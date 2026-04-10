@@ -1,0 +1,385 @@
+---
+title: "Latihan Pasca-Workshop"
+subtitle: "Latihan opsional untuk menguji pengetahuan dan memperkuat pemahaman Anda"
+format: html
+---
+
+## Persiapan
+
+Siapkan cheatsheet dplyr, tidyr, dan ggplot agar mudah dirujuk.
+
+### Muat paket-paket
+
+Kode di bawah ini akan memuat paket-paket yang Anda butuhkan:
+
+```{r}
+#| output: false
+library(tidyverse)
+library(car)
+```
+
+### Muat dataset
+
+Kode di bawah ini akan memuat dan menampilkan beberapa baris pertama dari dataset `Duncan`. Untuk mengetahui lebih lanjut tentang dataset ini, ketik `?Duncan` di konsol RStudio Anda.
+
+```{r}
+#| echo: true
+
+duncan <- as_tibble(Duncan)
+print(duncan)
+```
+
+Kode di bawah ini akan memuat dan menampilkan beberapa baris pertama dari dataset `WVS`. Untuk mengetahui lebih lanjut tentang dataset ini, ketik `?WVS` di konsol RStudio Anda.
+
+```{r}
+#| echo: true
+
+wvs <- as_tibble(WVS)
+print(wvs)
+```
+
+## Soal 1
+
+Menggunakan dataset `wvs`, filter kolom `age` untuk menyertakan nilai lebih dari 29. Kemudian, pilih kolom `age`, `degree`, `religion` dan `poverty`. Simpan hasilnya ke dataframe baru bernama `wvs_filtered`. 
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs_filtered <- wvs |> 
+    filter(age > 29) |> 
+    select(age, degree, religion, poverty) 
+
+print(wvs_filtered)
+```
+
+## Soal 2
+
+Perbarui dataset `wvs` dengan membuat versi dummy-coded dari variabel `gender`, di mana male = 0 dan female = 1. Simpan hasilnya di kolom baru bernama `gender_coded`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs <- wvs |> 
+    mutate(gender_coded = if_else(gender == "male", 0, 1)) 
+
+print(wvs)
+```
+
+
+## Soal 3
+
+Buat ringkasan dari dataset `wvs` yang menampilkan jumlah observasi untuk setiap negara.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    count(country) 
+```
+
+## Soal 4
+
+Menggunakan dataset `wvs`, hitung rata-rata `age` untuk setiap kombinasi gender dan status gelar.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    group_by(gender, degree) |> 
+    summarise(avg_age = mean(age, na.rm = TRUE))
+```
+
+## Soal 5
+
+Menggunakan dataset `wvs`, buat statistik ringkasan untuk setiap negara dan agama (yes/no). Hitung `age` mean, `age` median, dan jumlah observasi.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    group_by(country, religion) %>%
+    summarise(
+        avg_age = mean(age, na.rm = TRUE),
+        median_age = median(age, na.rm = TRUE),
+        n_observations = n()
+    ) 
+
+```
+
+
+
+## Soal 6
+
+Menggunakan dataset `wvs`, pilih 10 responden tertua dari USA. (petunjuk: `arrange()` dan `slice()`)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    filter(country == "USA", age > 50) |> 
+    arrange(desc(age)) |> 
+    slice(1:10)
+
+```
+
+## Soal 7
+
+
+Perbarui dataset `wvs` dengan menambahkan kolom baru bernama `age_category` yang mengkategorikan setiap responden berdasarkan kriteria berikut:
+
+- below 18 = "youth" category
+- between 18 to 34 = "young adult" category
+- between 35 to 49 = "adult" category
+- between 50 to 69 = "senior" category
+- more than 70 = "elderly" category
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs <- wvs |> 
+    mutate(age_category = case_when(
+        age < 18 ~ "youth",
+        age >= 18 & age < 35 ~ "young adult",
+        age >= 35 & age < 50 ~ "adult",
+        age >= 50 & age < 70 ~ "senior",
+        age >= 70 ~ "elderly"
+    )) 
+
+print(wvs)
+
+```
+
+## Soal 8
+
+Buat ulang visualisasi berikut:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> ggplot(aes(x = country, fill = poverty)) +
+    geom_bar(position = "dodge") +
+    labs(title = "Distribution of Poverty Opinions Across Countries",
+       x = "Country", 
+       y = "Count", 
+       fill = "Poverty Opinion") +
+    theme_minimal() 
+
+```
+
+## Soal 9
+
+Buat ulang visualisasi berikut:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    ggplot(aes(x = country, fill = degree)) +
+    geom_bar(position = "fill") +
+    labs(title = "Proportion of Degree Status by Country", 
+       x = "Country", y = "Count", fill = "Degree Status") +
+    theme_minimal()
+```
+
+
+## Soal 10
+
+Buat ulang visualisasi berikut:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> ggplot(aes(x = country, y = age)) +
+    geom_boxplot() +
+    labs(title = "Age Distribution by Country", x = "Country", y = "Age") +
+    theme_minimal() +
+    theme(legend.position = "none")
+```
+
+## Soal 11
+
+Buat ulang visualisasi berikut:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs |> 
+    ggplot(aes(x = country, y = age)) +
+    geom_boxplot() +
+    facet_wrap(~ religion) +
+    labs(title = "Age Distribution by Country and Religion",
+       x = "Country", y = "Age") +
+    theme_minimal() 
+```
+
+## Soal 12
+
+Buat ulang visualisasi berikut menggunakan dataset `duncan`:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+duncan |> 
+    ggplot(aes(x = income, y = prestige, color = type)) +
+    geom_jitter() +
+    labs(title = "Occupation Prestige vs. Income",
+       x = "Income", 
+       y = "Prestige Score",
+       color = "Occupation Type") +
+    theme_minimal()
+```
+
+## Soal 13
+
+Buat ulang visualisasi berikut menggunakan dataset `duncan`:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+duncan |> 
+    ggplot(aes(x = type, y = income)) +
+    geom_boxplot() +
+    labs(title = "Income Distribution by Occupation Type",
+        x = "Occupation Type",
+        y = "Income") +
+    theme_minimal()
+
+```
+
+## Soal 14
+
+Buat ulang visualisasi berikut menggunakan dataset `duncan`:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+duncan |> 
+    ggplot(aes(x = prestige, y = income, color = type)) +
+    geom_jitter() +
+    geom_smooth(method = "lm") +
+    labs(
+        title = "Relationship between Prestige and Income",
+        subtitle = "Grouped by Occupation Type",
+        x = "Prestige Score",
+        y = "Income",
+        color = "Occupation Type"
+    ) + 
+    theme_minimal()
+
+```
+
+## Soal 15
+
+Menggunakan dataset `duncan`:
+
+-  Periksa korelasi antara skor `prestige` dan `education`.
+-  Analisis hubungan antara `income` dan skor `prestige`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+cor.test(duncan$prestige, duncan$education)
+cor.test(duncan$prestige, duncan$income)
+```
+
+## Soal 16
+
+Menggunakan dataset `duncan`, bandingkan skor prestige antar kategori pekerjaan yang berbeda menggunakan ANOVA.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+duncan_anova <- aov(prestige ~ type, data=duncan)
+summary(duncan_anova)
+
+```
+
+## Soal 17
+
+Menggunakan dataset `duncan`, buat model regresi yang memprediksi `income` berdasarkan skor `prestige` dan `education`.
+
+```{r}
+#| output: false
+
+library(huxtable)
+```
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+duncan_model <- lm(income ~ prestige + education, data = duncan)
+huxreg("income" = duncan_model)
+```
+
+## Soal 18
+
+Menggunakan dataset `wvs`, periksa hubungan antara `religion` dan persepsi `poverty`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs_chisq <- chisq.test(table(wvs$religion, wvs$poverty))
+print(wvs_chisq)
+```
+
+## Soal 19
+
+Menggunakan dataset wvs, periksa apakah ada perbedaan signifikan dalam rata-rata usia antara individu dengan dan tanpa gelar universitas.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs_ttest <- t.test(age ~ degree, data = wvs)
+print(wvs_ttest)
+```
+
+## Soal 20
+
+Menggunakan dataset `wvs`, bandingkan rata-rata usia antar negara dan kategori usia yang berbeda **(lihat Soal 7 untuk membuat age_category)**, dan selidiki apakah ada perbedaan signifikan. Lakukan uji post-hoc jika diperlukan.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show Answer"
+
+wvs_anova <- aov(age ~ country + age_category, data = wvs)
+summary(wvs_anova)
+```

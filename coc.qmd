@@ -1,0 +1,18 @@
+---
+title: "Tata Tertib"
+format: html
+---
+
+Demi menciptakan lingkungan belajar yang positif dan profesional, kami mendorong perilaku berikut:
+
+-   Gunakan bahasa yang ramah dan inklusif
+
+-   Hormati sudut pandang dan pengalaman yang berbeda
+
+-   Terima kritik konstruktif dengan lapang dada
+
+-   Fokus pada hal yang terbaik untuk komunitas
+
+-   Tunjukkan sopan santun dan rasa hormat terhadap sesama peserta workshop
+
+*(Diadaptasi dari [The Carpentries' Code of Conduct](https://docs.carpentries.org/topic_folders/policies/code-of-conduct.html))*

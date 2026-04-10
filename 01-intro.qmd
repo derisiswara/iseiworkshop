@@ -1,0 +1,753 @@
+---
+title: "Pengantar R dan RStudio"
+author: "ISEI Workshop"
+format: revealjs
+---
+
+# Selamat Datang!
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+```
+
+## Pendahuluan
+
+-   Tentang workshop ini:
+
+    -   Format live-coding; silakan ikuti bersama!
+
+    -   Tujuan workshop: memberikan dasar-dasar yang cukup (setidaknya sampai ChatGPT tidak bisa membohongi Anda dengan mudah) dan kepercayaan diri untuk mengeksplorasi R secara mandiri.
+
+    -   Jangan takut untuk bertanya! Kita semua di sini untuk belajar.
+
+## Garis Besar Workshop
+
+Workshop ini disusun mengikuti alur kerja berikut saat bekerja dengan data ![](images/data-workflow.png)
+
+::: aside
+Gambar diambil dari [R for Data Science (2e)](https://r4ds.hadley.nz/intro) oleh Hadley Wickham.
+:::
+
+## Garis Besar Seri Workshop
+
+::: incremental
+1.  **Impor** data ke R, yaitu mengambil data (dari file, API, dll.) dan memuatnya ke dalam dataframe di R
+2.  **Rapikan (Tidy)** data yang sudah diimpor.
+    -   Tidy = menyimpan dalam bentuk konsisten yang sesuai dengan semantik dataset.
+    -   Tidy data = setiap kolom adalah variabel, setiap baris adalah observasi
+3.  Setelah data rapi, kita dapat **mentransformasi**. Transformasi meliputi:
+    -   mempersempit observasi yang diminati (seperti semua orang di satu kota atau semua data tahun lalu)
+    -   membuat variabel baru dari variabel yang ada (seperti menghitung kecepatan dari jarak dan waktu)
+    -   menghitung statistik ringkasan (seperti jumlah atau rata-rata).
+4.  Setelah memiliki data rapi dengan informasi yang dibutuhkan, kita dapat **memvisualisasikan** dan **memodelkan**.
+5.  **Mengkomunikasikan** hasilnya. Tidak peduli sebaik apa model dan visualisasi Anda memahami data, hasilnya perlu dikomunikasikan kepada orang lain.
+:::
+
+## Rencana Hari Ini
+
+-   R dan RStudio
+-   Sebelum coding
+-   Objek dan Nilai di R
+-   **Tipe** data
+-   Fungsi dan paket
+-   **Struktur** data
+-   Mengeksplorasi dataset
+-   Tips troubleshooting
+-   Rekap & umpan balik
+
+## Apa itu R? Apa itu RStudio?
+
+**R**: R adalah bahasa pemrograman open-source yang dikembangkan untuk analisis statistik dan visualisasi. Komunitas berbagi kode R dan membuat shortcut.
+
+**RStudio:** Lingkungan perangkat lunak R yaitu RStudio adalah tempat kita berinteraksi lebih mudah dengan bahasa dan skrip R.
+
+. . .
+
+Anda perlu menginstal **keduanya** untuk workshop ini. Kunjungi <https://posit.co/download/rstudio-desktop> untuk mengunduh dan menginstal keduanya jika belum. Ingat: Instal R terlebih dahulu baru kemudian RStudio.
+
+Lihat situs web workshop untuk panduan langkah demi langkah.
+
+## Tur RStudio
+
+Pertama, kita perlu familiar dengan antarmuka RStudio. Kita akan menggunakan RStudio untuk menulis kode, menavigasi file di komputer, memeriksa variabel yang kita buat, dan memvisualisasikan plot yang kita hasilkan.
+
+![Tampilan R Studio](images/rstudio-tour.jpg){fig-align="center"}
+
+## Sebelum Coding
+
+-   Mengatur direktori kerja (working directory)
+-   Membuat proyek
+-   Membuat folder dan file
+
+------------------------------------------------------------------------
+
+### Mengatur Direktori Kerja (Working Directory)
+
+-   Working directory -\> tempat R mencari file (skrip, data, dll.). Tetap terorganisir dengan semua file dan folder terkait proyek tersimpan di satu tempat.
+
+    -   Secara default, akan berada di Desktop Anda.
+
+    -   Praktik terbaik adalah menggunakan **R Project** untuk mengorganisir file dan data Anda.
+
+    -   Saat menggunakan R Project, working directory = folder proyek.
+
+### Membuat Proyek untuk Workshop Ini
+
+1.  Buka `File` \> `New project`. Pilih `New directory`, lalu `New project`
+
+2.  Masukkan `workshop-isei-regresi-sem` sebagai nama folder baru dan pilih lokasi penyimpanan, misalnya `Desktop` atau `Documents`. Ini akan menjadi working directory Anda selama workshop!
+
+------------------------------------------------------------------------
+
+### Membuat Folder di Dalam Direktori Kerja
+
+-   `data` - kita akan menyimpan data mentah di sini. **Praktik terbaik adalah menjaga data di sini tidak diubah.**
+
+-   `data-output` - jika perlu memodifikasi data mentah, simpan versi yang dimodifikasi di sini.
+
+-   `fig-output` - kita akan menyimpan semua grafik yang dibuat di sini!
+
+### Catatan
+
+Jangan:
+
+-   Jangan taruh proyek R di dalam folder OneDrive karena kadang menyebabkan masalah.
+
+-   Nama folder/file harus menghindari spasi, simbol, dan karakter khusus. Gunakan huruf kecil semua.
+
+Lakukan:
+
+-   Jika working directory tidak sesuai, ubah di antarmuka RStudio dengan menavigasi ke lokasi yang benar di file browser, klik ikon gear biru "More", dan pilih "Set As Working Directory".
+
+# Mari Mulai Coding!
+
+Buat skrip R baru - `File` \> `New File` \> `R script`.
+
+RStudio memungkinkan Anda mengeksekusi perintah langsung dari editor skrip dengan shortcut Ctrl + Enter (di Mac, Cmd + Return).
+
+Anda bisa mengetik perintah langsung di konsol dan tekan Enter untuk mengeksekusi, tetapi perintah tersebut akan hilang saat sesi ditutup. Lebih baik mengetik perintah di editor skrip dan menyimpan skrip tersebut.
+
+**Catatan: RStudio tidak menyimpan otomatis, jadi ingat untuk menyimpan secara berkala!**
+
+## Objek dan Nilai di R
+
+In this line of code:
+
+```{r}
+#| echo: true
+country_name <- "Singapore"
+```
+
+-   `"Singapore"` adalah sebuah **nilai (value)**. Ini bisa berupa tipe data karakter, numerik, atau boolean. (lebih lanjut segera)
+-   `country_name` adalah **objek** tempat kita menyimpan nilai ini. Ini agar kita bisa menyimpan nilai untuk digunakan nanti.
+-   `<-` adalah operator penugasan (assignment) untuk menetapkan nilai ke objek.
+    -   Anda juga bisa menggunakan `=`, tetapi umumnya di R, `<-` adalah konvensi.
+    -   Shortcut keyboard: `Alt` + `-` di Windows (`Option` + `-` di Mac)
+
+## Objek dan Nilai di R
+
+In this line of code:
+
+```{r}
+#| echo: true
+country_name <- "Singapore"
+```
+
+-   `"Singapore"` adalah sebuah **nilai (value)**. Ini bisa berupa tipe data karakter, numerik, atau boolean.
+
+-   `country_name` adalah **objek** tempat kita menyimpan nilai ini.
+
+-   `<-` adalah operator penugasan untuk menetapkan nilai ke objek.
+
+    -   Anda juga bisa menggunakan `=`, tetapi umumnya di R, `<-` adalah konvensi.
+    -   Shortcut keyboard: `Alt` + `-` di Windows (`Option` + `-` di Mac)
+
+-   Aturan penamaan objek:
+
+    -   Tidak boleh dimulai dengan angka
+
+    -   Peka huruf besar/kecil (case sensitive)
+
+    -   Tidak boleh ada spasi
+
+    -   Beberapa kata dicadangkan (reserved words)
+
+## Penyegaran: Tipe Data Kuantitatif
+
+-   [**Data Non-Kontinu**]{.underline}
+
+    -   **Nominal/Kategorikal**: Data non-urut, non-numerik, digunakan untuk merepresentasikan atribut kualitatif.
+
+        -   Contoh: kebangsaan, kelurahan, status pekerjaan
+
+    -   **Ordinal**: Data non-numerik berurutan.
+
+        -   Contoh: Peringkat Nutri-grade, frekuensi olahraga (harian, mingguan, dua mingguan)
+
+    -   **Diskrit**: Data numerik yang hanya bisa mengambil nilai tertentu (biasanya bilangan bulat)
+
+        -   Contoh: Ukuran sepatu, ukuran pakaian
+
+    -   **Biner**: Data nominal dengan hanya dua kemungkinan hasil
+
+        -   Contoh: lulus/gagal, ya/tidak, selamat/tidak selamat
+
+------------------------------------------------------------------------
+
+-   [**Data Kontinu**]{.underline}
+
+    -   **Interval**: Data numerik yang bisa mengambil nilai apa pun dalam rentang tertentu. [Tidak memiliki "nol sejati".]{.underline}
+
+        -   Contoh: Skala Celsius. Suhu 0°C tidak berarti tidak ada panas.
+
+    -   **Rasio**: Data numerik yang bisa mengambil nilai apa pun dalam rentang tertentu. [Memiliki "nol sejati".]{.underline}
+
+        -   Contoh: Pendapatan tahunan. Pendapatan 0 berarti tidak ada pendapatan.
+
+## Tipe Data di R
+
+Empat tipe data dasar adalah **karakter (characters)**, **numerik (numeric)**, **boolean**, dan integer. Mari lihat contohnya:
+
+```{r}
+#| echo: true
+#| code-line-numbers: "|1|2|3|4"
+
+country_code <- "SGP" # Karakter
+life_satisfaction <- 8.5 # Numerik (juga kadang disebut Double)
+is_religious <- TRUE # Boolean/Logical (TRUE/FALSE). peka huruf besar/kecil
+birth_year <- 1990L # Integer (bilangan bulat)
+```
+
+-   Untuk menyertakan komentar dalam kode, gunakan karakter \#.
+
+-   Apa pun di sebelah kanan tanda \# sampai akhir baris dianggap sebagai komentar dan diabaikan oleh R saat eksekusi.
+
+-   Praktik yang baik untuk membuat catatan dan menjelaskan kode.
+
+## Memeriksa Tipe Data Variabel
+
+Anda bisa menggunakan `str` atau `typeof` untuk memeriksa tipe data objek R.
+
+```{r}
+#| echo: true
+typeof(country_code)
+```
+
+```{r}
+#| echo: true
+str(is_religious) 
+```
+
+**`str` mengembalikan tipe data dan nilainya.**
+
+## Operasi Aritmatika di R
+
+Anda bisa melakukan operasi aritmatika di R. Misalnya, mari hitung rata-rata skor kepuasan:
+
+```{r}
+#| echo: true
+(8 + 7 + 9) / 3  # Rata-rata dari tiga skor kepuasan
+```
+
+```{r}
+#| echo: true
+2025 - 1990  # Hitung usia dari tahun lahir
+```
+
+## Operasi Boolean di R - Pernyataan TRUE/FALSE Sederhana
+
+Operasi boolean di R berguna untuk memfilter data survei. Sebelum itu, mari lihat bagaimana R mengevaluasi pernyataan TRUE/FALSE sederhana
+
+Apakah life_satisfaction lebih besar dari 8?
+
+```{r}
+#| echo: true
+
+life_satisfaction <- 8.5 # tetapkan nilai 8.5 ke life_satisfaction
+life_satisfaction > 8  
+```
+
+Apakah negara tersebut Singapura?
+
+```{r}
+#| echo: true
+
+country_code == "SGP"  
+```
+
+Apakah negara tersebut BUKAN Singapura?
+
+```{r}
+#| echo: true
+
+country_code != "SGP"  
+```
+
+## Operasi Boolean di R - Operator AND
+
+Kadang kita memiliki beberapa pernyataan untuk dievaluasi. Di sinilah Operator Boolean berguna.
+
+Operasi **AND** (kedua kondisi harus TRUE). Di R, direpresentasikan dengan ampersand `&`
+
+Apakah negara Selandia Baru DAN apakah kepuasan hidup lebih dari 8?
+
+```{r}
+#| echo: true
+
+(country_code == "NZL") & (life_satisfaction > 8) 
+```
+
+`country_code == "NZL"` adalah FALSE sementara `life_satisfaction > 8` adalah TRUE
+
+Seluruh pernyataan akan mengembalikan FALSE karena tidak semua kondisi TRUE.
+
+## Operasi Boolean di R - Operator OR
+
+Operasi **OR** (setidaknya satu kondisi harus TRUE). Di R, direpresentasikan dengan simbol pipe `|`
+
+Apakah negara Selandia Baru ATAU apakah kepuasan hidup lebih dari 8?
+
+```{r}
+#| echo: true
+
+(country_code == "NZL") | (life_satisfaction > 8) 
+```
+
+Selama satu kondisi terpenuhi, ini akan TRUE.
+
+## Fungsi di R
+
+-   Fungsi seperti resep dalam memasak.
+
+-   Fungsi mengambil bahan (input) dan menggunakan instruksi untuk menghasilkan hasil (output).
+
+-   Di R, fungsi adalah kumpulan instruksi tertulis yang melakukan tugas tertentu. Nama fungsi selalu diikuti tanda kurung bulat `()`
+
+Contoh: fungsi `round()` di R akan membulatkan angka.
+
+```{r}
+#| echo: true
+round(3.1415926)
+```
+
+-   `round()` adalah "resep", sedangkan `3.1415926` adalah "bahan"
+
+Menyimpan hasil ke objek:
+
+```{r}
+#| echo: true
+rounded_pi <- round(3.1415926)
+print(rounded_pi)
+```
+
+## Fungsi dengan Argumen di R
+
+-   Mengikuti analogi resep, argumen adalah bahan yang Anda berikan ke fungsi. nama_fungsi(argumen/parameter)
+
+-   Beberapa argumen wajib, yang lain opsional (memiliki nilai default).
+
+-   Setiap argumen memberi tahu fungsi apa yang harus digunakan atau bagaimana melakukan tugas.
+
+-   Contoh: Bayangkan pesanan bubble tea sebagai fungsi. Argumen/bahan yang mungkin:
+
+    -   Teh - bahan wajib
+
+    -   Susu - opsional, default-nya disertakan
+
+    -   Topping - opsional, pilihan default "mutiara"
+
+In R:
+
+```{r}
+#| echo: true
+round(3.1415926, digits = 2)
+```
+
+-   `3.1415926` adalah argumen wajib (jika tidak diberikan, fungsi tidak akan berjalan)
+
+-   `digits` adalah argumen opsional yang menentukan berapa desimal yang dibulatkan (default-nya 0)
+
+## Bagaimana Mengetahui Lebih Lanjut Tentang Fungsi?
+
+Anda bisa memanggil halaman bantuan / vignette di R dengan menambahkan `?` di depan nama fungsi.
+
+Misalnya, jika ingin mengetahui lebih lanjut tentang fungsi `round`, jalankan `?round` di konsol R (panel kiri bawah)
+
+
+## Struktur Data di R
+
+Kita akan mulai dengan mengeksplorasi 3 tipe dasar **struktur** data di R:
+
+1.  **Vektor** - dapat menampung beberapa nilai dalam satu variabel/objek.
+
+2.  **Faktor** - Struktur data khusus di R untuk menangani variabel kategorikal.
+
+3.  **Data frame** - Struktur data standar untuk data tabular di R, dan yang kita gunakan untuk pemrosesan, plotting, dan statistik.
+
+Tipe lain (tidak dibahas dalam workshop ini):
+
+-   Lists: Tipe vektor rekursif
+
+-   Matrices: Kumpulan elemen dengan tipe sama dalam baris dan kolom
+
+
+## Struktur Data di R - Visualisasi
+
+![](images/data-structures.svg){width=100% height=100%}
+
+## Struktur Data di R: Vektor
+
+Bayangkan vektor sebagai kolom dalam dataset. Ini adalah struktur data paling umum dan dasar di R. (semacam "pekerja keras" R!)
+
+-   Vektor hanya bisa berisi 1 tipe data.
+
+-   **Vektor dapat dibuat dengan fungsi c()**.
+
+-   Dapat menambah, menghapus, atau mengubah nilai dalam vektor.
+
+-   Periksa vektor: typeof(), str(), length()
+
+```{r}
+#| echo: true
+countries <- c("CAN", "NZL", "SGP", "CAN", "SGP")
+satisfaction_scores <- c(8, 7, 9, 6, 8)
+employment_status <- c("Full time", "Student", "Part time", "Retired", "Full time")
+```
+
+## Manipulasi Vektor: Mengambil dan Memperbarui Item
+
+Mengambil negara pertama dalam vektor
+
+```{r}
+#| echo: true
+countries[1]
+```
+
+Mengambil tiga skor kepuasan pertama
+
+```{r}
+#| echo: true
+satisfaction_scores[1:3]
+```
+
+Mengambil skor kepuasan pertama dan ketiga
+
+```{r}
+#| echo: true
+satisfaction_scores[c(1,3)]
+```
+
+Memperbarui skor kepuasan pertama
+
+```{r}
+#| echo: true
+
+satisfaction_scores[1] <- 7
+print(satisfaction_scores)
+```
+
+## Mengapa Tanda Kurung Siku dan Bukan Kurung Bulat?
+
+Tanda kurung bulat `()` untuk menjalankan fungsi, seperti menggunakan alat: `mean()` atau `sum()`.
+
+Tanda kurung siku `[]` untuk mengakses bagian tertentu dari data Anda, di mana kita memasukkan nomor indeks elemen yang diinginkan.
+
+## Manipulasi Vektor: Mengambil Item Berdasarkan Kriteria
+
+Mari temukan skor kepuasan tinggi (di atas 7)!
+
+-   Kode di bawah akan membuat vektor boolean bernama `criteria` yang mencatat apakah setiap item di `satisfaction_scores` memenuhi kondisi kita.
+
+-   Kondisinya adalah "nilai harus \> 7". Jika item 1 memenuhi kondisi, maka item 1 'ditandai' sebagai `TRUE`. Jika tidak, akan `FALSE`
+
+```{r}
+#| echo: true
+# Buat vektor boolean untuk kondisi kita
+criteria <- satisfaction_scores > 7
+print(criteria)
+```
+
+-   Baris kode ini menerapkan vektor boolean `criteria` ke `satisfaction_scores`, dan hanya mengambil item yang memenuhi kondisi.
+
+```{r}
+#| echo: true
+# Gunakan vektor boolean untuk memfilter skor kepuasan
+satisfaction_scores[criteria]
+```
+
+## Manipulasi Vektor: Menangani Nilai NA
+
+-   Nilai NA menunjukkan nilai null, atau ketiadaan nilai (0 masih merupakan nilai!)
+
+-   Fungsi ringkasan seperti `mean` memerlukan argumen `na.rm` tentang bagaimana penanganannya.
+
+Data survei sering mengandung nilai yang hilang (NA):
+
+```{r}
+#| echo: true
+financial_satisfaction <- c(8, 7, NA, 6, 9, NA, 7)
+
+# Secara default, mean() akan mengembalikan NA jika ada nilai NA
+mean(financial_satisfaction)
+
+# Hapus nilai NA sebelum menghitung mean dengan menyertakan na.rm = TRUE
+mean(financial_satisfaction, na.rm = TRUE)
+```
+
+## Struktur Data di R: Dataframe
+
+-   Struktur data standar untuk data tabular di R, dan yang kita gunakan untuk pemrosesan data, plotting, dan statistik.
+
+-   Mirip dengan spreadsheet - kumpulan persegi panjang dari variabel (kolom) dan observasi (baris)!
+
+-   Anda bisa membuatnya secara manual seperti ini: (meskipun lebih umum Anda menggunakan ini untuk memuat data dari sumber eksternal)
+
+```{r}
+#| echo: true
+survey_data <- data.frame(
+    country = c("SGP", "CAN", "NZL", "SGP", "CAN"),
+    life_satisfaction = c(8, 7, 9, 6, 8),
+    employment = c("Full time", "Student", "Part time", "Retired", "Full time")
+)
+print(survey_data)
+```
+
+
+## Mengunduh Dataset World Values Survey (WVS)
+
+Untuk workshop ini, kita akan mencoba memuat dataset dari file ke dalam dataframe!
+
+Buka situs web workshop dan kunjungi tab ['Dataset'](https://bellaratmelia.github.io/introductory-r-socsci/dataset.html) untuk mengunduh file data dan informasi tentang data WVS ini
+
+Unduh CSV ini dan simpan di folder `data` di proyek R Anda!
+
+## Paket di R (untuk fungsionalitas tambahan)
+
+-   Paket adalah kumpulan fungsi, dataset R, dll. Paket memperluas fungsionalitas R.
+
+    -   (Analogi terdekat: seperti add-on browser)
+
+-   Paket populer: `tidyverse`, `caret`, `shiny`, dll.
+
+-   Instalasi (**cukup sekali saja**): `install.packages("nama paket")`
+
+-   Memuat paket (*perlu dijalankan setiap restart RStudio*): `library(nama paket)` - mari coba muat `tidyverse` karena kita akan menggunakan ini untuk memuat CSV ke dataframe!
+
+    -   Tidyverse adalah kumpulan paket terkenal yang memfasilitasi proyek data science. Termasuk paket untuk manipulasi data, visualisasi, impor, dan tidying.
+
+## Memuat Dataset WVS
+
+Mari muat dataset World Values Survey menggunakan fungsi read_csv.
+
+Sebelum menggunakan read_csv, instal dan muat paket tidyverse. Instal paket hanya sekali dan perlu memuat paket di setiap sesi sebelum menggunakannya.
+
+```{r}
+#| echo: true
+#| output: true
+library(tidyverse)
+
+wvs_data <- read_csv("data/wvs-wave7-sg-ca-nz.csv")  
+head(wvs_data)
+```
+
+Pastikan file CSV tersimpan di folder data Anda! (Tidak ada auto save)
+
+## Mengeksplorasi Dataset WVS
+
+```{r}
+#| echo: true
+#| output: false
+#| eval: false
+
+dim(wvs_data) # <1>
+names(wvs_data) # <2>
+str(wvs_data) # <3>
+summary(wvs_data) # <4> 
+head(wvs_data, n=5) # <5>
+tail(wvs_data, n=5) # <6>
+```
+
+1.  mengembalikan vektor jumlah baris dan kolom
+2.  memeriksa kolom
+3.  memeriksa struktur
+4.  menampilkan statistik ringkasan seluruh dataframe
+5.  melihat 5 baris pertama
+6.  melihat 5 baris terakhir
+
+
+## Manipulasi Dasar Dataframe: Mengambil Nilai
+
+Beberapa fungsi dasar dataframe sebelum kita lanjut ke data wrangling:
+
+```{r}
+#| echo: true
+#| output: false
+#| eval: false
+
+wvs_data["country"] # <1>
+wvs_data$country # <2>
+wvs_data[3]  # <3>
+wvs_data[1, 4] # <4> 
+wvs_data[3, ] # <5>
+```
+
+1.  mengambil kolom berdasarkan nama kolom (dikembalikan sebagai tibble/dataframe)
+2.  cara lain mengambil kolom berdasarkan nama (dikembalikan sebagai vektor)
+3.  mengambil kolom berdasarkan indeks
+4.  mendapatkan sel di koordinat baris, kolom ini
+5.  mendapatkan seluruh baris
+
+## Struktur Data di R: Faktor
+
+-   Struktur data khusus di R untuk menangani data kategorikal.
+
+-   Terlihat (dan sering berperilaku) seperti vektor karakter tetapi sebenarnya diperlakukan sebagai vektor integer.
+
+-   Hanya dapat berisi kumpulan nilai yang telah ditentukan, dikenal sebagai `levels`. R selalu mengurutkan levels secara alfabet
+
+-   Dapat berurutan (ordinal) atau tidak berurutan (nominal).
+
+-   Mungkin terlihat seperti vektor biasa pada pandangan pertama, jadi gunakan `str()` untuk memeriksa.
+
+-   Aplikasi paling umum: saat kita ingin menentukan kolom di dataframe sebagai kolom kategori
+
+## Mengonversi Kolom Dataframe ke Faktor - Tidak Berurutan
+
+Dalam contoh kita, `country` seharusnya menjadi faktor! 
+
+```{r}
+#| echo: true 
+#| output: true
+
+str(wvs_data$country)
+```
+
+Karena tidak ada urutan bawaan dalam nama negara, kategori kita akan tidak berurutan:
+
+```{r}
+#| echo: true 
+#| output: true
+wvs_data$country <- factor(wvs_data$country)
+
+# periksa level kategori
+levels(wvs_data$country)
+```
+
+Jika kita periksa strukturnya, kolom `country` seharusnya menjadi faktor bukan karakter sekarang:
+```{r}
+#| echo: true 
+#| output: true
+
+str(wvs_data$country)
+```
+## Mengonversi Kolom Dataframe ke Faktor - Berurutan
+
+Secara teknis, di dataset kita tidak ada variabel yang harus berurutan. Tapi sebagai contoh, misalkan kita ingin mengurutkan nilai kategorikal di `religiousity` dari non-believer ke believer. 
+
+```{r}
+#| echo: true 
+#| output: true
+wvs_data$religiousity <- factor(wvs_data$religiousity,
+                                levels = c("An atheist", "Not a religious person", "A religious person", "Don't know"),
+                                ordered = TRUE)
+
+# periksa level kategori dan struktur
+levels(wvs_data$religiousity)
+str(wvs_data$religiousity)
+```
+
+## Trouble Shooting
+
+Types of messages
+
+-   Error: Fatal error in your code that prevented it from being run through successfully. Need to fix it for the code to run.
+
+-   Warning: Non-fatal errors (don’t stop the code from running, but this is a potential problem that you should know about).
+
+-   Message: Helpful information about the code you just ran(can usually ignore these messages)
+
+## Trouble Shooting
+
+Check. Did you...
+
+-   Set your working directory?
+
+-   Check for missing commas (,), parentheses ()?
+
+-   Check your spelling?
+
+    -   Spelling : Punctuation \<- mea**a**n(c(1, 2, 3, 4)) or print(Punctuati**o**on)
+
+    -   Punctuation : sum(10?20) or Punctuation \<- sum(c(10, 20))**)**
+
+    -   Capitalization : s**U**m(c(5, 10, 15))
+
+    -   In text indicators : X **+** Y or **\#**taking notes or “name” vs name
+
+## Rekap
+
+-   R & RStudio: R adalah bahasa pemrograman untuk komputasi statistik dan grafis, sementara RStudio adalah lingkungan yang memudahkan menulis, menjalankan, dan mengelola kode R.
+
+-   Working Directory: Folder di komputer di mana R membaca dan menyimpan file.
+
+-   Tipe Data: Jenis nilai yang dapat disimpan objek, seperti numerik, karakter, dan Boolean.
+
+-   Struktur Data: Struktur data mengorganisir dan menyimpan data di R, seperti vektor, faktor, dan data frame.
+
+-   Fungsi: Kode yang dapat digunakan kembali yang melakukan tugas tertentu. Bisa memanggil fungsi dengan argumen.
+
+-   Paket: Kumpulan fungsi dan data untuk melakukan tugas. Perlu menginstal dan memuat paket.
+
+# Akhir Sesi 1!
+
+Sesi Berikutnya: Pengolahan data dengan paket `dplyr` dan `tidyr` - kita akan belajar cara:
+
+-   Memfilter respons survei berdasarkan negara
+
+-   Menghitung rata-rata skor kepuasan berdasarkan kelompok demografi
+
+-   Membuat variabel baru dari yang sudah ada
+
+-   Menangani nilai yang hilang dalam data survei
+
+-   Dan banyak lagi!
+
+## Lampiran Manipulasi Vektor: Menambah Item
+
+Beberapa cara menambahkan item ke vektor
+
+```{r}
+#| echo: true
+#| eval: false
+#| 
+
+satisfaction_scores <- c(satisfaction_scores, 7) # <1>
+satisfaction_scores <- c(satisfaction_scores, 8, 9, 10) # <2>
+satisfaction_scores <- c(8, satisfaction_scores) # <3>
+satisfaction_scores <- append(satisfaction_scores, 9, after = 2) # <4>
+
+```
+
+1.  Tambah satu skor ke akhir vektor menggunakan c()
+2.  Tambah beberapa skor ke akhir
+3.  Tambah skor ke awal
+4.  Sisipkan skor di posisi tertentu menggunakan append(nama_vektor, elemen_yang_ditambahkan, dari_posisi)
+
+## Lampiran Manipulasi Vektor: Menghapus Item
+
+```{r}
+#| echo: true
+#| eval: false
+
+satisfaction_scores <- satisfaction_scores[-c(2, 4)] # <1>
+satisfaction_scores <- satisfaction_scores[satisfaction_scores <= 7] # <2>
+satisfaction_scores <- na.omit(satisfaction_scores) # <3>
+
+```
+
+1.  Hapus elemen berdasarkan indeks menggunakan "negative indexing"
+2.  Hapus elemen berdasarkan kondisi menggunakan logical indexing. Hapus item yang bernilai FALSE.
+3.  Hapus nilai NA dari vektor

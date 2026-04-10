@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+  page-footer: "ISEI Workshop: Analisis Regresi dan Structural Equation Modelling (SEM) dengan RStudio — Dibuat dengan [Quarto](https://quarto.org/)."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Beranda
+      - href: dataset.qmd
+        text: Dataset
+      - href: coc.qmd
+        text: Tata Tertib
+      - href: resources.qmd
+        text: Sumber Referensi
+      - href: exercises.qmd
+        text: Latihan
+
+format:
+  html:
+    theme: 
+      - flatly
+      - custom.scss
+    toc: true
+    lang: id
+
+  revealjs: 
+    theme: [default, custom.scss]
+    width: 1600
+    height: 900
+    slide-number: true
+    footer: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+    fig-height: 7
+    fig-width: 14
+    
+
+execute:
+  freeze: auto

@@ -1,0 +1,13 @@
+---
+title: "Sumber Referensi"
+format: html
+nocite: |
+    @*
+bibliography: references.bib
+csl: apa-annotated-bibliography.csl
+---
+
+Bacaan lanjutan jika Anda ingin memperdalam pengetahuan dan keterampilan setelah workshop:
+
+::: {#refs}
+:::

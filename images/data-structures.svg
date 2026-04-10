@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+    <!-- Background -->
+    <rect width="730" height="400" fill="#ffffff"/>
+    
+    <!-- Vector section -->
+    <rect x="50" y="50" width="210" height="60" rx="5" fill="#E6F3FF" stroke="#2196F3" stroke-width="2"/>
+    <text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">Vector Object</text>
+    
+    <!-- Vector elements -->
+    <rect x="60" y="60" width="40" height="40" rx="3" fill="#ffffff" stroke="#2196F3"/>
+    <rect x="110" y="60" width="40" height="40" rx="3" fill="#ffffff" stroke="#2196F3"/>
+    <rect x="160" y="60" width="40" height="40" rx="3" fill="#ffffff" stroke="#2196F3"/>
+    <rect x="210" y="60" width="40" height="40" rx="3" fill="#ffffff" stroke="#2196F3"/>
+    
+    <text x="80" y="85" text-anchor="middle" font-family="monospace" font-size="14">7.8</text>
+    <text x="130" y="85" text-anchor="middle" font-family="monospace" font-size="14">8.1</text>
+    <text x="180" y="85" text-anchor="middle" font-family="monospace" font-size="14">10</text>
+    <text x="230" y="85" text-anchor="middle" font-family="monospace" font-size="14">9.5</text>
+
+  <!-- Vector Explanatory text -->
+    <text x="50" y="135" font-family="Arial" font-size="14" fill="#333">Think of it as a single row in a spreadsheet.</text>
+    <text x="50" y="155" font-family="Arial" font-size="14" fill="#333">All elements must be the same type</text>
+    <text x="50" y="175" font-family="Arial" font-size="14" fill="#333">(all numbers, all text, or all logical values)</text>
+    
+    <!-- Factor section -->
+    <rect x="50" y="230" width="210" height="80" rx="5" fill="#F3E5F5" stroke="#9C27B0" stroke-width="2"/>
+    <text x="150" y="215" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">Factor Object</text>
+    
+    <!-- Factor elements -->
+    <rect x="60" y="240" width="40" height="40" rx="3" fill="#aabbcc" stroke="#9C27B0"/>
+    <rect x="110" y="240" width="40" height="40" rx="3" fill="#aaffcc" stroke="#9C27B0"/>
+    <rect x="160" y="240" width="40" height="40" rx="3" fill="#aaffcc" stroke="#9C27B0"/>
+    <rect x="210" y="240" width="40" height="40" rx="3" fill="#aabbcc" stroke="#9C27B0"/>
+    
+    <text x="80" y="265" text-anchor="middle" font-family="monospace" font-size="14">CA</text>
+    <text x="130" y="265" text-anchor="middle" font-family="monospace" font-size="14">SG</text>
+    <text x="180" y="265" text-anchor="middle" font-family="monospace" font-size="14">SG</text>
+    <text x="230" y="265" text-anchor="middle" font-family="monospace" font-size="14">CA</text>
+    
+    <!-- Factor levels -->
+    <text x="70" y="300" font-family="Arial" font-size="12">Levels (categories): CA, SG</text>
+    
+    <!-- Vector Explanatory text -->
+    <text x="50" y="330" font-family="Arial" font-size="14" fill="#333">Elements are restricted to a predefined set of </text>
+    <text x="50" y="350" font-family="Arial" font-size="14" fill="#333">levels / categories e.g. CA, SG, or NZ only.</text>
+   
+    <!-- DataFrame section -->
+    <rect x="350" y="50" width="310" height="260" rx="5" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+    <text x="500" y="35" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">Data Frame</text>
+    
+    <!-- Column headers -->
+    <rect x="360" y="60" width="90" height="30" fill="#4CAF50" stroke="#4CAF50"/>
+    <rect x="460" y="60" width="90" height="30" fill="#4CAF50" stroke="#4CAF50"/>
+    <rect x="560" y="60" width="90" height="30" fill="#4CAF50" stroke="#4CAF50"/>
+    
+    <text x="405" y="80" text-anchor="middle" font-family="Arial" font-size="14" fill="white">ID</text>
+    <text x="505" y="80" text-anchor="middle" font-family="Arial" font-size="14" fill="white">Country</text>
+    <text x="605" y="80" text-anchor="middle" font-family="Arial" font-size="14" fill="white">Score</text>
+    
+    <!-- Data rows -->
+    <rect x="360" y="100" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="460" y="100" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="560" y="100" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    
+    <rect x="360" y="150" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="460" y="150" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="560" y="150" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    
+    <rect x="360" y="200" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="460" y="200" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="560" y="200" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+
+    <rect x="360" y="250" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="460" y="250" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    <rect x="560" y="250" width="90" height="40" fill="#ffffff" stroke="#4CAF50"/>
+    
+    <!-- Sample data -->
+    <text x="405" y="125" text-anchor="middle" font-family="monospace" font-size="14">1</text>
+    <text x="505" y="125" text-anchor="middle" font-family="monospace" font-size="14">CA</text>
+    <text x="605" y="125" text-anchor="middle" font-family="monospace" font-size="14">7.8</text>
+    
+    <text x="405" y="175" text-anchor="middle" font-family="monospace" font-size="14">2</text>
+    <text x="505" y="175" text-anchor="middle" font-family="monospace" font-size="14">SG</text>
+    <text x="605" y="175" text-anchor="middle" font-size="14">8.1</text>
+    
+    <text x="405" y="225" text-anchor="middle" font-family="monospace" font-size="14">3</text>
+    <text x="505" y="225" text-anchor="middle" font-family="monospace" font-size="14">SG</text>
+    <text x="605" y="225" text-anchor="middle" font-family="monospace" font-size="14">10</text>
+
+      <text x="405" y="275" text-anchor="middle" font-family="monospace" font-size="14">4</text>
+    <text x="505" y="275" text-anchor="middle" font-family="monospace" font-size="14">CA</text>
+    <text x="605" y="275" text-anchor="middle" font-family="monospace" font-size="14">9.5</text>
+    
+    <!-- Data type annotations -->
+    <text x="405" y="303" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">numeric</text>
+    <text x="505" y="303" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">factor</text>
+    <text x="605" y="303" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">numeric</text>
+
+    <!-- Explanatory text -->
+    <text x="350" y="340" font-family="Arial" font-size="14" fill="#333">A data frame is a collection of vectors of equal length.</text>
+    <text x="350" y="360" font-family="Arial" font-size="14" fill="#333">Each column can have a different data type.</text>
+  <text x="350" y="380" font-family="Arial" font-size="14" fill="#333">Some vectors may be converted into Factor.</text>
+</svg>

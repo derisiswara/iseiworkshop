@@ -1,0 +1,794 @@
+---
+title: "Uji Statistik Inferensial: Korelasi, T-Test, dan ANOVA"
+author: "ISEI Workshop"
+format: revealjs
+---
+
+## Garis Besar Hari Ini
+
+1.  Penyegaran tentang distribusi data dan variabel penelitian
+2.  Kedua kategorikal: chi-square
+3.  Kedua kontinu: korelasi
+3.  X Kategorikal dan Y Kontinu (membandingkan rata-rata): Uji T dan ANOVA
+
+## Penyegaran: Distribusi Data
+
+Pemilihan uji statistik dan metode yang tepat sering kali bergantung pada distribusi data. Memahami distribusi membantu dalam memilih uji yang tepat dan validitas hasil.
+
+```{r}
+# Tetapkan seed untuk reproduktibilitas
+set.seed(123)
+
+normal_data <- rnorm(1000, mean = 0, sd = 1)
+left_skewed_data <- rbeta(1000,5,2)
+right_skewed_data <- rbeta(1000,2,5)
+bimodal_data <- c(rnorm(500, mean = -2, sd = 1), rnorm(500, mean = 2, sd = 1))
+uniform_data <- runif(1000, min = -1, max = 1)
+
+par(mfrow = c(2, 3), mar = c(4, 4, 2, 1))
+
+# Plot histogram atau plot densitas untuk setiap distribusi
+hist(normal_data, main = "Normal Distribution", col = "lightblue", probability = TRUE)
+curve(dnorm(x, mean = mean(normal_data), sd = sd(normal_data)), add = TRUE, col = "blue", lwd = 2)
+
+hist(bimodal_data, main = "Bimodal Distribution", col = "lightgoldenrod", probability = TRUE)
+lines(density(bimodal_data), col = "darkorange", lwd = 2)
+
+hist(uniform_data, main = "Uniform Distribution", col = "lightpink", probability = TRUE)
+curve(dunif(x, min = -1, max = 1), add = TRUE, col = "deeppink", lwd = 2)
+
+hist(left_skewed_data, main = "Left Skewed Distribution", col = "lightgreen", probability = TRUE)
+curve(dbeta(x, 5, 2), add = TRUE, col = "darkgreen", lwd = 2)
+
+hist(right_skewed_data, main = "Right Skewed Distribution", col = "lightcoral", probability = TRUE)
+curve(dbeta(x, 2, 5), add = TRUE, col = "darkred", lwd = 2)
+```
+
+## Penyegaran: Variabel Penelitian
+
+::: columns
+::: {.column width="50%"}
+[**Variabel Dependen (VD)**]{.underline}
+
+Variabel yang akan terpengaruh sebagai akibat dari manipulasi/perubahan pada VI
+
+-   Nama lainnya: Outcome, Response, Output, dll.
+-   Sering dilambangkan sebagai $y$
+:::
+
+::: {.column width="50%"}
+[**Variabel Independen (VI)**]{.underline}
+
+Variabel yang akan dimanipulasi oleh peneliti.
+
+-   Nama lainnya: Predictor, Covariate, Treatment, Regressor, Input, dll.
+-   Sering dilambangkan sebagai $x$
+:::
+:::
+
+## Buka Proyek Anda - cara yang (mungkin) lebih mudah
+
+1.  Buka folder tempat Anda menyimpan proyek untuk workshop ini
+
+2.  Temukan file dengan ekstensi `.Rproj` - ini adalah file proyek R yang menyimpan semua informasi tentang proyek Anda.
+
+
+3.  Klik dua kali pada file tersebut. RStudio akan terbuka dengan proyek Anda termuat! Ini seharusnya lebih mudah untuk memastikan bahwa Anda memuat proyek yang benar saat membuka RStudio.
+
+
+## Muat Data untuk Hari Ini!
+
+Mari buat skrip R baru bernama `session-4.R`, lalu salin kode di bawah ini untuk memuat data kita hari ini. Kode ini menggunakan `read_csv` dari paket `readr` (bagian dari `tidyverse`) untuk memuat CSV yang sudah dibersihkan (dari checkpoint pertama)
+
+```{r}
+#| echo: true
+#| label: load-data
+#| message: false
+#| output: false
+
+# impor pustaka tidyverse
+library(tidyverse)
+
+# baca CSV dengan data WVS
+wvs_cleaned <- read_csv("data-output/wvs_cleaned_v1.csv")
+
+# Konversi variabel kategorikal menjadi faktor
+columns_to_convert <- c("country", "religiousity", "sex", "marital_status", "employment")
+
+wvs_cleaned <- wvs_cleaned |> 
+    mutate(across(all_of(columns_to_convert), as_factor))
+
+# lihat sekilas data, perhatikan tipe datanya!
+glimpse(wvs_cleaned)
+```
+# Kedua Variabel Kategorikal - Uji $X^2$
+
+## Uji Chi-square Independensi
+
+Uji $X^2$ independensi mengevaluasi apakah terdapat hubungan yang signifikan secara statistik antara dua variabel kategorikal.
+
+Ini dilakukan dengan menganalisis tabel frekuensi (yaitu, tabel kontingensi) yang dibentuk oleh dua variabel kategorikal.
+
+**Contoh**: Apakah terdapat hubungan antara `religiousity` dan `country` dalam data WVS kita?
+
+Biasanya, kita bisa mulai dengan tabel kontingensi terlebih dahulu, kemudian visualisasi
+
+```{r}
+#| echo: true
+table(wvs_cleaned$religiousity, wvs_cleaned$country)
+```
+
+
+## Uji Chi-square Independensi - visualisasi data
+
+Kita bisa menggunakan barchart persen-bertumpuk untuk memvisualisasikan ini (ingat dari minggu lalu!)
+
+```{r}
+#| echo: true
+
+wvs_cleaned |> 
+    ggplot(aes(x = country, fill = religiousity)) +
+    geom_bar(position = "fill") +
+    labs(title = "Proportion of religiousity for each country") +
+    theme_minimal()
+
+```
+
+## Chi-Square: Contoh Masalah dan Hasil
+
+Apakah terdapat hubungan antara religiusitas dan negara?
+
+```{r}
+#| echo: true
+chisq.test(table(wvs_cleaned$religiousity, wvs_cleaned$country))
+```
+
+::: {style="font-size: 75%; width: 75%"}
+-   **X-squared** = koefisien
+-   **df** = derajat kebebasan
+-   **p-value** = probabilitas mendapatkan hasil yang lebih ekstrem dari yang diamati. Secara umum, jika nilai ini kurang dari tingkat signifikansi yang telah ditentukan (juga disebut alpha), hasilnya dianggap "signifikan secara statistik"
+:::
+
+*Bagaimana jika ada hipotesis? Bagaimana Anda menuliskannya dalam laporan?*
+
+# Kedua Variabel Kontinu - Korelasi
+
+## Korelasi
+
+Uji korelasi mengevaluasi kekuatan dan arah hubungan linear antara dua variabel. Koefisien dinyatakan dalam nilai antara -1 hingga 1, dengan 0 berarti tidak ada korelasi sama sekali.
+
+::: columns
+::: {.column width="33%"}
+**Pearson's** $r$ (r)
+
+-   Mengukur asosiasi antara dua variabel numerik kontinu
+-   Sensitif terhadap outlier
+-   Mengasumsikan normalitas dan/atau linearitas
+-   (*kemungkinan besar yang Anda pelajari di kelas)*
+:::
+
+::: {.column width="33%"}
+**Kendall's** $\tau$ (tau)
+
+-   Mengukur asosiasi antara dua variabel (ordinal-ordinal atau ordinal-kontinu)
+-   Kurang sensitif/lebih robust terhadap outlier
+-   Non-parametrik, tidak mengasumsikan normalitas dan/atau linearitas
+:::
+
+::: {.column width="33%"}
+**Spearman's** $\rho$ (rho)
+
+-   Mengukur asosiasi antara dua variabel (ordinal-ordinal atau ordinal-kontinu)
+-   Kurang sensitif/lebih robust terhadap outlier
+-   Non-parametrik, tidak mengasumsikan normalitas dan/atau linearitas
+:::
+:::
+
+Untuk info lebih lanjut, Anda dapat merujuk ke bacaan ini: [Measures of Association - How to Choose? (Harry Khamis, PhD)](https://journals.sagepub.com/doi/pdf/10.1177/8756479308317006){target="_blank"}
+
+## Korelasi: Contoh Masalah dan Hasil
+
+RQ: **Apakah terdapat korelasi yang signifikan antara kepuasan hidup dan kepuasan finansial?**
+
+Karena kedua variabel bersifat numerik dan kontinu, kita dapat menggunakan korelasi pearson.
+
+Mari mulai dengan memvisualisasikan data, yang dapat digunakan untuk mendukung penjelasan.
+
+```{r}
+#| echo: true
+#| output-location: slide
+#| 
+wvs_cleaned |> 
+    ggplot(aes(x = financial_satisfaction, y = life_satisfaction)) +
+    geom_jitter(color="maroon", alpha=0.5) +
+    geom_smooth(method = "lm", se = TRUE) # se menampilkan interval kepercayaan
+```
+
+## Melakukan Uji Korelasi
+
+```{r}
+#| echo: true
+#| output-location: column
+cor.test(wvs_cleaned$life_satisfaction, 
+         wvs_cleaned$financial_satisfaction, 
+         method = "pearson")
+```
+
+::: {style="font-size: 75%; width: 75%"}
+-   **cor** adalah **koefisien korelasi** - ini adalah angka yang ingin Anda laporkan.
+-   **t** adalah **statistik uji t**
+-   **df** adalah derajat kebebasan
+-   **p-value** adalah tingkat signifikansi dari **uji t**
+-   **conf.int** adalah **interval kepercayaan** dari koefisien pada 95%
+-   **sample estimates** adalah koefisien korelasi
+:::
+
+## Latihan Cek #1
+
+Apakah terdapat hubungan antara religiusitas dan kelompok usia? Apa pendapat Anda berdasarkan hasil ini?
+
+
+```{r}
+#| echo: true
+
+chisq.test(table(wvs_cleaned$religiousity, wvs_cleaned$age_group))
+
+```
+
+# Membandingkan Rata-rata Antar Kelompok - Uji T dan ANOVA
+
+## Uji T (T-Tests)
+
+**Uji t** adalah uji statistik yang digunakan untuk membandingkan rata-rata dari dua kelompok/sampel data kontinu dan menentukan apakah perbedaannya signifikan secara statistik.
+
+-   Uji *t* Student banyak digunakan ketika ukuran sampel cukup kecil (kurang dari sekitar 30) **atau** ketika standar deviasi populasi tidak diketahui.
+
+## 3 Jenis Uji T
+
+::: columns
+
+
+::: {.column width="40%"}
+**Uji T Dua Sampel / Sampel Independen**
+
+Digunakan untuk membandingkan rata-rata dari dua kelompok independen (seperti penelitian antar-subjek) untuk menentukan apakah perbedaannya signifikan.
+
+Contoh: Kelompok Pria vs Wanita, Plasebo vs Obat Sebenarnya.
+:::
+
+::: {.column width="30%"}
+**Uji T Sampel Berpasangan**
+
+Digunakan untuk membandingkan rata-rata dari dua kelompok yang berhubungan, seperti pengukuran berulang pada subjek yang sama (penelitian dalam-subjek).
+
+Contoh: Sebelum workshop vs Sesudah workshop.
+:::
+
+::: {.column width="30%"}
+**Uji T Satu Sampel**
+
+Menguji apakah rata-rata sampel tertentu (X̄) berbeda secara statistik dari rata-rata populasi yang diketahui atau dihipotesiskan (μ atau mu)
+:::
+:::
+
+
+## Uji T: Uji T Sampel Independen
+
+RQ: **Apakah terdapat perbedaan yang signifikan dalam kepuasan hidup antara laki-laki dan perempuan?**
+
+Mari kita ambil hanya kolom yang diperlukan dan dapatkan beberapa statistik deskriptif, khususnya jumlah sampel untuk setiap kelompok, serta rata-rata, standar deviasi, dan varians.
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+wvs_cleaned |> 
+    group_by(sex) |> 
+    summarise(total = n(), 
+              mean = mean(life_satisfaction),
+              variance = var(life_satisfaction),
+              stdeviation = sd(life_satisfaction))
+```
+
+## Visualisasi Perbedaan antara Dua Sampel
+
+Varians akan lebih mudah dilihat ketika kita memvisualisasikannya juga. Seperti yang bisa kita lihat, varians untuk kedua kelompok hampir sama. Ini menunjukkan bahwa varians mungkin homogen.
+
+```{r}
+#| echo: true
+#| output-location: fragment
+#| 
+wvs_cleaned |> 
+    ggplot(aes(x = sex, y = life_satisfaction)) +
+    geom_boxplot() +
+    theme_minimal()
+```
+
+## Melakukan Uji T Sampel Independen
+
+Ingat, hipotesisnya adalah:
+
+::: columns
+::: {.column width="50%"}
+$H_0$: **Tidak ada** perbedaan yang signifikan dalam rata-rata kepuasan hidup antara partisipan laki-laki dan perempuan.
+:::
+
+::: {.column width="50%"}
+$H_1$: Terdapat perbedaan yang signifikan dalam rata-rata kepuasan hidup antara partisipan laki-laki dan perempuan.
+:::
+:::
+
+```{r}
+#| echo: true
+#| output-location: column
+
+t.test(life_satisfaction ~ sex, 
+       data = wvs_cleaned, 
+       var.equal = FALSE)
+```
+::: {.callout-tip appearance="simple"}
+
+### Perhatikan bahwa kita menggunakan uji t Welch, bukan uji t Student
+
+Uji t Welch (juga dikenal sebagai **uji t varians tidak sama**), adalah alternatif yang lebih robust dari uji t Student. Uji ini sering digunakan ketika dua sampel memiliki varians yang tidak sama dan kemungkinan ukuran sampel yang tidak sama. 
+
+:::
+
+
+## Uji T: Uji T Sampel Berpasangan
+
+Sayangnya, data kita tidak cocok untuk uji T berpasangan. Untuk tujuan demonstrasi, kita akan menggunakan dataset sampel bawaan yang disebut `sleep` dari dataset dasar R.
+
+Dataset sudah dimuat, jadi Anda bisa langsung menggunakannya!
+
+-   ketik `View(sleep)` di konsol R Anda (kiri bawah), lalu tekan enter. RStudio akan membuka pratinjau dataset.
+-   ketik `?sleep` di konsol R Anda untuk melihat halaman bantuan (alias vignette) tentang dataset ini.
+-   ketik `data()` di konsol Anda untuk melihat dataset apa saja yang tersedia untuk latihan!
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+sleep <- as_tibble(sleep)
+print(sleep)
+
+```
+
+## Visualisasi sebelum (grup 1) dan sesudah (grup 2)
+
+```{r}
+#| echo: true
+
+sleep |> 
+    group_by(group) |> 
+    summarise(n = n(), mean = mean(extra), sd = sd(extra), variance = var(extra))
+```
+
+
+Visualisasi: 
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+sleep |> 
+    ggplot(aes(x = group, y = extra)) +
+    geom_boxplot() +
+    theme_minimal()
+```
+
+## Transformasi Bentuk Data
+
+Data dalam format panjang (long). Mari kita transformasi ke format lebar (wide) agar kita dapat melakukan analisis dengan lebih mudah.
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+sleep_wide <- sleep |> 
+    pivot_wider(names_from = group, values_from = extra, 
+                names_prefix = "group_")
+print(sleep_wide)
+
+```
+
+## Melakukan Uji T Sampel Berpasangan
+
+Ingat, hipotesisnya adalah:
+
+::: columns
+::: {.column width="50%"}
+$H_0$: Tidak ada perbedaan yang signifikan dalam peningkatan jam tidur.
+:::
+
+::: {.column width="50%"}
+$H_1$: Terdapat perbedaan yang signifikan dalam peningkatan jam tidur.
+:::
+:::
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+t.test(Pair(sleep_wide$group_1, sleep_wide$group_2) ~ 1,
+       data = sleep)
+
+```
+
+## Uji T: Uji T Satu Sampel
+
+RQ: **Apakah rata-rata kepuasan hidup dalam sampel kita berbeda secara signifikan dari rata-rata global 6,5?**
+
+Mari mulai dengan memvisualisasikan data
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+wvs_cleaned |> 
+    ggplot(aes(y = life_satisfaction)) +
+    geom_boxplot(width = 0.2) + 
+    geom_hline(yintercept = 6.5, color="red") 
+```
+
+## Melakukan Uji T Satu Sampel
+
+```{r}
+#| echo: true
+#| output-location: fragment
+global_mean_satisfaction = 6.5  
+
+t.test(wvs_cleaned$life_satisfaction,          
+       alternative = "two.sided", 
+       mu = global_mean_satisfaction)
+
+```
+
+## Latihan Cek #2
+
+Lihat data berikut dari `CO2`, uji T mana yang harus digunakan jika kita ingin membandingkan perbedaan serapan karbon dioksida `uptake` antara kedua perlakuan? 
+
+```{r}
+
+summary(CO2)
+
+```
+Visualisasi data:
+
+```{r}
+print(CO2)
+```
+
+## ANOVA (Analisis Varians)
+
+ANOVA (Analisis Varians) adalah uji statistik yang digunakan untuk membandingkan rata-rata dari tiga atau lebih kelompok atau sampel dan menentukan apakah perbedaannya signifikan secara statistik.
+
+Ada dua ANOVA yang 'umum':
+
+::: incremental
+-   **ANOVA Satu Arah**: membandingkan rata-rata di dua atau lebih kelompok independen (level) dari [**satu**]{.underline} variabel independen.
+-   **ANOVA Dua Arah**: membandingkan rata-rata di dua atau lebih kelompok independen (level) dari [**dua**]{.underline} variabel independen. ()
+-   Jenis ANOVA lain yang mungkin Anda temui: Repeated measures ANOVA, Multivariate ANOVA (MANOVA), ANCOVA, dll.
+:::
+
+## ANOVA Satu Arah: Contoh Masalah dan Hasil
+
+RQ: **Apakah terdapat perbedaan yang signifikan dalam kepuasan hidup antar negara yang berbeda?**
+
+Mari visualisasikan data terlebih dahulu!
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_cleaned |> 
+    ggplot(aes(x = country, y = life_satisfaction)) +
+    geom_boxplot() +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Melakukan Uji ANOVA Satu Arah
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+satisfaction_country_anova <- aov(life_satisfaction ~ country, data = wvs_cleaned)
+summary(satisfaction_country_anova)
+```
+
+::: {style="font-size: 75%; width: 75%"}
+-   **F-value**: nilai koefisien
+-   **Pr(\>F)**: nilai p (p-value)
+-   **Sum Sq**: Jumlah Kuadrat (Sum of Squares)
+-   **Mean Sq** : Rata-rata Kuadrat (Mean Squares)
+-   **Df**: Derajat Kebebasan (Degrees of Freedom)
+:::
+
+## Uji Post-hoc (hanya jika hasilnya signifikan)
+
+Jika uji ANOVA Anda menunjukkan hasil yang signifikan, langkah selanjutnya adalah mencari tahu pasangan kategori mana yang menghasilkan hasil signifikan.
+
+Tukey's Honest Significant Difference (HSD) dapat membantu kita mencari tahu! 
+
+```{r}
+#| echo: true
+#| output-location: fragment
+TukeyHSD(satisfaction_country_anova)
+```
+
+## Asumsi ANOVA
+
+1.  Variabel Dependen harus berupa variabel kontinu
+
+2.  Variabel Independen harus berupa variabel kategorikal
+
+3.  Observasi untuk Variabel Independen harus saling independen
+
+4.  Distribusi Variabel Dependen harus mendekati normal -- semakin penting jika ukuran sampel kecil.
+
+    -   Anda dapat memverifikasi ini dengan memvisualisasikan data dalam histogram, atau menggunakan Uji Shapiro-Wilk, antara lain
+
+5.  Varians untuk setiap kombinasi kelompok harus kira-kira sama -- juga disebut sebagai "homogenitas varians" atau [**homoskedastisitas**]{.underline}.
+
+    -   Salah satu cara untuk memverifikasi ini adalah menggunakan Uji Levene
+
+6.  Tidak ada outlier yang signifikan
+
+## ANOVA Dua Arah: Contoh Masalah dan Hasil
+
+RQ: **Apakah terdapat perbedaan yang signifikan dalam kepuasan hidup berdasarkan religiusitas dan negara?**
+
+Mari visualisasikan data!
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_cleaned |> 
+    ggplot(aes(x = religiousity, y = life_satisfaction)) +
+    geom_boxplot() +
+    facet_wrap(~ country) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## Melakukan Uji ANOVA Dua Arah (Model Aditif)
+
+```{r}
+#| echo: true
+#| output-location: fragment
+satisfaction_relig_country_anova <- aov(life_satisfaction ~ religiousity + country, 
+                                    data = wvs_cleaned)
+summary(satisfaction_relig_country_anova)
+```
+
+## Uji Post-hoc untuk ANOVA Dua Arah
+
+```{r}
+#| echo: true
+#| output-location: fragment
+TukeyHSD(satisfaction_relig_country_anova)
+```
+
+## Melakukan Uji ANOVA Dua Arah (dengan Interaksi)
+
+"Dengan interaksi" berarti kita menguji apakah efek satu variabel (religiusitas) terhadap hasil (kepuasan hidup) bergantung pada level variabel lainnya (negara), atau sebaliknya. Untuk kode R, kita menggunakan `religiousity * country` sebagai ganti `religiousity + country`
+
+```{r}
+#| echo: true
+#| output-location: fragment
+satisfaction_relig_country_anova <- aov(life_satisfaction ~ religiousity * country, 
+                                    data = wvs_cleaned)
+summary(satisfaction_relig_country_anova)
+```
+
+## Plot Interaksi
+
+Untuk melihat efek ini dengan lebih baik, mari kita plot interaksinya.
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_cleaned |> 
+    ggplot(aes(x = religiousity, y = life_satisfaction, 
+                          group = country, color = country)) + # garis akan dikelompokkan dan diwarnai berdasarkan negara
+    stat_summary(fun = mean, geom = "point") + # Tambahkan titik untuk menunjukkan rata-rata life_satisfaction untuk setiap religiusitas per negara
+    stat_summary(fun = mean, geom = "line") + # Hubungkan titik-titik dengan garis 
+    theme_minimal()
+    
+```
+
+## Menginterpretasikan Plot Interaksi
+
+Beberapa pengamatan yang bisa kita buat:
+
+-   Pola Selandia Baru sangat berbeda dari dua negara lainnya; NZ menunjukkan kepuasan hidup tertinggi untuk "Not a religious person" tetapi turun tajam untuk "A religious person", sementara untuk Kanada dan Singapura, terdapat pola serupa dengan puncak pada "A religious person"
+-   Interaksi paling terlihat pada bagaimana orang religius vs non-religius berbeda antar negara, dengan perbedaan terbesar antar negara muncul di antara orang-orang non-religius. 
+-   Hubungan antara religiusitas dan kepuasan hidup jelas bervariasi berdasarkan negara. Kita mengetahui ini karena garis-garisnya tidak sejajar satu sama lain. 
+
+
+
+# Rekap
+
+::: incremental
+
+- Distribusi data, distribusi normal dan distribusi miring (skewed).
+
+- Gunakan uji independensi X2, chisq.test(), untuk mengevaluasi apakah terdapat hubungan yang signifikan secara statistik antara dua variabel kategorikal.
+
+- Gunakan uji korelasi, cor.test(), untuk mengevaluasi kekuatan dan arah hubungan linear antara dua variabel. Koefisien dinyatakan dalam nilai antara -1 hingga 1, dengan 0 berarti tidak ada korelasi sama sekali.
+
+- Gunakan t-test() untuk membandingkan rata-rata dari dua kelompok data kontinu dan menentukan apakah perbedaannya signifikan secara statistik.
+
+- Tiga jenis uji t yaitu, uji t satu sampel, uji t sampel independen, dan uji t sampel berpasangan.
+
+- Gunakan ANOVA (Analisis Varians) untuk membandingkan rata-rata dari tiga atau lebih kelompok atau sampel dan menentukan apakah perbedaannya signifikan secara statistik.
+
+
+:::
+
+# Akhir Sesi 4!
+
+Sesi berikutnya: Regresi Linear dan Logistik
+
+# Lampiran
+
+- Pelaporan dengan apaTables
+- Asumsi ANOVA
+
+## Pelaporan dengan apaTables
+
+`apaTables` adalah paket yang akan menghasilkan tabel laporan berformat APA untuk korelasi, ANOVA, dan regresi. Paket ini memiliki kustomisasi terbatas dan sedikit variasi tabel. Dokumentasi online adalah untuk versi "development" yang bukan yang akan kita dapatkan jika menginstal secara normal dengan `install.packages()`, jadi kita perlu lebih mengandalkan vignette. [**Lihat dokumentasinya di sini**](https://dstanley4.github.io/apaTables/index.html)
+
+
+Contoh: dapatkan tabel korelasi untuk `political_scale`, `life_satisfaction`, dan `financial_satisfaction`
+
+```r
+library(apaTables)
+
+wvs_cleaned |> 
+    select(life_satisfaction, financial_satisfaction, political_scale) |> 
+    apa.cor.table( table.number = 1, filename = "fig-output/table-cor.doc")
+```
+
+## Pelaporan dengan gtsummary
+
+Paket populer lainnya adalah `gt` (singkatan dari "great tables") dan 'add-on'-nya, `gtsummary`. Paket ini memiliki banyak kustomisasi (yang bisa membingungkan!) tetapi untungnya dokumentasinya cukup baik dan banyak contoh kode. [**Lihat dokumentasinya di sini**](https://www.danieldsjoberg.com/gtsummary/index.html)
+
+Contoh: dapatkan tabel perbedaan rata-rata untuk `political_scale`, `life_satisfaction`, dan `financial_satisfaction`, dikelompokkan berdasarkan `sex`
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+library(gtsummary)
+
+wvs_cleaned |> 
+    dplyr::select(life_satisfaction, financial_satisfaction, political_scale, sex) |> 
+    tbl_summary(by = sex) |> 
+    add_difference()
+```
+
+## Asumsi ANOVA
+
+1.  Variabel Dependen harus berupa variabel kontinu
+
+2.  Variabel Independen harus berupa variabel kategorikal
+
+3.  Observasi untuk Variabel Independen harus saling independen
+
+4.  Distribusi Variabel Dependen harus mendekati normal -- semakin penting jika ukuran sampel kecil.
+
+    -   Anda dapat memverifikasi ini dengan memvisualisasikan data dalam histogram, atau menggunakan Uji Shapiro-Wilk, antara lain
+
+5.  Varians untuk setiap kombinasi kelompok harus kira-kira sama -- juga disebut sebagai "homogenitas varians" atau [**homoskedastisitas**]{.underline}.
+
+    -   Salah satu cara untuk memverifikasi ini adalah menggunakan Uji Levene
+
+6.  Tidak ada outlier yang signifikan
+
+## Verifikasi Asumsi: Uji Homogenitas Varians
+
+**Uji Levene** untuk menguji homogenitas varians yaitu homoskedastisitas
+
+```{r}
+#| echo: true
+#| output-location: column
+
+library(car)
+leveneTest(life_satisfaction ~ country, 
+           data = wvs_cleaned)
+```
+
+Hasil menunjukkan bahwa nilai p lebih dari tingkat signifikansi 0,05, yang menunjukkan bahwa TIDAK ada perbedaan yang signifikan dalam varians antar kelompok. Oleh karena itu, asumsi homogenitas varians terpenuhi.
+
+## Plot Residual: Residual vs Fitted
+
+Ketika kita memplot residual[^1], kita juga dapat melihat beberapa outlier:
+
+[^1]: Residual = perbedaan antara nilai yang diamati dan rata-rata semua nilai untuk kelompok tersebut.
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+plot(satisfaction_country_anova, 1)
+
+```
+
+## Verifikasi Asumsi: Uji Normalitas
+
+**Uji Shapiro-Wilk** untuk menguji normalitas.
+
+```{r}
+#| echo: true
+#| output-location: column
+
+library(car)
+set.seed(123) # tetapkan seed untuk reproduktibilitas, pastikan pengambilan sampel selalu sama.
+shapiro.test(sample(residuals(satisfaction_country_anova), 5000))
+```
+
+Nilai p dari uji Shapiro-Wilk kurang dari tingkat signifikansi 0,05, yang menunjukkan bahwa data secara signifikan menyimpang dari normalitas. Oleh karena itu, asumsi normalitas TIDAK terpenuhi.
+
+## Plot Residual: Q-Q Plot 
+
+Kita dapat melihat ini lebih baik ketika kita memplot residual:
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+plot(satisfaction_country_anova, 2)
+
+```
+
+## Ketika Asumsi Tidak Terpenuhi...
+
+Kita dapat menggunakan **uji jumlah peringkat Kruskal-Wallis** sebagai alternatif non-parametrik dari ANOVA Satu Arah!
+
+```{r}
+#| echo: true 
+
+kruskal.test(life_satisfaction ~ country, data = wvs_cleaned)
+```
+
+Alternatif lain: **ANOVA Welch** untuk ketika asumsi homoskedastisitas tidak terpenuhi.
+
+```{r}
+#| echo: true
+
+oneway.test(life_satisfaction ~ country, data = wvs_cleaned, var.equal = FALSE)
+```
+
+## Latihan untuk ANOVA Dua Arah
+
+Apakah terdapat perbedaan yang signifikan dalam kecenderungan politik antar kelompok usia yang berbeda?
+
+-   Visualisasikan data juga
+-   Uji normalitas dan homoskedastisitas, dan pilih uji yang sesuai
+
+
+```{r}
+#| code-fold: true
+#| echo: true
+#| code-summary: "Show answer"
+
+poli_age_anova <- aov(political_scale ~ age_group, data = wvs_cleaned)
+summary(poli_age_anova)
+```
+---
+
+TukeyHSD:
+
+```{r}
+#| code-fold: true
+#| echo: true
+#| code-summary: "Show answer"
+
+TukeyHSD(poli_age_anova)
+```

@@ -1,0 +1,118 @@
+---
+title: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+subtitle: "Sabtu, 18 April 2026 — Sekretariat PP ISEI, Jakarta Selatan"
+format: html
+---
+
+## Selamat Datang!
+
+**Upgrade skill risetmu dan siapkan publikasi ilmiah yang lebih kuat!**
+
+Situs ini merupakan repositori materi pelatihan (slide, kode, dan dataset) untuk **ISEI Workshop: Analisis Regresi dan Structural Equation Modelling (SEM) dengan RStudio** — pelatihan praktis yang dirancang untuk peneliti, dosen, mahasiswa pascasarjana, dan praktisi yang ingin meningkatkan kualitas analisis data untuk publikasi ilmiah.
+
+### Dalam workshop ini Anda akan belajar:
+
+- Konsep dan praktik analisis regresi
+- Structural Equation Modelling (SEM) menggunakan RStudio
+- Tips analisis data untuk meningkatkan peluang publikasi ilmiah
+
+## Narasumber
+
+Bersama narasumber berpengalaman dari akademisi.
+
+## Informasi Workshop
+
+| | |
+|---|---|
+| **Tanggal** | Sabtu, 18 April 2026 |
+| **Waktu** | 08.30 – 15.30 WIB |
+| **Tempat** | Sekretariat PP ISEI, Jakarta Selatan ([Peta Lokasi](https://bit.ly/KantorSekretariatISEI)) |
+| **Kapasitas** | 20 orang per sesi |
+| **Investasi** | Rp1.000.000/orang |
+
+**Fasilitas yang termasuk:**
+
+- ✔ E-Certificate Pelatihan
+- ✔ Snack Pagi
+- ✔ Makan Siang
+- ✔ Workshop Kit
+
+## Jadwal Workshop
+
+*Klik pada tautan di kolom "Materi" untuk mengakses slide. Materi akan tersedia secara bertahap.*
+
+::: table-schedule
+| Sesi | Waktu | Materi | Deskripsi |
+|------------------|------------------|------------------|--------------------|
+| \~ | Sebelum workshop | Persiapan | Selesaikan [kegiatan pra-workshop](#kegiatan-pra-workshop) |
+| 1 | 08.30 – 09.30 | [**Pengantar R dan RStudio**](01-intro.html) | Pengenalan RStudio, tipe data dasar dan struktur data di R, serta mengimpor file data. |
+| 2 | 09.30 – 10.15 | [**Pengolahan Data dengan Tidyverse**](02-tidyverse.html) | Manipulasi data dengan tidyverse: filter, select, mutate, dan pengelompokan data. |
+| \~ | 10.15 – 10.30 | ☕ *Coffee Break* | |
+| 3 | 10.30 – 12.00 | [**Visualisasi Data dan Statistik Deskriptif**](03-visualization.html) | Membuat visualisasi dengan ggplot2 dan menghitung statistik deskriptif. |
+| \~ | 12.00 – 13.00 | 🍽️ *Makan Siang* | |
+| 4 | 13.00 – 14.30 | [**Uji Statistik Inferensial**](04-stats.html) | Korelasi, t-test, ANOVA, dan interpretasi hasil statistik di R. |
+| 5 | 14.30 – 15.30 | [**Analisis Regresi dan Penyajian Hasil**](05-more-stats.html) | Regresi linear, regresi logistik, dan paket-paket R untuk menyajikan tabel hasil analisis. |
+| \~ | Setelah workshop | | [Latihan pasca-workshop](exercises.html) |
+:::
+
+```{=html5}
+<style type="text/css">
+    .table-schedule {width: 100%;}
+    .table-schedule th:nth-child(1), .table-schedule td:nth-child(1) { width: 8%; }
+    .table-schedule th:nth-child(2), .table-schedule td:nth-child(2) { width: 15%; }
+    .table-schedule th:nth-child(3), .table-schedule td:nth-child(3) { width: 30%; }
+    .table-schedule th:nth-child(4), .table-schedule td:nth-child(4) { width: 47%; }
+</style>
+```
+
+## Kegiatan Pra-Workshop {#kegiatan-pra-workshop}
+
+### Tentang R dan RStudio
+
+**R** dan **RStudio** adalah dua alat yang berbeda namun saling melengkapi yang digunakan dalam analisis data dan komputasi statistik.
+
+**R** adalah bahasa pemrograman dan lingkungan perangkat lunak yang dirancang khusus untuk komputasi statistik dan grafis. R adalah alat inti yang memproses data dan melakukan analisis.
+
+**RStudio** adalah Integrated Development Environment (IDE) untuk R. Anggaplah sebagai antarmuka yang ramah pengguna yang memudahkan penulisan kode R, pengelolaan proyek, dan visualisasi output. RStudio tidak wajib untuk menggunakan R, tetapi sangat meningkatkan pengalaman pemrograman R!
+
+::: callout-important
+**Selalu** instal R terlebih dahulu sebelum menginstal RStudio, karena RStudio membutuhkan R untuk berfungsi.
+:::
+
+### Langkah 1: Instal R
+
+1.  Buka <https://cran.rstudio.com/>
+
+2.  Pilih sistem operasi Anda (Windows, Mac, atau Linux)
+
+3.  Unduh dan instal versi terbaru R
+
+### Langkah 2: Instal RStudio
+
+1.  Kunjungi <https://posit.co/download/rstudio-desktop/>
+
+2.  Gulir ke bawah ke "Download RStudio Desktop"
+
+3.  Klik "Download" dan instal versi terbaru RStudio
+
+### Langkah 3: Instal paket-paket yang dibutuhkan
+
+::: callout-note
+**Paket (packages)** di R adalah kumpulan alat, fungsi, dan dataset tambahan yang memperluas kemampuan R. Paket dibuat oleh kontributor di komunitas R.
+
+Analoginya, R seperti smartphone, dan paket seperti aplikasi yang Anda unduh untuk menambah fitur baru. Setiap paket dirancang untuk membantu tugas atau analisis tertentu, seperti membuat grafik, menganalisis jenis data tertentu, atau melakukan uji statistik lanjutan.
+
+Paket menghemat waktu dan memanfaatkan alat buatan ahli tanpa harus menulis kode kompleks dari nol!
+:::
+
+1.  Buka RStudio
+
+2.  Salin kode berikut: `install.packages(c("car", "rmarkdown", "huxtable", "gt", "gtsummary", "apaTables", "lavaan", "semPlot", "tidyverse"))`
+
+3.  Tempel di tab **Console** (lihat gambar di bawah)
+
+4.  Tekan Enter. RStudio akan memproses instalasi paket-paket yang dibutuhkan.
+
+![](images/install-packages.jpg)
+
+

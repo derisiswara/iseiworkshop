@@ -1,0 +1,43 @@
+/*-- scss:defaults --*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+$font-family-sans-serif: "Inter", sans-serif;
+$presentation-font-size-root: 36px;
+
+/*-- scss:rules --*/
+
+.reveal code.sourceCode {
+    font-size: 1.5em;
+}
+
+.reveal pre.sourceCode code {
+    font-size: 1.5em;
+}
+
+.reveal pre code {
+    font-size: 1.5em;
+    padding: 15px;
+    background-color: #F0F0F0;
+    line-height: 1.2;
+}
+
+.reveal .slide-logo {
+  display: block;
+  position: fixed;
+  height: 200px;
+}
+
+div.csl-entry {
+    clear: both;
+    margin-bottom: 1em;
+}
+
+div.csl-block {
+    text-indent: 0;
+    font-style: italic;
+}
+
+details>summary {
+    color: darkorange;
+}

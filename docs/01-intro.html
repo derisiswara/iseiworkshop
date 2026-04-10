@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
+
+  <meta name="author" content="ISEI Workshop">
+  <title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio – Pengantar R dan RStudio</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-a7f10681c9b5f297715cb6ded155c4c3.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Pengantar R dan RStudio</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+ISEI Workshop 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="selamat-datang" class="title-slide slide level1 center">
+<h1>Selamat Datang!</h1>
+
+</section>
+<section id="pendahuluan" class="slide level2">
+<h2>Pendahuluan</h2>
+<ul>
+<li><p>Tentang workshop ini:</p>
+<ul>
+<li><p>Format live-coding; silakan ikuti bersama!</p></li>
+<li><p>Tujuan workshop: memberikan dasar-dasar yang cukup (setidaknya sampai ChatGPT tidak bisa membohongi Anda dengan mudah) dan kepercayaan diri untuk mengeksplorasi R secara mandiri.</p></li>
+<li><p>Jangan takut untuk bertanya! Kita semua di sini untuk belajar.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="garis-besar-workshop" class="slide level2">
+<h2>Garis Besar Workshop</h2>
+<p>Workshop ini disusun mengikuti alur kerja berikut saat bekerja dengan data <img data-src="images/data-workflow.png"></p>
+
+<aside><div>
+<p>Gambar diambil dari <a href="https://r4ds.hadley.nz/intro">R for Data Science (2e)</a> oleh Hadley Wickham.</p>
+</div></aside></section>
+<section id="garis-besar-seri-workshop" class="slide level2">
+<h2>Garis Besar Seri Workshop</h2>
+<ol type="1">
+<li class="fragment"><strong>Impor</strong> data ke R, yaitu mengambil data (dari file, API, dll.) dan memuatnya ke dalam dataframe di R</li>
+<li class="fragment"><strong>Rapikan (Tidy)</strong> data yang sudah diimpor.
+<ul>
+<li class="fragment">Tidy = menyimpan dalam bentuk konsisten yang sesuai dengan semantik dataset.</li>
+<li class="fragment">Tidy data = setiap kolom adalah variabel, setiap baris adalah observasi</li>
+</ul></li>
+<li class="fragment">Setelah data rapi, kita dapat <strong>mentransformasi</strong>. Transformasi meliputi:
+<ul>
+<li class="fragment">mempersempit observasi yang diminati (seperti semua orang di satu kota atau semua data tahun lalu)</li>
+<li class="fragment">membuat variabel baru dari variabel yang ada (seperti menghitung kecepatan dari jarak dan waktu)</li>
+<li class="fragment">menghitung statistik ringkasan (seperti jumlah atau rata-rata).</li>
+</ul></li>
+<li class="fragment">Setelah memiliki data rapi dengan informasi yang dibutuhkan, kita dapat <strong>memvisualisasikan</strong> dan <strong>memodelkan</strong>.</li>
+<li class="fragment"><strong>Mengkomunikasikan</strong> hasilnya. Tidak peduli sebaik apa model dan visualisasi Anda memahami data, hasilnya perlu dikomunikasikan kepada orang lain.</li>
+</ol>
+</section>
+<section id="rencana-hari-ini" class="slide level2">
+<h2>Rencana Hari Ini</h2>
+<ul>
+<li>R dan RStudio</li>
+<li>Sebelum coding</li>
+<li>Objek dan Nilai di R</li>
+<li><strong>Tipe</strong> data</li>
+<li>Fungsi dan paket</li>
+<li><strong>Struktur</strong> data</li>
+<li>Mengeksplorasi dataset</li>
+<li>Tips troubleshooting</li>
+<li>Rekap &amp; umpan balik</li>
+</ul>
+</section>
+<section id="apa-itu-r-apa-itu-rstudio" class="slide level2">
+<h2>Apa itu R? Apa itu RStudio?</h2>
+<p><strong>R</strong>: R adalah bahasa pemrograman open-source yang dikembangkan untuk analisis statistik dan visualisasi. Komunitas berbagi kode R dan membuat shortcut.</p>
+<p><strong>RStudio:</strong> Lingkungan perangkat lunak R yaitu RStudio adalah tempat kita berinteraksi lebih mudah dengan bahasa dan skrip R.</p>
+<div class="fragment">
+<p>Anda perlu menginstal <strong>keduanya</strong> untuk workshop ini. Kunjungi <a href="https://posit.co/download/rstudio-desktop" class="uri">https://posit.co/download/rstudio-desktop</a> untuk mengunduh dan menginstal keduanya jika belum. Ingat: Instal R terlebih dahulu baru kemudian RStudio.</p>
+<p>Lihat situs web workshop untuk panduan langkah demi langkah.</p>
+</div>
+</section>
+<section id="tur-rstudio" class="slide level2">
+<h2>Tur RStudio</h2>
+<p>Pertama, kita perlu familiar dengan antarmuka RStudio. Kita akan menggunakan RStudio untuk menulis kode, menavigasi file di komputer, memeriksa variabel yang kita buat, dan memvisualisasikan plot yang kita hasilkan.</p>
+
+<img data-src="images/rstudio-tour.jpg" class="r-stretch quarto-figure-center"><p class="caption">Tampilan R Studio</p></section>
+<section id="sebelum-coding" class="slide level2">
+<h2>Sebelum Coding</h2>
+<ul>
+<li>Mengatur direktori kerja (working directory)</li>
+<li>Membuat proyek</li>
+<li>Membuat folder dan file</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="mengatur-direktori-kerja-working-directory">Mengatur Direktori Kerja (Working Directory)</h3>
+<ul>
+<li><p>Working directory -&gt; tempat R mencari file (skrip, data, dll.). Tetap terorganisir dengan semua file dan folder terkait proyek tersimpan di satu tempat.</p>
+<ul>
+<li><p>Secara default, akan berada di Desktop Anda.</p></li>
+<li><p>Praktik terbaik adalah menggunakan <strong>R Project</strong> untuk mengorganisir file dan data Anda.</p></li>
+<li><p>Saat menggunakan R Project, working directory = folder proyek.</p></li>
+</ul></li>
+</ul>
+<h3 id="membuat-proyek-untuk-workshop-ini">Membuat Proyek untuk Workshop Ini</h3>
+<ol type="1">
+<li><p>Buka <code>File</code> &gt; <code>New project</code>. Pilih <code>New directory</code>, lalu <code>New project</code></p></li>
+<li><p>Masukkan <code>workshop-isei-regresi-sem</code> sebagai nama folder baru dan pilih lokasi penyimpanan, misalnya <code>Desktop</code> atau <code>Documents</code>. Ini akan menjadi working directory Anda selama workshop!</p></li>
+</ol>
+</section>
+<section class="slide level2">
+
+<h3 id="membuat-folder-di-dalam-direktori-kerja">Membuat Folder di Dalam Direktori Kerja</h3>
+<ul>
+<li><p><code>data</code> - kita akan menyimpan data mentah di sini. <strong>Praktik terbaik adalah menjaga data di sini tidak diubah.</strong></p></li>
+<li><p><code>data-output</code> - jika perlu memodifikasi data mentah, simpan versi yang dimodifikasi di sini.</p></li>
+<li><p><code>fig-output</code> - kita akan menyimpan semua grafik yang dibuat di sini!</p></li>
+</ul>
+<h3 id="catatan">Catatan</h3>
+<p>Jangan:</p>
+<ul>
+<li><p>Jangan taruh proyek R di dalam folder OneDrive karena kadang menyebabkan masalah.</p></li>
+<li><p>Nama folder/file harus menghindari spasi, simbol, dan karakter khusus. Gunakan huruf kecil semua.</p></li>
+</ul>
+<p>Lakukan:</p>
+<ul>
+<li>Jika working directory tidak sesuai, ubah di antarmuka RStudio dengan menavigasi ke lokasi yang benar di file browser, klik ikon gear biru “More”, dan pilih “Set As Working Directory”.</li>
+</ul>
+</section></section>
+<section>
+<section id="mari-mulai-coding" class="title-slide slide level1 center">
+<h1>Mari Mulai Coding!</h1>
+<p>Buat skrip R baru - <code>File</code> &gt; <code>New File</code> &gt; <code>R script</code>.</p>
+<p>RStudio memungkinkan Anda mengeksekusi perintah langsung dari editor skrip dengan shortcut Ctrl + Enter (di Mac, Cmd + Return).</p>
+<p>Anda bisa mengetik perintah langsung di konsol dan tekan Enter untuk mengeksekusi, tetapi perintah tersebut akan hilang saat sesi ditutup. Lebih baik mengetik perintah di editor skrip dan menyimpan skrip tersebut.</p>
+<p><strong>Catatan: RStudio tidak menyimpan otomatis, jadi ingat untuk menyimpan secara berkala!</strong></p>
+</section>
+<section id="objek-dan-nilai-di-r" class="slide level2">
+<h2>Objek dan Nilai di R</h2>
+<p>In this line of code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>country_name <span class="ot">&lt;-</span> <span class="st">"Singapore"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>"Singapore"</code> adalah sebuah <strong>nilai (value)</strong>. Ini bisa berupa tipe data karakter, numerik, atau boolean. (lebih lanjut segera)</li>
+<li><code>country_name</code> adalah <strong>objek</strong> tempat kita menyimpan nilai ini. Ini agar kita bisa menyimpan nilai untuk digunakan nanti.</li>
+<li><code>&lt;-</code> adalah operator penugasan (assignment) untuk menetapkan nilai ke objek.
+<ul>
+<li>Anda juga bisa menggunakan <code>=</code>, tetapi umumnya di R, <code>&lt;-</code> adalah konvensi.</li>
+<li>Shortcut keyboard: <code>Alt</code> + <code>-</code> di Windows (<code>Option</code> + <code>-</code> di Mac)</li>
+</ul></li>
+</ul>
+</section>
+<section id="objek-dan-nilai-di-r-1" class="slide level2">
+<h2>Objek dan Nilai di R</h2>
+<p>In this line of code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>country_name <span class="ot">&lt;-</span> <span class="st">"Singapore"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p><code>"Singapore"</code> adalah sebuah <strong>nilai (value)</strong>. Ini bisa berupa tipe data karakter, numerik, atau boolean.</p></li>
+<li><p><code>country_name</code> adalah <strong>objek</strong> tempat kita menyimpan nilai ini.</p></li>
+<li><p><code>&lt;-</code> adalah operator penugasan untuk menetapkan nilai ke objek.</p>
+<ul>
+<li>Anda juga bisa menggunakan <code>=</code>, tetapi umumnya di R, <code>&lt;-</code> adalah konvensi.</li>
+<li>Shortcut keyboard: <code>Alt</code> + <code>-</code> di Windows (<code>Option</code> + <code>-</code> di Mac)</li>
+</ul></li>
+<li><p>Aturan penamaan objek:</p>
+<ul>
+<li><p>Tidak boleh dimulai dengan angka</p></li>
+<li><p>Peka huruf besar/kecil (case sensitive)</p></li>
+<li><p>Tidak boleh ada spasi</p></li>
+<li><p>Beberapa kata dicadangkan (reserved words)</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="penyegaran-tipe-data-kuantitatif" class="slide level2">
+<h2>Penyegaran: Tipe Data Kuantitatif</h2>
+<ul>
+<li><p><u><strong>Data Non-Kontinu</strong></u></p>
+<ul>
+<li><p><strong>Nominal/Kategorikal</strong>: Data non-urut, non-numerik, digunakan untuk merepresentasikan atribut kualitatif.</p>
+<ul>
+<li>Contoh: kebangsaan, kelurahan, status pekerjaan</li>
+</ul></li>
+<li><p><strong>Ordinal</strong>: Data non-numerik berurutan.</p>
+<ul>
+<li>Contoh: Peringkat Nutri-grade, frekuensi olahraga (harian, mingguan, dua mingguan)</li>
+</ul></li>
+<li><p><strong>Diskrit</strong>: Data numerik yang hanya bisa mengambil nilai tertentu (biasanya bilangan bulat)</p>
+<ul>
+<li>Contoh: Ukuran sepatu, ukuran pakaian</li>
+</ul></li>
+<li><p><strong>Biner</strong>: Data nominal dengan hanya dua kemungkinan hasil</p>
+<ul>
+<li>Contoh: lulus/gagal, ya/tidak, selamat/tidak selamat</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<ul>
+<li><p><u><strong>Data Kontinu</strong></u></p>
+<ul>
+<li><p><strong>Interval</strong>: Data numerik yang bisa mengambil nilai apa pun dalam rentang tertentu. <u>Tidak memiliki “nol sejati”.</u></p>
+<ul>
+<li>Contoh: Skala Celsius. Suhu 0°C tidak berarti tidak ada panas.</li>
+</ul></li>
+<li><p><strong>Rasio</strong>: Data numerik yang bisa mengambil nilai apa pun dalam rentang tertentu. <u>Memiliki “nol sejati”.</u></p>
+<ul>
+<li>Contoh: Pendapatan tahunan. Pendapatan 0 berarti tidak ada pendapatan.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="tipe-data-di-r" class="slide level2">
+<h2>Tipe Data di R</h2>
+<p>Empat tipe data dasar adalah <strong>karakter (characters)</strong>, <strong>numerik (numeric)</strong>, <strong>boolean</strong>, dan integer. Mari lihat contohnya:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|1|2|3|4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>country_code <span class="ot">&lt;-</span> <span class="st">"SGP"</span> <span class="co"># Karakter</span></span>
+<span id="cb3-2"><a></a>life_satisfaction <span class="ot">&lt;-</span> <span class="fl">8.5</span> <span class="co"># Numerik (juga kadang disebut Double)</span></span>
+<span id="cb3-3"><a></a>is_religious <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># Boolean/Logical (TRUE/FALSE). peka huruf besar/kecil</span></span>
+<span id="cb3-4"><a></a>birth_year <span class="ot">&lt;-</span> <span class="dv">1990</span>L <span class="co"># Integer (bilangan bulat)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p>Untuk menyertakan komentar dalam kode, gunakan karakter #.</p></li>
+<li><p>Apa pun di sebelah kanan tanda # sampai akhir baris dianggap sebagai komentar dan diabaikan oleh R saat eksekusi.</p></li>
+<li><p>Praktik yang baik untuk membuat catatan dan menjelaskan kode.</p></li>
+</ul>
+</section>
+<section id="memeriksa-tipe-data-variabel" class="slide level2">
+<h2>Memeriksa Tipe Data Variabel</h2>
+<p>Anda bisa menggunakan <code>str</code> atau <code>typeof</code> untuk memeriksa tipe data objek R.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">typeof</span>(country_code)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">str</span>(is_religious) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> logi TRUE</code></pre>
+</div>
+</div>
+<p><strong><code>str</code> mengembalikan tipe data dan nilainya.</strong></p>
+</section>
+<section id="operasi-aritmatika-di-r" class="slide level2">
+<h2>Operasi Aritmatika di R</h2>
+<p>Anda bisa melakukan operasi aritmatika di R. Misalnya, mari hitung rata-rata skor kepuasan:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>(<span class="dv">8</span> <span class="sc">+</span> <span class="dv">7</span> <span class="sc">+</span> <span class="dv">9</span>) <span class="sc">/</span> <span class="dv">3</span>  <span class="co"># Rata-rata dari tiga skor kepuasan</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="dv">2025</span> <span class="sc">-</span> <span class="dv">1990</span>  <span class="co"># Hitung usia dari tahun lahir</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35</code></pre>
+</div>
+</div>
+</section>
+<section id="operasi-boolean-di-r---pernyataan-truefalse-sederhana" class="slide level2">
+<h2>Operasi Boolean di R - Pernyataan TRUE/FALSE Sederhana</h2>
+<p>Operasi boolean di R berguna untuk memfilter data survei. Sebelum itu, mari lihat bagaimana R mengevaluasi pernyataan TRUE/FALSE sederhana</p>
+<p>Apakah life_satisfaction lebih besar dari 8?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>life_satisfaction <span class="ot">&lt;-</span> <span class="fl">8.5</span> <span class="co"># tetapkan nilai 8.5 ke life_satisfaction</span></span>
+<span id="cb12-2"><a></a>life_satisfaction <span class="sc">&gt;</span> <span class="dv">8</span>  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Apakah negara tersebut Singapura?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>country_code <span class="sc">==</span> <span class="st">"SGP"</span>  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Apakah negara tersebut BUKAN Singapura?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>country_code <span class="sc">!=</span> <span class="st">"SGP"</span>  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</section>
+<section id="operasi-boolean-di-r---operator-and" class="slide level2">
+<h2>Operasi Boolean di R - Operator AND</h2>
+<p>Kadang kita memiliki beberapa pernyataan untuk dievaluasi. Di sinilah Operator Boolean berguna.</p>
+<p>Operasi <strong>AND</strong> (kedua kondisi harus TRUE). Di R, direpresentasikan dengan ampersand <code>&amp;</code></p>
+<p>Apakah negara Selandia Baru DAN apakah kepuasan hidup lebih dari 8?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>(country_code <span class="sc">==</span> <span class="st">"NZL"</span>) <span class="sc">&amp;</span> (life_satisfaction <span class="sc">&gt;</span> <span class="dv">8</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p><code>country_code == "NZL"</code> adalah FALSE sementara <code>life_satisfaction &gt; 8</code> adalah TRUE</p>
+<p>Seluruh pernyataan akan mengembalikan FALSE karena tidak semua kondisi TRUE.</p>
+</section>
+<section id="operasi-boolean-di-r---operator-or" class="slide level2">
+<h2>Operasi Boolean di R - Operator OR</h2>
+<p>Operasi <strong>OR</strong> (setidaknya satu kondisi harus TRUE). Di R, direpresentasikan dengan simbol pipe <code>|</code></p>
+<p>Apakah negara Selandia Baru ATAU apakah kepuasan hidup lebih dari 8?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>(country_code <span class="sc">==</span> <span class="st">"NZL"</span>) <span class="sc">|</span> (life_satisfaction <span class="sc">&gt;</span> <span class="dv">8</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Selama satu kondisi terpenuhi, ini akan TRUE.</p>
+</section>
+<section id="fungsi-di-r" class="slide level2">
+<h2>Fungsi di R</h2>
+<ul>
+<li><p>Fungsi seperti resep dalam memasak.</p></li>
+<li><p>Fungsi mengambil bahan (input) dan menggunakan instruksi untuk menghasilkan hasil (output).</p></li>
+<li><p>Di R, fungsi adalah kumpulan instruksi tertulis yang melakukan tugas tertentu. Nama fungsi selalu diikuti tanda kurung bulat <code>()</code></p></li>
+</ul>
+<p>Contoh: fungsi <code>round()</code> di R akan membulatkan angka.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">round</span>(<span class="fl">3.1415926</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<ul>
+<li><code>round()</code> adalah “resep”, sedangkan <code>3.1415926</code> adalah “bahan”</li>
+</ul>
+<p>Menyimpan hasil ke objek:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>rounded_pi <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fl">3.1415926</span>)</span>
+<span id="cb24-2"><a></a><span class="fu">print</span>(rounded_pi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+</section>
+<section id="fungsi-dengan-argumen-di-r" class="slide level2">
+<h2>Fungsi dengan Argumen di R</h2>
+<ul>
+<li><p>Mengikuti analogi resep, argumen adalah bahan yang Anda berikan ke fungsi. nama_fungsi(argumen/parameter)</p></li>
+<li><p>Beberapa argumen wajib, yang lain opsional (memiliki nilai default).</p></li>
+<li><p>Setiap argumen memberi tahu fungsi apa yang harus digunakan atau bagaimana melakukan tugas.</p></li>
+<li><p>Contoh: Bayangkan pesanan bubble tea sebagai fungsi. Argumen/bahan yang mungkin:</p>
+<ul>
+<li><p>Teh - bahan wajib</p></li>
+<li><p>Susu - opsional, default-nya disertakan</p></li>
+<li><p>Topping - opsional, pilihan default “mutiara”</p></li>
+</ul></li>
+</ul>
+<p>In R:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">round</span>(<span class="fl">3.1415926</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.14</code></pre>
+</div>
+</div>
+<ul>
+<li><p><code>3.1415926</code> adalah argumen wajib (jika tidak diberikan, fungsi tidak akan berjalan)</p></li>
+<li><p><code>digits</code> adalah argumen opsional yang menentukan berapa desimal yang dibulatkan (default-nya 0)</p></li>
+</ul>
+</section>
+<section id="bagaimana-mengetahui-lebih-lanjut-tentang-fungsi" class="slide level2">
+<h2>Bagaimana Mengetahui Lebih Lanjut Tentang Fungsi?</h2>
+<p>Anda bisa memanggil halaman bantuan / vignette di R dengan menambahkan <code>?</code> di depan nama fungsi.</p>
+<p>Misalnya, jika ingin mengetahui lebih lanjut tentang fungsi <code>round</code>, jalankan <code>?round</code> di konsol R (panel kiri bawah)</p>
+</section>
+<section id="struktur-data-di-r" class="slide level2">
+<h2>Struktur Data di R</h2>
+<p>Kita akan mulai dengan mengeksplorasi 3 tipe dasar <strong>struktur</strong> data di R:</p>
+<ol type="1">
+<li><p><strong>Vektor</strong> - dapat menampung beberapa nilai dalam satu variabel/objek.</p></li>
+<li><p><strong>Faktor</strong> - Struktur data khusus di R untuk menangani variabel kategorikal.</p></li>
+<li><p><strong>Data frame</strong> - Struktur data standar untuk data tabular di R, dan yang kita gunakan untuk pemrosesan, plotting, dan statistik.</p></li>
+</ol>
+<p>Tipe lain (tidak dibahas dalam workshop ini):</p>
+<ul>
+<li><p>Lists: Tipe vektor rekursif</p></li>
+<li><p>Matrices: Kumpulan elemen dengan tipe sama dalam baris dan kolom</p></li>
+</ul>
+</section>
+<section id="struktur-data-di-r---visualisasi" class="slide level2">
+<h2>Struktur Data di R - Visualisasi</h2>
+<p><img data-src="images/data-structures.svg" style="width:100.0%;height:100.0%"></p>
+</section>
+<section id="struktur-data-di-r-vektor" class="slide level2">
+<h2>Struktur Data di R: Vektor</h2>
+<p>Bayangkan vektor sebagai kolom dalam dataset. Ini adalah struktur data paling umum dan dasar di R. (semacam “pekerja keras” R!)</p>
+<ul>
+<li><p>Vektor hanya bisa berisi 1 tipe data.</p></li>
+<li><p><strong>Vektor dapat dibuat dengan fungsi c()</strong>.</p></li>
+<li><p>Dapat menambah, menghapus, atau mengubah nilai dalam vektor.</p></li>
+<li><p>Periksa vektor: typeof(), str(), length()</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>countries <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CAN"</span>, <span class="st">"NZL"</span>, <span class="st">"SGP"</span>, <span class="st">"CAN"</span>, <span class="st">"SGP"</span>)</span>
+<span id="cb28-2"><a></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">6</span>, <span class="dv">8</span>)</span>
+<span id="cb28-3"><a></a>employment_status <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Full time"</span>, <span class="st">"Student"</span>, <span class="st">"Part time"</span>, <span class="st">"Retired"</span>, <span class="st">"Full time"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="manipulasi-vektor-mengambil-dan-memperbarui-item" class="slide level2">
+<h2>Manipulasi Vektor: Mengambil dan Memperbarui Item</h2>
+<p>Mengambil negara pertama dalam vektor</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>countries[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CAN"</code></pre>
+</div>
+</div>
+<p>Mengambil tiga skor kepuasan pertama</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>satisfaction_scores[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8 7 9</code></pre>
+</div>
+</div>
+<p>Mengambil skor kepuasan pertama dan ketiga</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>satisfaction_scores[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8 9</code></pre>
+</div>
+</div>
+<p>Memperbarui skor kepuasan pertama</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>satisfaction_scores[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb35-2"><a></a><span class="fu">print</span>(satisfaction_scores)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7 7 9 6 8</code></pre>
+</div>
+</div>
+</section>
+<section id="mengapa-tanda-kurung-siku-dan-bukan-kurung-bulat" class="slide level2">
+<h2>Mengapa Tanda Kurung Siku dan Bukan Kurung Bulat?</h2>
+<p>Tanda kurung bulat <code>()</code> untuk menjalankan fungsi, seperti menggunakan alat: <code>mean()</code> atau <code>sum()</code>.</p>
+<p>Tanda kurung siku <code>[]</code> untuk mengakses bagian tertentu dari data Anda, di mana kita memasukkan nomor indeks elemen yang diinginkan.</p>
+</section>
+<section id="manipulasi-vektor-mengambil-item-berdasarkan-kriteria" class="slide level2">
+<h2>Manipulasi Vektor: Mengambil Item Berdasarkan Kriteria</h2>
+<p>Mari temukan skor kepuasan tinggi (di atas 7)!</p>
+<ul>
+<li><p>Kode di bawah akan membuat vektor boolean bernama <code>criteria</code> yang mencatat apakah setiap item di <code>satisfaction_scores</code> memenuhi kondisi kita.</p></li>
+<li><p>Kondisinya adalah “nilai harus &gt; 7”. Jika item 1 memenuhi kondisi, maka item 1 ‘ditandai’ sebagai <code>TRUE</code>. Jika tidak, akan <code>FALSE</code></p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="co"># Buat vektor boolean untuk kondisi kita</span></span>
+<span id="cb37-2"><a></a>criteria <span class="ot">&lt;-</span> satisfaction_scores <span class="sc">&gt;</span> <span class="dv">7</span></span>
+<span id="cb37-3"><a></a><span class="fu">print</span>(criteria)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE FALSE  TRUE FALSE  TRUE</code></pre>
+</div>
+</div>
+<ul>
+<li>Baris kode ini menerapkan vektor boolean <code>criteria</code> ke <code>satisfaction_scores</code>, dan hanya mengambil item yang memenuhi kondisi.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># Gunakan vektor boolean untuk memfilter skor kepuasan</span></span>
+<span id="cb39-2"><a></a>satisfaction_scores[criteria]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9 8</code></pre>
+</div>
+</div>
+</section>
+<section id="manipulasi-vektor-menangani-nilai-na" class="slide level2">
+<h2>Manipulasi Vektor: Menangani Nilai NA</h2>
+<ul>
+<li><p>Nilai NA menunjukkan nilai null, atau ketiadaan nilai (0 masih merupakan nilai!)</p></li>
+<li><p>Fungsi ringkasan seperti <code>mean</code> memerlukan argumen <code>na.rm</code> tentang bagaimana penanganannya.</p></li>
+</ul>
+<p>Data survei sering mengandung nilai yang hilang (NA):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>financial_satisfaction <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">7</span>, <span class="cn">NA</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="cn">NA</span>, <span class="dv">7</span>)</span>
+<span id="cb41-2"><a></a></span>
+<span id="cb41-3"><a></a><span class="co"># Secara default, mean() akan mengembalikan NA jika ada nilai NA</span></span>
+<span id="cb41-4"><a></a><span class="fu">mean</span>(financial_satisfaction)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># Hapus nilai NA sebelum menghitung mean dengan menyertakan na.rm = TRUE</span></span>
+<span id="cb43-2"><a></a><span class="fu">mean</span>(financial_satisfaction, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7.4</code></pre>
+</div>
+</div>
+</section>
+<section id="struktur-data-di-r-dataframe" class="slide level2">
+<h2>Struktur Data di R: Dataframe</h2>
+<ul>
+<li><p>Struktur data standar untuk data tabular di R, dan yang kita gunakan untuk pemrosesan data, plotting, dan statistik.</p></li>
+<li><p>Mirip dengan spreadsheet - kumpulan persegi panjang dari variabel (kolom) dan observasi (baris)!</p></li>
+<li><p>Anda bisa membuatnya secara manual seperti ini: (meskipun lebih umum Anda menggunakan ini untuk memuat data dari sumber eksternal)</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>survey_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb45-2"><a></a>    <span class="at">country =</span> <span class="fu">c</span>(<span class="st">"SGP"</span>, <span class="st">"CAN"</span>, <span class="st">"NZL"</span>, <span class="st">"SGP"</span>, <span class="st">"CAN"</span>),</span>
+<span id="cb45-3"><a></a>    <span class="at">life_satisfaction =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">6</span>, <span class="dv">8</span>),</span>
+<span id="cb45-4"><a></a>    <span class="at">employment =</span> <span class="fu">c</span>(<span class="st">"Full time"</span>, <span class="st">"Student"</span>, <span class="st">"Part time"</span>, <span class="st">"Retired"</span>, <span class="st">"Full time"</span>)</span>
+<span id="cb45-5"><a></a>)</span>
+<span id="cb45-6"><a></a><span class="fu">print</span>(survey_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  country life_satisfaction employment
+1     SGP                 8  Full time
+2     CAN                 7    Student
+3     NZL                 9  Part time
+4     SGP                 6    Retired
+5     CAN                 8  Full time</code></pre>
+</div>
+</div>
+</section>
+<section id="mengunduh-dataset-world-values-survey-wvs" class="slide level2">
+<h2>Mengunduh Dataset World Values Survey (WVS)</h2>
+<p>Untuk workshop ini, kita akan mencoba memuat dataset dari file ke dalam dataframe!</p>
+<p>Buka situs web workshop dan kunjungi tab <a href="https://bellaratmelia.github.io/introductory-r-socsci/dataset.html">‘Dataset’</a> untuk mengunduh file data dan informasi tentang data WVS ini</p>
+<p>Unduh CSV ini dan simpan di folder <code>data</code> di proyek R Anda!</p>
+</section>
+<section id="paket-di-r-untuk-fungsionalitas-tambahan" class="slide level2">
+<h2>Paket di R (untuk fungsionalitas tambahan)</h2>
+<ul>
+<li><p>Paket adalah kumpulan fungsi, dataset R, dll. Paket memperluas fungsionalitas R.</p>
+<ul>
+<li>(Analogi terdekat: seperti add-on browser)</li>
+</ul></li>
+<li><p>Paket populer: <code>tidyverse</code>, <code>caret</code>, <code>shiny</code>, dll.</p></li>
+<li><p>Instalasi (<strong>cukup sekali saja</strong>): <code>install.packages("nama paket")</code></p></li>
+<li><p>Memuat paket (<em>perlu dijalankan setiap restart RStudio</em>): <code>library(nama paket)</code> - mari coba muat <code>tidyverse</code> karena kita akan menggunakan ini untuk memuat CSV ke dataframe!</p>
+<ul>
+<li>Tidyverse adalah kumpulan paket terkenal yang memfasilitasi proyek data science. Termasuk paket untuk manipulasi data, visualisasi, impor, dan tidying.</li>
+</ul></li>
+</ul>
+</section>
+<section id="memuat-dataset-wvs" class="slide level2">
+<h2>Memuat Dataset WVS</h2>
+<p>Mari muat dataset World Values Survey menggunakan fungsi read_csv.</p>
+<p>Sebelum menggunakan read_csv, instal dan muat paket tidyverse. Instal paket hanya sekali dan perlu memuat paket di setiap sesi sebelum menggunakannya.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb47-2"><a></a></span>
+<span id="cb47-3"><a></a>wvs_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs-wave7-sg-ca-nz.csv"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7087 Columns: 16
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): country, religiousity, sex, marital_status, employment
+dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">head</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 16
+  country        ID family_importance friends_importance leisure_importance
+  &lt;chr&gt;       &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;              &lt;dbl&gt;
+1 CAN     124070003                 1                  1                  1
+2 CAN     124070004                 1                  1                  2
+3 CAN     124070005                 2                  2                  2
+4 CAN     124070006                 1                  2                  2
+5 CAN     124070008                 1                  2                  2
+6 CAN     124070009                 1                  2                  2
+# ℹ 11 more variables: work_importance &lt;dbl&gt;, freedom &lt;dbl&gt;,
+#   life_satisfaction &lt;dbl&gt;, financial_satisfaction &lt;dbl&gt;, religiousity &lt;chr&gt;,
+#   political_scale &lt;dbl&gt;, sex &lt;chr&gt;, birthyear &lt;dbl&gt;, age &lt;dbl&gt;,
+#   marital_status &lt;chr&gt;, employment &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Pastikan file CSV tersimpan di folder data Anda! (Tidak ada auto save)</p>
+</section>
+<section id="mengeksplorasi-dataset-wvs" class="slide level2">
+<h2>Mengeksplorasi Dataset WVS</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-28"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-28-1" class="code-annotation-target"><a href="#annotated-cell-28-1"></a><span class="fu">dim</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-28-2" class="code-annotation-target"><a href="#annotated-cell-28-2"></a><span class="fu">names</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-28-3" class="code-annotation-target"><a href="#annotated-cell-28-3"></a><span class="fu">str</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-28-4" class="code-annotation-target"><a href="#annotated-cell-28-4"></a><span class="fu">summary</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-28-5" class="code-annotation-target"><a href="#annotated-cell-28-5"></a><span class="fu">head</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-28-6" class="code-annotation-target"><a href="#annotated-cell-28-6"></a><span class="fu">tail</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-28" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="1" data-code-annotation="1">mengembalikan vektor jumlah baris dan kolom</span>
+</dd>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="2" data-code-annotation="2">memeriksa kolom</span>
+</dd>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="3" data-code-annotation="3">memeriksa struktur</span>
+</dd>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="4" data-code-annotation="4">menampilkan statistik ringkasan seluruh dataframe</span>
+</dd>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="5" data-code-annotation="5">melihat 5 baris pertama</span>
+</dd>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-28" data-code-lines="6" data-code-annotation="6">melihat 5 baris terakhir</span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="manipulasi-dasar-dataframe-mengambil-nilai" class="slide level2">
+<h2>Manipulasi Dasar Dataframe: Mengambil Nilai</h2>
+<p>Beberapa fungsi dasar dataframe sebelum kita lanjut ke data wrangling:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-29"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-29-1" class="code-annotation-target"><a href="#annotated-cell-29-1"></a>wvs_data[<span class="st">"country"</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-29-2" class="code-annotation-target"><a href="#annotated-cell-29-2"></a>wvs_data<span class="sc">$</span>country</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-29-3" class="code-annotation-target"><a href="#annotated-cell-29-3"></a>wvs_data[<span class="dv">3</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-29-4" class="code-annotation-target"><a href="#annotated-cell-29-4"></a>wvs_data[<span class="dv">1</span>, <span class="dv">4</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-29-5" class="code-annotation-target"><a href="#annotated-cell-29-5"></a>wvs_data[<span class="dv">3</span>, ]</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-29" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="1" data-code-annotation="1">mengambil kolom berdasarkan nama kolom (dikembalikan sebagai tibble/dataframe)</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="2" data-code-annotation="2">cara lain mengambil kolom berdasarkan nama (dikembalikan sebagai vektor)</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="3" data-code-annotation="3">mengambil kolom berdasarkan indeks</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="4" data-code-annotation="4">mendapatkan sel di koordinat baris, kolom ini</span>
+</dd>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-29" data-code-lines="5" data-code-annotation="5">mendapatkan seluruh baris</span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="struktur-data-di-r-faktor" class="slide level2">
+<h2>Struktur Data di R: Faktor</h2>
+<ul>
+<li><p>Struktur data khusus di R untuk menangani data kategorikal.</p></li>
+<li><p>Terlihat (dan sering berperilaku) seperti vektor karakter tetapi sebenarnya diperlakukan sebagai vektor integer.</p></li>
+<li><p>Hanya dapat berisi kumpulan nilai yang telah ditentukan, dikenal sebagai <code>levels</code>. R selalu mengurutkan levels secara alfabet</p></li>
+<li><p>Dapat berurutan (ordinal) atau tidak berurutan (nominal).</p></li>
+<li><p>Mungkin terlihat seperti vektor biasa pada pandangan pertama, jadi gunakan <code>str()</code> untuk memeriksa.</p></li>
+<li><p>Aplikasi paling umum: saat kita ingin menentukan kolom di dataframe sebagai kolom kategori</p></li>
+</ul>
+</section>
+<section id="mengonversi-kolom-dataframe-ke-faktor---tidak-berurutan" class="slide level2">
+<h2>Mengonversi Kolom Dataframe ke Faktor - Tidak Berurutan</h2>
+<p>Dalam contoh kita, <code>country</code> seharusnya menjadi faktor!</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:7087] "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" ...</code></pre>
+</div>
+</div>
+<p>Karena tidak ada urutan bawaan dalam nama negara, kategori kita akan tidak berurutan:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>wvs_data<span class="sc">$</span>country <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>country)</span>
+<span id="cb53-2"><a></a></span>
+<span id="cb53-3"><a></a><span class="co"># periksa level kategori</span></span>
+<span id="cb53-4"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CAN" "NZL" "SGP"</code></pre>
+</div>
+</div>
+<p>Jika kita periksa strukturnya, kolom <code>country</code> seharusnya menjadi faktor bukan karakter sekarang:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Factor w/ 3 levels "CAN","NZL","SGP": 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="mengonversi-kolom-dataframe-ke-faktor---berurutan" class="slide level2">
+<h2>Mengonversi Kolom Dataframe ke Faktor - Berurutan</h2>
+<p>Secara teknis, di dataset kita tidak ada variabel yang harus berurutan. Tapi sebagai contoh, misalkan kita ingin mengurutkan nilai kategorikal di <code>religiousity</code> dari non-believer ke believer.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>wvs_data<span class="sc">$</span>religiousity <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>religiousity,</span>
+<span id="cb57-2"><a></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"An atheist"</span>, <span class="st">"Not a religious person"</span>, <span class="st">"A religious person"</span>, <span class="st">"Don't know"</span>),</span>
+<span id="cb57-3"><a></a>                                <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb57-4"><a></a></span>
+<span id="cb57-5"><a></a><span class="co"># periksa level kategori dan struktur</span></span>
+<span id="cb57-6"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>religiousity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "An atheist"             "Not a religious person" "A religious person"    
+[4] "Don't know"            </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>religiousity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Ord.factor w/ 4 levels "An atheist"&lt;"Not a religious person"&lt;..: 3 3 1 3 2 1 1 3 2 3 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="trouble-shooting" class="slide level2">
+<h2>Trouble Shooting</h2>
+<p>Types of messages</p>
+<ul>
+<li><p>Error: Fatal error in your code that prevented it from being run through successfully. Need to fix it for the code to run.</p></li>
+<li><p>Warning: Non-fatal errors (don’t stop the code from running, but this is a potential problem that you should know about).</p></li>
+<li><p>Message: Helpful information about the code you just ran(can usually ignore these messages)</p></li>
+</ul>
+</section>
+<section id="trouble-shooting-1" class="slide level2">
+<h2>Trouble Shooting</h2>
+<p>Check. Did you…</p>
+<ul>
+<li><p>Set your working directory?</p></li>
+<li><p>Check for missing commas (,), parentheses ()?</p></li>
+<li><p>Check your spelling?</p>
+<ul>
+<li><p>Spelling : Punctuation &lt;- mea<strong>a</strong>n(c(1, 2, 3, 4)) or print(Punctuati<strong>o</strong>on)</p></li>
+<li><p>Punctuation : sum(10?20) or Punctuation &lt;- sum(c(10, 20))<strong>)</strong></p></li>
+<li><p>Capitalization : s<strong>U</strong>m(c(5, 10, 15))</p></li>
+<li><p>In text indicators : X <strong>+</strong> Y or <strong>#</strong>taking notes or “name” vs name</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="rekap" class="slide level2">
+<h2>Rekap</h2>
+<ul>
+<li><p>R &amp; RStudio: R adalah bahasa pemrograman untuk komputasi statistik dan grafis, sementara RStudio adalah lingkungan yang memudahkan menulis, menjalankan, dan mengelola kode R.</p></li>
+<li><p>Working Directory: Folder di komputer di mana R membaca dan menyimpan file.</p></li>
+<li><p>Tipe Data: Jenis nilai yang dapat disimpan objek, seperti numerik, karakter, dan Boolean.</p></li>
+<li><p>Struktur Data: Struktur data mengorganisir dan menyimpan data di R, seperti vektor, faktor, dan data frame.</p></li>
+<li><p>Fungsi: Kode yang dapat digunakan kembali yang melakukan tugas tertentu. Bisa memanggil fungsi dengan argumen.</p></li>
+<li><p>Paket: Kumpulan fungsi dan data untuk melakukan tugas. Perlu menginstal dan memuat paket.</p></li>
+</ul>
+</section></section>
+<section>
+<section id="akhir-sesi-1" class="title-slide slide level1 center">
+<h1>Akhir Sesi 1!</h1>
+<p>Sesi Berikutnya: Pengolahan data dengan paket <code>dplyr</code> dan <code>tidyr</code> - kita akan belajar cara:</p>
+<ul>
+<li><p>Memfilter respons survei berdasarkan negara</p></li>
+<li><p>Menghitung rata-rata skor kepuasan berdasarkan kelompok demografi</p></li>
+<li><p>Membuat variabel baru dari yang sudah ada</p></li>
+<li><p>Menangani nilai yang hilang dalam data survei</p></li>
+<li><p>Dan banyak lagi!</p></li>
+</ul>
+</section>
+<section id="lampiran-manipulasi-vektor-menambah-item" class="slide level2">
+<h2>Lampiran Manipulasi Vektor: Menambah Item</h2>
+<p>Beberapa cara menambahkan item ke vektor</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-35"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-35-1" class="code-annotation-target"><a href="#annotated-cell-35-1"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(satisfaction_scores, <span class="dv">7</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-35-2" class="code-annotation-target"><a href="#annotated-cell-35-2"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(satisfaction_scores, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-35-3" class="code-annotation-target"><a href="#annotated-cell-35-3"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, satisfaction_scores)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-35-4" class="code-annotation-target"><a href="#annotated-cell-35-4"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">append</span>(satisfaction_scores, <span class="dv">9</span>, <span class="at">after =</span> <span class="dv">2</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-35" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-35" data-code-lines="1" data-code-annotation="1">Tambah satu skor ke akhir vektor menggunakan c()</span>
+</dd>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-35" data-code-lines="2" data-code-annotation="2">Tambah beberapa skor ke akhir</span>
+</dd>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-35" data-code-lines="3" data-code-annotation="3">Tambah skor ke awal</span>
+</dd>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-35" data-code-lines="4" data-code-annotation="4">Sisipkan skor di posisi tertentu menggunakan append(nama_vektor, elemen_yang_ditambahkan, dari_posisi)</span>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+<section id="lampiran-manipulasi-vektor-menghapus-item" class="slide level2">
+<h2>Lampiran Manipulasi Vektor: Menghapus Item</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-36"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-36-1" class="code-annotation-target"><a href="#annotated-cell-36-1"></a>satisfaction_scores <span class="ot">&lt;-</span> satisfaction_scores[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-36-2" class="code-annotation-target"><a href="#annotated-cell-36-2"></a>satisfaction_scores <span class="ot">&lt;-</span> satisfaction_scores[satisfaction_scores <span class="sc">&lt;=</span> <span class="dv">7</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-36-3" class="code-annotation-target"><a href="#annotated-cell-36-3"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(satisfaction_scores)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-36" data-code-lines="1" data-code-annotation="1">Hapus elemen berdasarkan indeks menggunakan “negative indexing”</span>
+</dd>
+<dt data-target-cell="annotated-cell-36" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-36" data-code-lines="2" data-code-annotation="2">Hapus elemen berdasarkan kondisi menggunakan logical indexing. Hapus item yang bernilai FALSE.</span>
+</dd>
+<dt data-target-cell="annotated-cell-36" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-36" data-code-lines="3" data-code-annotation="3">Hapus nilai NA dari vektor</span>
+</dd>
+</dl>
+</div>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

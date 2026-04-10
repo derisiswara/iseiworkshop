@@ -1,0 +1,50 @@
+---
+title: "Contoh Dokumen Quarto"
+author: "ISEI Workshop"
+format: html
+bibliography: references.bib
+---
+
+# Halo Quarto!
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+mollit anim id est laborum.
+
+```{r}
+library(tidyverse)
+
+diamonds = as_tibble(diamonds)
+
+```
+
+## Mari Visualisasikan Data Diamonds
+
+```{r}
+#| echo: true
+#| output: true
+diamonds |> print(n = 10)
+```
+
+Mari buat boxplot untuk karat berdasarkan kualitas potongan:
+
+```{r}
+
+diamonds |> ggplot(aes(x = cut, y = carat)) +
+    geom_boxplot() +
+    theme_minimal()
+```
+
+## Teks dengan Rumus
+
+$$
+E = mc^2
+$$
+
+## Teks dengan Sitasi
+
+Banyak orang mengatakan bahwa R sangat keren [@wickham].

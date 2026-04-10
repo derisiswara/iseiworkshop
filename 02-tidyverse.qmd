@@ -1,0 +1,757 @@
+---
+title: "Pengolahan Data dengan Tidyverse"
+author: "ISEI Workshop"
+format: revealjs
+---
+
+## Garis Besar Hari Ini
+
+1.  Memuat data ke dalam lingkungan RStudio
+2.  Data wrangling dengan `dplyr` dan `tidyr` (bagian dari paket `tidyverse`)
+
+## Checklist Saat Memulai RStudio
+
+-   Navigasi ke folder proyek R yang telah dibuat untuk workshop ini.
+-   Cari file dengan ekstensi `.Rproject` dan klik dua kali. Ini akan membuka RStudio beserta proyek Anda.
+-   Pastikan panel `Environment` kosong (klik ikon sapu untuk membersihkannya).
+-   Bersihkan juga `Console` dan `Plots`.
+-   Jalankan ulang bagian `library(tidyverse)` dan `read_csv` dari sesi sebelumnya (kode juga tersedia di slide berikutnya jika Anda melewatkan sesi minggu lalu)
+
+## Penyegaran: Memuat dari CSV ke Dataframe
+
+Gunakan `read_csv` dari paket `readr` (bagian dari `tidyverse`) untuk memuat data World Values Survey. Informasi lebih lanjut tentang data dapat ditemukan di tab `Dataset` pada website kursus.
+
+```{r}
+#| echo: true
+#| message: false
+#| output: false
+
+# impor pustaka tidyverse
+library(tidyverse)
+
+# baca file CSV dan simpan ke dataframe bernama wvs_data
+wvs_data <- read_csv("data/wvs-wave7-sg-ca-nz.csv")
+
+# "intip" data, perhatikan tipe datanya!
+glimpse(wvs_data)
+```
+
+## Mengapa Kita Perlu Membersihkan Data?
+
+::: incremental
+-   Peneliti menghabiskan 60-80% waktu mereka untuk persiapan data - investasi dalam proses wrangling yang baik di awal menghemat berjam-jam debugging dan pengerjaan ulang.
+-   Kualitas data yang buruk merugikan proyek atau organisasi jutaan per tahun(!), dan bahkan satu titik data yang salah klasifikasi dapat mengubah seluruh analisis.
+-   Data yang bersih meningkatkan alur kerja untuk uji statistik dan dapat mengungkap pola tersembunyi yang tidak terlihat dalam dataset yang berantakan.
+-   Pembersihan data yang terdokumentasi dengan baik membuat penelitian transparan dan dapat direproduksi, bermanfaat bagi diri Anda di masa depan maupun kolaborator.
+
+:::
+
+## Mengapa di R? Tidak Bisa di Excel?
+
+::: incremental
+-   Kode R membuat catatan permanen tentang apa yang Anda lakukan - klik dan edit manual di Excel sulit dilacak dan direproduksi (kecuali Anda mencatat apa yang dilakukan).
+-   R menangani tanggal, waktu, teks, dan tipe data campuran jauh lebih andal dibanding Excel.
+-   Excel dapat secara otomatis "mengoreksi" data Anda dengan cara yang tidak diinginkan (seperti mengubah format tanggal dari DDMMYY ke MMDDYY).
+-   Tulis kode pembersihan sekali, terapkan ke banyak dataset atau saat data diperbarui. Sedangkan Excel memerlukan pengulangan manual langkah yang sama setiap kali.
+-   Join yang kompleks, reshaping, dan operasi kondisional yang membutuhkan banyak langkah di Excel dapat dilakukan dalam beberapa baris kode R.
+-   Skrip R dapat dengan mudah dibagikan, dikontrol versinya, dan diintegrasikan ke dalam alur kerja yang dapat direproduksi.
+
+:::
+
+## Apa yang Perlu Diketahui Sebelum Mulai?
+
+::: incremental
+-   Selalu periksa data Anda terlebih dahulu (`glimpse()`, `summary()`, `str()`) sebelum membersihkan.
+-   **Jangan pernah menimpa file data mentah Anda**
+-   Siapkan waktu ekstra untuk pembersihan data - hampir selalu memakan waktu lebih lama dari yang diharapkan!
+-   Memiliki pemahaman yang jelas tentang bentuk data yang diinginkan sangat penting karena data nyata sering berbeda dari yang dibayangkan! **Lihat codebook, kuesioner asli, lampiran untuk panduan.**
+-   Perhatikan outlier!
+-   Ingat: Teknik pembersihan data berbeda berdasarkan masalah, tipe data, dan pertanyaan penelitian yang ingin dijawab. Berbagai metode tersedia, masing-masing dengan kelebihan dan kekurangannya.
+
+:::
+
+
+## Alat yang Akan Kita Gunakan: dplyr dan tidyr dari tidyverse
+
+-   Paket dari `tidyverse`. ([klik di sini untuk ke halaman utama tidyverse](https://www.tidyverse.org/))
+
+-   Posit telah membuat cheatsheet di sini! (Anda bisa membukanya di tab lain sebagai referensi selama sesi ini!)
+
+    -   [dplyr cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html) \| [versi pdf](https://rstudio.github.io/cheatsheets/data-transformation.pdf) (Saya pribadi lebih suka versi PDF ini karena lebih visual)
+
+    -   [tidyr cheatsheet](https://rstudio.github.io/cheatsheets/html/tidyr.html) \| [versi pdf](https://rstudio.github.io/cheatsheets/tidyr.pdf)
+
+-   Sebagian besar waktu, ini adalah fungsi yang akan sering Anda gunakan:
+
+    -   `drop_na()` - menghapus baris dengan nilai kosong (null)
+
+    -   `select()` - untuk memilih kolom dari dataframe
+
+    -   `filter()` - untuk menyaring baris berdasarkan kriteria
+
+    -   `mutate()` - untuk membuat kolom baru atau mengedit yang sudah ada
+
+    -   `if_else()` dan `case_when()` - digunakan dengan mutate ketika ingin membuat/mengedit kolom berdasarkan beberapa kriteria
+
+    -   `group_by()` dan `summarize()` - mengelompokkan data dan merangkum setiap kelompok
+    
+## Fitur Lanjutan yang Tidak Dibahas di Workshop (lihat lampiran untuk contoh)
+
+-   Menggabungkan kolom dari beberapa dataframe: `left_join()`, `right_join()`, `inner_join()`, `full_join()`
+    
+-   Menggabungkan baris dari beberapa dataframe: `bind_rows()`
+    
+-   Memisahkan atau menggabungkan sel: `unite()`, `separate_wider_delim()`, `separate_long_delim()`
+    
+Tambahan: Anda mungkin memerlukan cheatsheet [forcats](https://forcats.tidyverse.org/articles/forcats.html) di sini: <https://raw.githubusercontent.com/rstudio/cheatsheets/main/factors.pdf>
+
+forcats juga bagian dari tidyverse, khusus digunakan untuk menangani data factor.
+
+
+## Mengapa Menggunakan Tidyverse? Apakah Wajib?
+
+Tidak wajib, tapi akan sangat mempermudah pekerjaan kita! Keuntungan utama:
+
+-   Kode terlihat lebih mirip bahasa Inggris sehingga lebih intuitif bagi pemula
+-   Tidyverse mengikuti pola sintaks yang konsisten - argumen pertama selalu data yang akan diolah, diikuti nama fungsi yaitu hal yang ingin kita lakukan pada data.
+-   Tidyverse memberikan pesan error yang lebih jelas dan membantu
+
+Contoh:
+```r
+# Base R
+subset_data <- data[data$age > 18 & data$income > 50000, c("name", "age", "salary")]
+
+# Tidyverse  
+subset_data <- data |> 
+  filter(age > 18, income > 50000)  |> 
+  select(name, age, salary)
+
+```
+
+## Skenario: Kegiatan Data Wrangling dengan Data WVS {.smaller}
+
+**Skenario**: Kita adalah asisten peneliti yang menganalisis pola nilai dan kepuasan di berbagai negara dan kelompok demografis.
+
+Tim kita ditugaskan untuk mengeksplorasi dan mendapatkan wawasan tentang bagaimana faktor-faktor tertentu (pekerjaan, pentingnya kerja, status pernikahan, orientasi politik, kepuasan finansial, dan religiusitas) dapat berhubungan dengan kepuasan hidup di berbagai generasi (Gen Z, Milenial, Gen X, dan Baby Boomer), termasuk perbedaannya di antara 3 negara.
+
+Untuk memastikan kualitas analisis, kita diinstruksikan untuk membuang data yang tidak lengkap.
+
+Kita dapat memecah langkah-langkahnya sebagai berikut:
+
+::: incremental
+1.  Hapus semua baris dengan nilai kosong (NA)
+
+2.  Periksa duplikasi data
+
+3.  Pilih hanya kolom yang relevan: `ID` peserta, kolom demografis (yaitu `age`, `country`, `sex`, `birthyear`), `work_importance`, `life_satisfaction`, `financial_satisfaction`, `religiousity`, `political_scale`, `marital_status`, dan `employment`.
+
+4.  Saring responden berusia 18 tahun ke atas. Secara opsional, kita juga bisa mengurutkan dataset berdasarkan usia (tertua ke termuda)
+
+5.  Reverse-code variabel `importance` agar angka yang lebih tinggi secara konsisten mewakili tingkat yang lebih tinggi dari konstruk yang diukur. Dengan kata lain, 1 = Tidak penting sama sekali dan 4 = Sangat penting.
+
+6.  Buat kelompok usia untuk setiap generasi: "18-28", "29-44", "45-60", "61+"
+:::
+
+Setelah semua proses wrangling di atas selesai, kita bisa menyimpan versi "ter-wrangle" ini ke dalam CSV lain sebagai "checkpoint".
+
+# Mari Bersihkan Data Kita!
+
+## Langkah #1
+
+> **Strategi yang saya rekomendasikan:** baca sekilas dokumentasi `dplyr` + `tidyr`, baik versi PDF maupun HTML, dan buka di tab terpisah agar bisa dirujuk dengan cepat.
+
+Hapus semua baris dengan nilai kosong (NA) menggunakan `drop_na()`
+
+```{r}
+#| echo: true
+#| output: false
+wvs_data <- wvs_data |> 
+  drop_na()
+```
+
+Jumlah observasi setelah menghapus NA:
+
+```{r}
+#| echo: true
+dim(wvs_data)
+```
+
+## Interlude: Operator Pipe ( \|\> )
+
+-   Operator pipe (\|\>) memungkinkan kita merangkai beberapa operasi tanpa membuat dataframe perantara/sementara.
+
+-   Sangat berguna ketika kita melakukan beberapa tugas data wrangling menggunakan tidyverse secara berurutan.
+
+-   Membantu keterbacaan kode, terutama untuk operasi yang kompleks.
+
+-   Pintasan keyboard: `Ctrl`+`Shift`+`M` di Windows, `Cmd`+`Shift`+`M` di Mac
+
+::: panel-tabset
+### Tanpa operator pipe
+
+Perhatikan bahwa kita harus membuat dataframe "sementara" bernama `wvs_data_clean` dengan metode ini.
+
+``` r
+wvs_data <- drop_na(wvs_data)
+wvs_data_clean <- arrange(wvs_data, desc(age))
+write_csv(wvs_data_clean, "data-output/wvs-clean.csv")
+```
+
+### Dengan operator pipe
+
+Tidak perlu dataframe "sementara" di sini! :D
+
+``` {.r code-overflow="overflow"}
+wvs_data |> 
+    drop_na() |> 
+    distinct(ID, .keep_all = TRUE) |> 
+    write_csv("data-output/wvs-30plus.csv")
+```
+:::
+
+## Langkah #2
+
+Periksa duplikasi data dengan `distinct()`
+
+```{r}
+#| echo: true
+#| output: false
+
+wvs_data <- wvs_data |> 
+  distinct(ID, .keep_all = TRUE)
+```
+
+(Data kita tidak memiliki duplikat, tetapi ini tetap praktik yang baik, terutama jika kita menggabungkan data dari berbagai sumber)
+
+## Langkah #3:
+
+Pilih hanya kolom yang relevan: kolom demografis, `life_satisfaction`, `work_importance`, `financial_satisfaction`, `religiousity`, `political_scale`, `marital_status`, dan `employment`.
+
+Kita bisa mencapai ini dengan `select()`!
+
+```{r}
+#| echo: true
+
+wvs_data <- wvs_data |>
+    select(ID, country, sex, birthyear, age, life_satisfaction, work_importance, financial_satisfaction, religiousity, political_scale, marital_status, employment) 
+```
+
+Pratinjau data yang telah disaring:
+
+```{r}
+wvs_data |> glimpse()
+```
+
+## Langkah #4:
+
+Saring responden berusia 18 tahun ke atas. Secara opsional, kita bisa mengurutkan dataset berdasarkan usia (tertua ke termuda)
+
+```{r}
+#| echo: true
+
+wvs_data <- wvs_data |> 
+    filter(age >= 18) |> 
+    arrange(desc(age))
+```
+
+Memeriksa struktur data:
+
+```{r}
+head(wvs_data)
+```
+
+## Langkah #5
+
+Reverse-code variabel `work_importance` agar angka yang lebih tinggi secara konsisten mewakili tingkat yang lebih tinggi dari konstruk yang diukur. Dengan kata lain, 1 = Tidak penting sama sekali dan 4 = Sangat penting.
+
+Kita bisa mencapai ini dengan `mutate()`! (mutate() digunakan untuk mengubah atau menambah kolom baru.)
+
+```{r}
+#| echo: true
+
+wvs_data <- wvs_data |>
+    mutate(work_importance_r = 5 - work_importance)
+```
+
+Pratinjau kelompok usia:
+
+```{r}
+wvs_data |>
+    select(work_importance_r, work_importance) |>
+    print(n = 5)
+```
+
+## Langkah #6
+
+Buat kelompok usia untuk setiap generasi: "18-28", "29-44", "45-60", "61+"
+
+```{r}
+#| echo: true
+
+wvs_data <- wvs_data |>
+    mutate(age_group = case_when(
+        age <= 28 ~ "18-28",
+        age <= 44 ~ "29-44",
+        age <= 60 ~ "45-60",
+        TRUE ~ "61+"
+    ))
+```
+
+Pratinjau kelompok usia:
+
+```{r}
+wvs_data |>
+    select(age, age_group) |>
+    print(n = 4)
+```
+
+## Checkpoint 1 - Menyimpan Hasil Kerja ke File CSV
+
+Kita sudah melakukan beberapa pembersihan! Mari simpan data yang sudah dibersihkan ini ke file CSV terpisah bernama "wvs_cleaned_v1.csv"
+
+```{r}
+#| echo: true
+
+wvs_data |> write_csv("data-output/wvs_cleaned_v1.csv")
+
+```
+
+Periksa folder data output untuk memastikan file CSV sudah dibuat!
+
+
+## Analisis Deskriptif Sederhana
+
+Setelah selesai dengan bagian wrangling, kita bisa melanjutkan dengan analisis deskriptif sederhana!
+
+::: incremental
+-   Persiapan: Sebelum melanjutkan, konversikan variabel kategorikal yang sesuai (country, religiousity, sex, marital_status, employment) ke **Factor**
+
+-   Analisis 1: Buat statistik ringkasan dari life_satisfaction yang dikelompokkan berdasarkan country
+
+-   Analisis 2: Buat kolom baru bernama `satisfaction_group` yang menunjukkan apakah setiap responden memiliki `life_satisfaction` lebih tinggi atau lebih rendah dari rata-rata
+
+-   Analisis 3: Ubah bentuk data untuk menampilkan skor kepuasan rata-rata berdasarkan negara dan kelompok usia
+:::
+
+## Persiapan Sebelum Analisis: Konversi ke Factor
+
+Mari gunakan dataframe `wvs_cleaned` untuk tugas ini.
+
+Identifikasi kolom mana yang bisa dikonversi ke data kategorikal (factor). Konversikan variabel kategorikal yang sesuai (country, religiousity, sex, marital_status, employment) ke **Factor**.
+
+Kita bisa melakukannya dengan `mutate()` dan `as_factor()` dari forcats, sub-paket lain dalam tidyverse.
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_cleaned <- read_csv("data-output/wvs_cleaned_v1.csv")
+wvs_cleaned <- wvs_cleaned |> 
+    mutate(
+        country = as_factor(country),
+        religiousity = as_factor(religiousity),
+        sex = as_factor(sex),
+        marital_status = as_factor(marital_status),
+        employment = as_factor(employment)
+    )
+
+# periksa hasil konversi
+str(wvs_cleaned)
+```
+
+RStudio mungkin menyarankan `as.factor()` dari base R. Anda juga bisa menggunakan ini, tetapi `as_factor()` lebih direkomendasikan karena kita menggunakan pendekatan tidyverse.
+
+## Persiapan Sebelum Analisis: Konversi ke Factor (versi singkat)
+
+Jika kita memiliki banyak kolom untuk dikonversi, akan merepotkan untuk mengetik semuanya! Di sinilah `across()` berguna. across(pemilihan kolom, fungsi) digunakan untuk menerapkan fungsi yang sama atau serangkaian fungsi ke beberapa kolom dalam satu fungsi mutate() atau summarize().
+
+
+Mari definisikan vektor karakter yang berisi nama-nama kolom yang akan kita konversi.
+
+```{r}
+#| echo: true
+
+columns_to_convert <- c("country", "religiousity", "sex", "marital_status", "employment")
+
+```
+
+Kita akan menggunakan vektor ini dengan `mutate()` dan `across()`. Kita memberitahu tidyverse untuk mengkonversi semua kolom tersebut dengan bantuan `all_of()`
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_cleaned <- wvs_cleaned |> 
+    mutate(across(all_of(columns_to_convert), as_factor))
+
+# periksa hasil konversi
+str(wvs_cleaned)
+
+```
+
+`across()` digunakan untuk menerapkan fungsi yang sama ke beberapa kolom dalam satu operasi `mutate()` atau `summarise()`.
+
+## Analisis 1 - Statistik ringkasan life_satisfaction per negara
+
+Buat statistik ringkasan seperti jumlah (n), rata-rata, median, dan standar deviasi dari life_satisfaction yang dikelompokkan berdasarkan negara.
+
+Kita bisa mencapai ini dengan `group_by()` dan `summarise()`. Hasilnya akan berisi satu kolom untuk setiap variabel pengelompokan dan satu kolom untuk setiap statistik ringkasan yang ditentukan.
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+wvs_data |>
+    group_by(country, age_group) |>
+    summarise(
+        n = n(),
+        mean_satisfaction = mean(life_satisfaction),
+        median_satisfaction = median(life_satisfaction),
+        sd_satisfaction = sd(life_satisfaction)
+    ) |>
+    arrange(country, desc(mean_satisfaction))
+
+```
+
+*Bagaimana jika kita ingin menyimpan ini ke dalam CSV? Bagaimana jika kita juga ingin mengelompokkan berdasarkan country DAN age_group?*
+
+## Analisis 2 - Berapa banyak yang memiliki life_satisfaction di bawah dan di atas rata-rata?
+
+Buat kolom baru bernama `satisfaction_group` yang menunjukkan apakah setiap responden memiliki `life_satisfaction` lebih tinggi atau lebih rendah dari rata-rata
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+mean_satisfaction <- mean(wvs_data$life_satisfaction, na.rm = TRUE)
+
+wvs_data |>
+    mutate(satisfaction_group = if_else(
+        life_satisfaction > mean_satisfaction, # kondisi yang dievaluasi
+        "higher", # jika kondisi terpenuhi, lakukan ini
+        "lower" # jika tidak, lakukan ini
+    )) 
+```
+
+## Analisis 3 - Berapa skor kepuasan rata-rata untuk setiap negara dan kelompok usia?
+
+Tampilkan skor kepuasan rata-rata berdasarkan negara dan kelompok usia dalam format data lebar (wide)
+
+```{r}
+#| echo: true
+wvs_data |>
+    group_by(country, age_group) |>
+    summarise(
+        avg_satisfaction = mean(life_satisfaction, na.rm = TRUE),
+    ) |>
+    pivot_wider(
+        names_from = age_group,
+        values_from = avg_satisfaction
+    ) 
+```
+
+## Data Long vs Wide
+
+::::: columns
+::: {.column width="50%"}
+**Data long:**
+
+-   Setiap baris adalah satu observasi unik --\> untuk satu unit observasi, mungkin ada beberapa baris.
+
+-   Ada kolom terpisah yang menunjukkan variabel atau jenis pengukuran.
+
+-   Format ini lebih "dipahami" oleh R, lebih cocok untuk visualisasi, terutama yang melibatkan pengelompokan, perangkuman, atau visualisasi data dari waktu ke waktu atau lintas kategori.
+ (yang akan kita eksplorasi lebih lanjut minggu depan!)
+ 
+:::
+
+::: {.column width="50%"}
+**Data wide:**
+
+-   Setiap baris berisi nilai dari variabel.
+
+-   Setiap kolom adalah nilai dalam variabel --\> semakin banyak nilai yang Anda miliki, semakin "lebar" datanya.
+
+-   Perbandingan cepat variabel yang berbeda untuk satu entitas.
+
+
+-   Format ini lebih intuitif bagi manusia!
+:::
+:::::
+
+## Data Long vs Wide: Contoh
+
+::::: columns
+::: {.column width="50%"}
+**Data long:**
+
+```{r}
+#| echo: false
+
+library(kableExtra)
+
+# Membuat data frame wide
+long_data <- wvs_data |>
+    group_by(country, age_group) |>
+    summarise(count = n()) 
+
+long_data |> 
+    kbl(caption = "Observations (Long)")  |> 
+    kable_styling(bootstrap_options = c("striped", "bordered"), font_size = "85%")
+
+```
+:::
+
+::: {.column width="50%"}
+**Data wide:**
+
+```{r}
+#| echo: false
+
+long_data |>
+    pivot_wider(names_from = "age_group", values_from = "count") |> 
+    kbl(caption = "Observations (Wide)") |> 
+    kable_styling(bootstrap_options = c("striped", "bordered"), font_size = "85%")
+```
+:::
+:::::
+
+
+## Bonus: Menghapus Kolom dari Dataframe
+
+Misalkan saya memiliki kolom bernama `wrong_column` yang ingin dihapus:
+
+```{r}
+#| echo: true
+
+wvs_data <- wvs_data |> mutate(wrong_column = "random values")
+wvs_data |> select(country, wrong_column) |> print(n = 3)
+```
+
+## Hapus kolom yang salah dengan subset `-`:
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |> 
+    select(-wrong_column)
+```
+
+```{r}
+wvs_data |> select(country) |> print(n = 3)
+```
+
+# Rekap
+
+::: incremental
+
+-   Impor dan baca data ke RStudio: Muat file data eksternal (seperti CSV atau Excel) ke R menggunakan fungsi seperti `read_csv()` agar data tersedia untuk analisis.
+
+-   Data wrangling dengan dplyr dan tidyr (bagian dari paket tidyverse): Gunakan fungsi tidyverse untuk merapikan dan membentuk ulang dataset serta melakukan tugas seperti memilih, menyaring, dan merangkum data.
+
+-   Hapus semua baris dengan nilai kosong (NA) dan periksa duplikat: Hapus baris yang mengandung data kosong menggunakan `na.omit()` dan identifikasi atau hapus baris duplikat dengan fungsi seperti `distinct()`.
+
+-   Pilih hanya kolom yang relevan: Gunakan `select()` untuk menyimpan hanya kolom yang dibutuhkan untuk analisis, fokus pada variabel penting.
+
+-   Saring data berdasarkan kriteria dan urutkan data: Terapkan `filter()` untuk menyimpan baris yang memenuhi kondisi tertentu dan gunakan `arrange()` untuk mengurutkan data berdasarkan satu atau lebih kolom.
+
+-   Konversi variabel kategorikal ke data Factor: Gunakan `mutate()` dan `as_factor`.
+
+-   Buat kolom baru: Buat atau modifikasi kolom menggunakan `mutate()`, sering kali dengan mentransformasi atau menggabungkan kolom yang sudah ada.
+
+:::
+
+# Akhir Sesi 2!
+
+Sesi berikutnya: Statistik deskriptif dan visualisasi data dengan paket `ggplot2` - kita akan membuat visualisasi untuk mengeksplorasi pola dalam kepuasan hidup, nilai, dan demografi lintas negara!
+
+## Latihan di Rumah: Latihan 1
+
+Sekarang kita memiliki file baru, muat file `wvs_cleaned_v1.csv` ke dalam dataframe baru bernama `wvs_cleaned`. Saring responden dari Singapura yang saat ini bekerja penuh waktu (full time). Tampilkan hanya ID Responden, country, status employment, dan age. Gunakan `glimpse()` atau `print()` untuk memeriksa hasilnya! (Anda bisa merangkai fungsi-fungsi ini di akhir)
+
+**Langkah 1**: Muat file baru
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show answer"
+#| output: false
+
+library(tidyverse)
+wvs_cleaned <- read_csv("data-output/wvs_cleaned_v1.csv")
+```
+
+------------------------------------------------------------------------
+
+**Langkah 2**: Lakukan penyaringan dan pemilihan, lalu tampilkan hasil
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show answer"
+
+library(tidyverse)
+wvs_cleaned <- read_csv("data-output/wvs_cleaned_v1.csv")
+
+wvs_cleaned |> 
+    filter(country == "SGP" & employment == "Full time") |> 
+    select(ID, country, employment, age) |> 
+    glimpse()
+
+```
+
+
+## Latihan di Rumah: Latihan 2
+
+Buat statistik ringkasan dari `age` yang dikelompokkan berdasarkan `country` dan `sex`. Statistik ringkasan harus mencakup mean, median, max, min, std, dan n (jumlah observasi). Hasilnya seharusnya terlihat seperti ini:
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| output-location: slide
+#| code-summary: "Show answer"
+
+wvs_data |> 
+    group_by(country, sex) |> 
+    summarise(observation = n(), 
+              mean_age = mean(age, na.rm = TRUE),
+              median_age = median(age, na.rm = TRUE), 
+              oldest = max(age, na.rm = TRUE),
+              youngest = min(age, na.rm = TRUE),
+              std_dev = sd(age, na.rm = TRUE))
+```
+
+# Lampiran
+Fitur lanjutan tidyr dan dplyr yang mungkin Anda butuhkan di masa depan.
+
+## Menggabungkan DataFrame berdasarkan Kolom
+
+Misalkan kita memiliki dua DataFrame `customers` dan `orders`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Dataframe `customers`:
+
+(Perhatikan bahwa ID-nya adalah 1, 2, dan 3)
+```{r}
+
+customers <- data.frame(id = 1:3, name = c("Alice", "Bob", "Carol"))
+print(customers)
+```
+:::
+
+::: {.column width="50%"}
+Dataframe `orders`
+
+(Perhatikan bahwa ID-nya adalah 1, 2, dan 4)
+```{r}
+
+orders <- data.frame(id = c(1,2,4), amount = c(100, 200, 150))
+print(orders)
+
+```
+:::
+
+::::
+
+
+## left_join() untuk menyimpan semua baris dari tabel kiri yaitu customers
+```{r}
+#| echo: true
+
+customers |> left_join(orders, by = "id")
+
+```
+
+## right_join() untuk menyimpan semua baris dari tabel kanan yaitu orders
+```{r}
+#| echo: true
+
+customers |> right_join(orders, by = "id")
+
+```
+
+
+## inner_join() untuk menyimpan hanya baris yang cocok
+```{r}
+#| echo: true
+
+customers |> inner_join(orders, by = "id")
+
+```
+
+## full_join() untuk menyimpan semua baris dari kedua tabel
+```{r}
+#| echo: true
+
+customers |> full_join(orders, by = "id")
+```
+
+
+## bind_rows() untuk menumpuk baris dari dua dataframe berbeda
+
+Misalkan kita memiliki dataframe berikut
+```{r}
+df1 <- data.frame(name = "Alice", age = 25)
+df2 <- data.frame(name = "Bob", age = 30)
+```
+```{r}
+#| echo: true
+print(df1)
+```
+
+```{r}
+#| echo: true
+print(df2)
+```
+
+Tumpuk keduanya:
+```{r}
+#| echo: true
+
+df1 |> bind_rows(df2)
+
+```
+
+## Memisahkan dan Menggabungkan Sel
+
+Misalkan kita memiliki dataframe berikut
+
+```{r}
+
+df <- data.frame(
+  first = c("John", "Jane"),
+  last = c("Doe", "Smith"),
+  full_address = c("123 Main St, NYC, NY", "456 Oak Ave, LA, CA")
+)
+
+print(df)
+```
+
+
+## Gabungkan kolom first dan last name menjadi satu
+```{r}
+#| echo: true
+
+df <- df |> unite("full_name", "first", "last", sep = "_")
+print(df)
+```
+
+## Pisahkan kolom full name menjadi beberapa (berdasarkan delimiter)
+```{r}
+#| echo: true
+
+df <- df |> separate_wider_delim("full_name", delim = "_", names = c("first", "last"))
+print(df)
+```
+
+## Pisahkan satu kolom menjadi beberapa baris (format long)
+```{r}
+#| echo: true
+
+df |> separate_longer_delim(full_address, delim = ", ")
+
+
+```
+
+
