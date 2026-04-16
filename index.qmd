@@ -191,7 +191,7 @@ Situs ini merupakan repositori materi pelatihan (slide, kode, dan dataset) untuk
 | \~ | 10.15 – 10.30 | ☕ *Coffee Break* | |
 | 2 | 10.30 – 12.00 | [**Analisis Regresi**](02-regresi.html) | Regresi linear sederhana, berganda, dan dengan variabel kategorikal menggunakan data WVS. Diagnostik model dan interpretasi hasil. |
 | \~ | 12.00 – 13.00 | 🍽️ *Makan Siang* | |
-| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](03-sem.html) | CB-SEM dengan `lavaan` (CFA, full SEM, path diagram) dan PLS-SEM dengan `seminr` (konstruk formatif & reflektif, bootstrap). |
+| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](03-sem.html) | CB-SEM dengan `lavaan` (CFA, full SEM, mediasi) dan PLS-SEM dengan `seminr` (model ECSI, bootstrap, PLS-Predict). |
 | \~ | Setelah workshop | | [Latihan pasca-workshop](exercises.html) |
 :::
 
@@ -247,7 +247,7 @@ Paket menghemat waktu dan memanfaatkan alat buatan ahli tanpa harus menulis kode
 
 1.  Buka RStudio
 
-2.  Salin kode berikut: `install.packages(c("car", "broom", "lavaan", "semPlot", "seminr", "tidyverse", "rmarkdown"))`
+2.  Salin kode berikut: `install.packages(c("readxl", "car", "broom", "lmtest", "sandwich", "lavaan", "semPlot", "seminr", "tidyverse", "rmarkdown", "knitr"))`
 
 3.  Tempel di tab **Console** (lihat gambar di bawah)
 

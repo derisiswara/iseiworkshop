@@ -548,20 +548,21 @@ Unduh CSV ini dan simpan di folder `data` di proyek R Anda!
 
 ## Memuat Dataset WVS
 
-Mari muat dataset World Values Survey menggunakan fungsi read_csv.
+Mari muat dataset World Values Survey menggunakan fungsi `read_excel` dari paket `readxl`.
 
-Sebelum menggunakan read_csv, instal dan muat paket tidyverse. Instal paket hanya sekali dan perlu memuat paket di setiap sesi sebelum menggunakannya.
+Sebelum menggunakan `read_excel`, instal dan muat paket `readxl` dan `tidyverse`. Instal paket hanya sekali dan perlu memuat paket di setiap sesi sebelum menggunakannya.
 
 ```{r}
 #| echo: true
 #| output: true
 library(tidyverse)
+library(readxl)
 
-wvs_data <- read_csv("data/wvs1.csv")  
+wvs_data <- read_excel("data/regresi/wvs1.xlsx")  
 head(wvs_data)
 ```
 
-Pastikan file CSV tersimpan di folder data Anda! (Tidak ada auto save)
+Pastikan file xlsx tersimpan di folder data Anda! (Tidak ada auto save)
 
 ## Mengeksplorasi Dataset WVS
 
@@ -766,8 +767,9 @@ subset_data <- data |>
 
 library(tidyverse)
 
-# Baca file CSV data WVS (sudah diterjemahkan ke Bahasa Indonesia)
-wvs_data <- read_csv("data/wvs1.csv")
+# Baca file WVS (sudah diterjemahkan ke Bahasa Indonesia)
+library(readxl)
+wvs_data <- read_excel("data/regresi/wvs1.xlsx")
 glimpse(wvs_data)
 ```
 
@@ -938,13 +940,13 @@ wvs_cleaned |>
 
 ## Latihan Tidyverse {.smaller}
 
-> Muat file `data/wvs2.csv`, gabungkan dengan `wvs_data` menggunakan `bind_rows()`. Saring hanya responden dari Indonesia, hitung rata-rata `kepuasan_hidup` per `jenis_kelamin`.
+> Muat file `data/regresi/wvs2.xlsx`, gabungkan dengan `wvs_data` menggunakan `bind_rows()`. Saring hanya responden dari Indonesia, hitung rata-rata `kepuasan_hidup` per `jenis_kelamin`.
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Jawaban"
-wvs2 <- read_csv("data/wvs2.csv")
+wvs2 <- read_excel("data/regresi/wvs2.xlsx")
 wvs_gabungan <- bind_rows(wvs_data, wvs2)
 
 wvs_gabungan |> 

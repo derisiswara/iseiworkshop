@@ -3,32 +3,26 @@ title: "Dataset"
 format: html
 ---
 
-Workshop ini menggunakan **4 dataset** untuk 3 sesi yang berbeda.
+Workshop ini menggunakan **3 dataset** untuk 3 sesi yang berbeda.
 
-## Dataset untuk Sesi 1 & 2: World Values Survey (WVS)
+## 1. Regresi: World Values Survey (WVS) Wave 7
 
-Untuk sesi Pengantar R dan Analisis Regresi, kita menggunakan data dari **World Values Survey Wave 7** yang telah diterjemahkan ke Bahasa Indonesia.
+Untuk sesi Pengantar R dan Analisis Regresi, kita menggunakan data dari **World Values Survey Wave 7** yang telah diterjemahkan ke Bahasa Indonesia. Data tersedia dalam format Excel (.xlsx).
 
 ### File Data
 
-| File | Negara | Keterangan |
+| File | Negara | n |
 |---|---|---|
-| `wvs1.csv` | Singapura, Kanada, Selandia Baru | Digunakan untuk latihan sesi 1 & 2 |
-| `wvs2.csv` | Singapura, Thailand, Indonesia | Digunakan untuk latihan sesi 2 (regresi) |
+| `wvs1.xlsx` | Singapura, Kanada, Selandia Baru | 7.087 |
+| `wvs2.xlsx` | Singapura, Thailand, Indonesia | 6.712 |
 
-::: callout-tip
-Kedua file sudah tersedia di folder `data/` dalam repositori workshop. Jika Anda mengunduh secara terpisah, simpan di dalam folder `data/` pada project RStudio Anda.
-:::
-
-### Kamus Data (Data Dictionary)
-
-Semua variabel sudah diterjemahkan ke Bahasa Indonesia. Berikut adalah 16 variabel yang tersedia:
+### Kamus Data
 
 #### Variabel Identitas
 
 | Variabel | Tipe | Deskripsi |
 |---|---|---|
-| `negara` | Karakter | Kode negara: `Singapura`, `Kanada`, `Selandia Baru`, `Thailand`, `Indonesia` |
+| `negara` | Karakter | Kode negara |
 | `id_responden` | Numerik | Identifikasi unik setiap responden |
 
 #### Variabel Pentingnya Aspek Kehidupan (Skala 1–4, 1 = sangat penting)
@@ -53,7 +47,7 @@ Semua variabel sudah diterjemahkan ke Bahasa Indonesia. Berikut adalah 16 variab
 | Variabel | Deskripsi |
 |---|---|
 | `skala_politik` | Orientasi politik kiri–kanan (1 = kiri, 10 = kanan) |
-| `religiusitas` | Identifikasi keagamaan: `Religius`, `Tidak religius`, `Ateis`, `Tidak tahu` |
+| `religiusitas` | Tingkat religiusitas (1–10) |
 
 #### Variabel Demografi
 
@@ -62,54 +56,107 @@ Semua variabel sudah diterjemahkan ke Bahasa Indonesia. Berikut adalah 16 variab
 | `jenis_kelamin` | Karakter | `Laki-laki` atau `Perempuan` |
 | `tahun_lahir` | Numerik | Tahun lahir responden |
 | `usia` | Numerik | Usia responden |
-| `status_pernikahan` | Karakter | `Menikah`, `Tinggal bersama`, `Cerai`, `Berpisah`, `Janda/Duda`, `Lajang` |
-| `status_pekerjaan` | Karakter | `Penuh waktu`, `Paruh waktu`, `Wiraswasta`, `Pensiun`, `Ibu rumah tangga`, `Pelajar/Mahasiswa`, `Pengangguran` |
+| `status_pernikahan` | Karakter | Status pernikahan |
+| `status_pekerjaan` | Karakter | Status pekerjaan |
 
-Dokumentasi lengkap variabel tersedia di file [wvs_variabel.md](data/wvs_variabel.md).
-
-::: {.callout-note appearance="simple"}
-### Apa itu CSV?
-
-CSV (Comma-Separated Values) adalah jenis file yang menyimpan data dalam format teks biasa. Setiap baris mewakili satu baris data, dan setiap kolom dipisahkan oleh koma. Format ini umumnya digunakan untuk menyimpan dan mentransfer data. Anda dapat membuka file CSV di Excel, Google Sheets, atau bahkan Notepad.
-:::
-
----
-
-## Dataset untuk Sesi 3: SEM
-
-Sesi SEM menggunakan **2 dataset dummy** yang dirancang dengan dasar teori yang kuat.
-
-### CB-SEM: `sem_ecommerce.csv`
-
-Dataset kepuasan pelanggan e-commerce (n = 300) berdasarkan teori ACSI, SERVQUAL, dan Trust.
-
-| Konstruk | Kode | Indikator | Teori |
-|---|---|---|---|
-| Kualitas Layanan | SQ | SQ1–SQ4 | SERVQUAL (Parasuraman et al.) |
-| Persepsi Nilai | PV | PV1–PV3 | Perceived Value |
-| Kepercayaan | TR | TR1–TR4 | Trust Theory (McKnight et al.) |
-| Kepuasan Pelanggan | CS | CS1–CS4 | ACSI (Fornell et al.) |
-| Loyalitas Pelanggan | CL | CL1–CL3 | Customer Loyalty |
-| Niat Beli Ulang | RI | RI1–RI3 | Repurchase Intention |
-
-Semua konstruk **reflektif** (Mode A). Skala Likert 1–7.
-
-### PLS-SEM: `sem_innovation.csv`
-
-Dataset inovasi dan kinerja UMKM (n = 200) berdasarkan Resource-Based View dan Market Orientation.
-
-| Konstruk | Kode | Mode | Indikator | Teori |
-|---|---|---|---|---|
-| Kapabilitas Inovasi | IC | **Formatif (B)** | IC1–IC4 | RBV (Barney, 1991) |
-| Orientasi Pasar | MO | **Formatif (B)** | MO1–MO3 | Narver & Slater (1990) |
-| Orientasi Kewirausahaan | EO | **Formatif (B)** | EO1–EO3 | Lumpkin & Dess (1996) |
-| Keunggulan Bersaing | CA | Reflektif (A) | CA1–CA4 | Competitive Advantage |
-| Kinerja Perusahaan | FP | Reflektif (A) | FP1–FP4 | Firm Performance |
-
-Skala Likert 1–7. Juga mengandung variabel kontrol: `firm_age`, `firm_size`, `industry`.
-
----
-
-### Referensi WVS
+### Referensi
 
 Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. & Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: [doi.org/10.14281/18241.18](https://doi.org/10.14281/18241.18)
+
+---
+
+## 2. CB-SEM: Electronic Loyalty (E-Loyalty)
+
+Dataset untuk analisis CB-SEM menggunakan data riil tentang **Electronic Loyalty** dalam konteks e-commerce.
+
+**File:** `data/sem/data.xlsx` (n = 485, 15 kolom)
+
+### Konstruk dan Indikator
+
+| Konstruk | Kode | Indikator | Deskripsi | Referensi |
+|---|---|---|---|---|
+| Perceived Mental Benefits | PMB | PMB1–PMB4 | Manfaat mental yang dirasakan konsumen | Nguyen & Khoa (2019) |
+| Hedonic Value | HV | HV1–HV4 | Nilai hedonis dari pengalaman belanja online | Lee & Wu (2017) |
+| Electronic Loyalty | ELOY | ELOY1–ELOY3 | Loyalitas elektronik konsumen | Khoa & Nguyen (2020); Srivastava & Rai (2018) |
+
+Semua konstruk **reflektif**. Skala Likert.
+
+### Variabel Tambahan
+
+| Variabel | Deskripsi |
+|---|---|
+| `No` | Nomor responden |
+| `gender` | Jenis kelamin |
+| `occupation` | Pekerjaan |
+| `times` | Frekuensi penggunaan |
+
+### Model Struktural
+
+```
+PMB → ELOY    (direct effect)
+PMB → HV
+HV  → ELOY
+PMB → HV → ELOY  (indirect/mediasi)
+```
+
+### Referensi
+
+- Khoa, B. T., & Nguyen, H. M. (2020). Electronic Loyalty In Social Commerce. *Gadjah Mada International Journal of Business*, 22(3), 275-299.
+- Lee, C.-H., & Wu, J. J. (2017). Consumer online flow experience. *Industrial Management & Data Systems*, 117(10), 2452-2467.
+- Nguyen, M. H., & Khoa, B. T. (2019). Perceived Mental Benefit in Electronic Commerce. *Sustainability*, 11(23), 6587-6608.
+
+---
+
+## 3. PLS-SEM: ECSI Mobile Industry
+
+Dataset untuk analisis PLS-SEM menggunakan data **European Customer Satisfaction Index (ECSI)** untuk industri telepon seluler.
+
+**File:** `data/plssem/sem_mobi.xlsx` (n = 250, 24 kolom)
+
+### Konstruk dan Indikator
+
+| Konstruk | Kode | Indikator | Deskripsi |
+|---|---|---|---|
+| Corporate Image | IMAG | IMAG1–IMAG5 | Trustworthiness, stabilitas, kontribusi sosial, kepedulian, inovasi |
+| Customer Expectations | CUEX | CUEX1–CUEX3 | Ekspektasi kualitas, pemenuhan kebutuhan, frekuensi error |
+| Perceived Quality | PERQ | PERQ1–PERQ7 | Kualitas keseluruhan, teknis, layanan, produk, keragaman, reliabilitas, transparansi |
+| Perceived Value | PERV | PERV1–PERV2 | Harga vs kualitas, kualitas vs harga |
+| Customer Satisfaction | CUSA | CUSA1–CUSA3 | Kepuasan keseluruhan, fulfillment, perbandingan ideal |
+| Customer Complaints | CUSCO | CUSCO | Single indicator — penanganan keluhan |
+| Customer Loyalty | CUSL | CUSL1–CUSL3 | Repurchase, price tolerance, word of mouth |
+
+**Skala:** Likert 1–10. Semua konstruk **reflektif** (Mode A). CUSCO adalah *single-item construct*.
+
+### Model Struktural ECSI
+
+```
+IMAG → CUEX, CUSA, CUSL
+CUEX → PERQ, PERV, CUSA
+PERQ → PERV, CUSA
+PERV → CUSA
+CUSA → CUSCO, CUSL
+CUSCO → CUSL
+```
+
+### Referensi
+
+- Hair, J.F., Risher, J.J., Sarstedt, M. & Ringle, C.M. (2019). When to use and how to report PLS-SEM. *European Business Review*, 31(1), 2-24.
+- Henseler, J., Ringle, C.M. & Sarstedt, M. (2015). A new criterion for assessing discriminant validity. *JAMS*, 43(1), 115-135.
+
+---
+
+## Download Data
+
+### Regresi
+
+- [wvs1.xlsx](data/regresi/wvs1.xlsx) — WVS Wave 7: Singapura, Kanada, Selandia Baru (n = 7.087)
+- [wvs2.xlsx](data/regresi/wvs2.xlsx) — WVS Wave 7: Singapura, Thailand, Indonesia (n = 6.712)
+
+### CB-SEM
+
+- [data.xlsx](data/sem/data.xlsx) — E-Loyalty: Perceived Mental Benefits, Hedonic Value, Electronic Loyalty (n = 485)
+- [Measurement Scale.pdf](data/sem/Measurement%20Scale.pdf) — Skala pengukuran dan item kuesioner
+
+### PLS-SEM
+
+- [sem_mobi.xlsx](data/plssem/sem_mobi.xlsx) — ECSI Mobile Industry: 7 konstruk, 24 indikator (n = 250)

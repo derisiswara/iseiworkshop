@@ -48,5 +48,8 @@ format:
     fig-width: 14
     
 
+resources:
+  - data/**
+
 execute:
   freeze: auto

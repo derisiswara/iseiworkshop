@@ -237,7 +237,7 @@ ISEI Workshop
 <h2>Dataset Hari Ini</h2>
 <p>Kita akan menggunakan data <strong>World Values Survey (WVS)</strong> Wave 7 yang sudah diterjemahkan ke Bahasa Indonesia.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>wvs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs1.csv"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>wvs <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/regresi/wvs1.xlsx"</span>)</span>
 <span id="cb1-2"><a></a><span class="fu">glimpse</span>(wvs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 7,087
@@ -324,6 +324,19 @@ $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "P
 <pre><code>[1] 6922</code></pre>
 </div>
 </div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Variabel skala 1–10 diperlakukan sebagai kontinu berdasarkan Norman (2010) yang menunjukkan bahwa Likert data dengan ≥ 5 kategori bersifat robust untuk analisis parametrik.</p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="bagian-1-regresi-linear-sederhana" class="title-slide slide level1 center">
@@ -337,6 +350,14 @@ $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "P
 <li class="fragment">Variabel <strong>dependen</strong> (Y): variabel yang ingin kita prediksi/jelaskan</li>
 <li class="fragment">Variabel <strong>independen</strong> (X): variabel yang digunakan sebagai prediktor</li>
 <li class="fragment">Model: <span class="math inline">\(Y = \beta_0 + \beta_1 X + \varepsilon\)</span></li>
+</ul>
+</section>
+<section id="landasan-teori-subjective-well-being" class="slide level2">
+<h2>Landasan Teori: Subjective Well-Being</h2>
+<ul>
+<li class="fragment"><strong>Teori Subjective Well-Being</strong> (Diener et al., 1999): kepuasan hidup merupakan komponen kognitif dari SWB, yang mencerminkan evaluasi individu terhadap kehidupannya secara keseluruhan.</li>
+<li class="fragment"><strong>Kebebasan dan kesejahteraan</strong>: Inglehart (2000) dan Sen (1999) menunjukkan bahwa kebebasan individual berperan penting dalam meningkatkan kesejahteraan subjektif.</li>
+<li class="fragment"><strong>Justifikasi variabel</strong>: Pemilihan variabel prediktor (kepuasan finansial, kebebasan memilih, religiusitas) didasarkan pada literatur WVS yang secara konsisten menemukan hubungan signifikan antara faktor-faktor tersebut dengan kepuasan hidup.</li>
 </ul>
 </section>
 <section id="komponen-model-regresi" class="slide level2">
@@ -495,13 +516,13 @@ F-statistic:  4988 on 1 and 6920 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="interpretasi-koefisien" class="slide level2">
 <h2>Interpretasi Koefisien</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">tidy</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">tidy</span>(m1, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  term               estimate std.error statistic p.value
-  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-1 (Intercept)           3.51    0.0535       65.7       0
-2 kepuasan_finansial    0.545   0.00772      70.6       0</code></pre>
+<pre><code># A tibble: 2 × 7
+  term               estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)           3.51    0.0535       65.7       0    3.41      3.62 
+2 kepuasan_finansial    0.545   0.00772      70.6       0    0.530     0.560</code></pre>
 </div>
 </div>
 <div class="fragment">
@@ -578,6 +599,17 @@ Residual standard error: 1.448 on 6920 degrees of freedom
 Multiple R-squared:  0.3704,    Adjusted R-squared:  0.3703 
 F-statistic:  4070 on 1 and 6920 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">tidy</span>(m_latihan, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  term              estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)          2.64    0.0721       36.6 4.99e-268    2.50      2.78 
+2 kebebasan_memilih    0.611   0.00958      63.8 0            0.592     0.630</code></pre>
+</div>
 </div>
 </section></section>
 <section>
@@ -602,7 +634,7 @@ F-statistic:  4070 on 1 and 6920 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>Formula Regresi Berganda</h2>
 <p><span class="math display">\[Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \varepsilon\]</span></p>
 <p>Di R:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">lm</span>(Y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3, <span class="at">data =</span> ...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">lm</span>(Y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3, <span class="at">data =</span> ...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment">
 <p><code>+</code> menambahkan prediktor ke model (bukan operasi matematika)</p>
 </div>
@@ -610,9 +642,9 @@ F-statistic:  4070 on 1 and 6920 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="model-dengan-2-prediktor" class="slide level2">
 <h2>Model dengan 2 Prediktor</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih,</span>
-<span id="cb21-2"><a></a>         <span class="at">data =</span> dat)</span>
-<span id="cb21-3"><a></a><span class="fu">summary</span>(m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih,</span>
+<span id="cb23-2"><a></a>         <span class="at">data =</span> dat)</span>
+<span id="cb23-3"><a></a><span class="fu">summary</span>(m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -640,14 +672,14 @@ F-statistic:  3961 on 2 and 6919 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="interpretasi-koefisien-berganda" class="slide level2">
 <h2>Interpretasi Koefisien Berganda</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">tidy</span>(m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">tidy</span>(m2, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 5
-  term               estimate std.error statistic   p.value
-  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 (Intercept)           1.71    0.0648       26.3 8.78e-146
-2 kepuasan_finansial    0.388   0.00788      49.2 0        
-3 kebebasan_memilih     0.388   0.00940      41.3 0        </code></pre>
+<pre><code># A tibble: 3 × 7
+  term               estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)           1.71    0.0648       26.3 8.78e-146    1.58      1.83 
+2 kepuasan_finansial    0.388   0.00788      49.2 0            0.373     0.404
+3 kebebasan_memilih     0.388   0.00940      41.3 0            0.370     0.407</code></pre>
 </div>
 </div>
 <div class="fragment">
@@ -670,9 +702,9 @@ F-statistic:  3961 on 2 and 6919 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="model-dengan-lebih-banyak-prediktor" class="slide level2">
 <h2>Model dengan Lebih Banyak Prediktor</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb25-2"><a></a>           religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
-<span id="cb25-3"><a></a><span class="fu">summary</span>(m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb27-2"><a></a>           religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
+<span id="cb27-3"><a></a><span class="fu">summary</span>(m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -703,7 +735,7 @@ F-statistic:  2023 on 4 and 6917 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>Perbandingan Model: ANOVA</h2>
 <p>Apakah model yang lebih kompleks secara signifikan lebih baik?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">anova</span>(m1, m2, m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">anova</span>(m1, m2, m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -730,25 +762,67 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="perbandingan-r2" class="slide level2">
 <h2>Perbandingan <span class="math inline">\(R^2\)</span></h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">tibble</span>(</span>
-<span id="cb29-2"><a></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">"m1 (finansial)"</span>,</span>
-<span id="cb29-3"><a></a>            <span class="st">"m2 (+ kebebasan)"</span>,</span>
-<span id="cb29-4"><a></a>            <span class="st">"m3 (+ religiusitas + usia)"</span>),</span>
-<span id="cb29-5"><a></a>  <span class="at">R2 =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>r.squared,</span>
-<span id="cb29-6"><a></a>         <span class="fu">glance</span>(m2)<span class="sc">$</span>r.squared,</span>
-<span id="cb29-7"><a></a>         <span class="fu">glance</span>(m3)<span class="sc">$</span>r.squared),</span>
-<span id="cb29-8"><a></a>  <span class="at">R2_adj =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>adj.r.squared,</span>
-<span id="cb29-9"><a></a>             <span class="fu">glance</span>(m2)<span class="sc">$</span>adj.r.squared,</span>
-<span id="cb29-10"><a></a>             <span class="fu">glance</span>(m3)<span class="sc">$</span>adj.r.squared),</span>
-<span id="cb29-11"><a></a>  <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(m1), <span class="fu">AIC</span>(m2), <span class="fu">AIC</span>(m3))</span>
-<span id="cb29-12"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 4
-  Model                         R2 R2_adj    AIC
-  &lt;chr&gt;                      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1 m1 (finansial)             0.419  0.419 24222.
-2 m2 (+ kebebasan)           0.534  0.534 22699.
-3 m3 (+ religiusitas + usia) 0.539  0.539 22623.</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">tibble</span>(</span>
+<span id="cb31-2"><a></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">"m1 (finansial)"</span>,</span>
+<span id="cb31-3"><a></a>            <span class="st">"m2 (+ kebebasan)"</span>,</span>
+<span id="cb31-4"><a></a>            <span class="st">"m3 (+ religiusitas + usia)"</span>),</span>
+<span id="cb31-5"><a></a>  <span class="at">R2 =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>r.squared,</span>
+<span id="cb31-6"><a></a>         <span class="fu">glance</span>(m2)<span class="sc">$</span>r.squared,</span>
+<span id="cb31-7"><a></a>         <span class="fu">glance</span>(m3)<span class="sc">$</span>r.squared),</span>
+<span id="cb31-8"><a></a>  <span class="at">R2_adj =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb31-9"><a></a>             <span class="fu">glance</span>(m2)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb31-10"><a></a>             <span class="fu">glance</span>(m3)<span class="sc">$</span>adj.r.squared),</span>
+<span id="cb31-11"><a></a>  <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(m1), <span class="fu">AIC</span>(m2), <span class="fu">AIC</span>(m3)),</span>
+<span id="cb31-12"><a></a>  <span class="at">f2 =</span> R2_adj <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> R2_adj)</span>
+<span id="cb31-13"><a></a>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">R2</th>
+<th style="text-align: right;">R2_adj</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">f2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">m1 (finansial)</td>
+<td style="text-align: right;">0.419</td>
+<td style="text-align: right;">0.419</td>
+<td style="text-align: right;">24221.64</td>
+<td style="text-align: right;">0.721</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">m2 (+ kebebasan)</td>
+<td style="text-align: right;">0.534</td>
+<td style="text-align: right;">0.534</td>
+<td style="text-align: right;">22698.99</td>
+<td style="text-align: right;">1.144</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">m3 (+ religiusitas + usia)</td>
+<td style="text-align: right;">0.539</td>
+<td style="text-align: right;">0.539</td>
+<td style="text-align: right;">22623.47</td>
+<td style="text-align: right;">1.168</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Cohen’s <span class="math inline">\(f^2\)</span></strong>: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).</p>
+</div>
 </div>
 </div>
 </section>
@@ -765,13 +839,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="diagnostik-residual-vs-fitted" class="slide level2">
 <h2>Diagnostik: Residual vs Fitted</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">ggplot</span>(<span class="fu">augment</span>(m3), <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb31-2"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb31-3"><a></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb31-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb31-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Residual vs Fitted"</span>,</span>
-<span id="cb31-6"><a></a>       <span class="at">x =</span> <span class="st">"Fitted Values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
-<span id="cb31-7"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">ggplot</span>(<span class="fu">augment</span>(m3), <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb32-2"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb32-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Residual vs Fitted"</span>,</span>
+<span id="cb32-6"><a></a>       <span class="at">x =</span> <span class="st">"Fitted Values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
+<span id="cb32-7"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -786,11 +860,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div></section><section id="diagnostik-q-q-plot" class="slide level2">
 <h2>Diagnostik: Q-Q Plot</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">ggplot</span>(<span class="fu">augment</span>(m3), <span class="fu">aes</span>(<span class="at">sample =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb32-2"><a></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb32-3"><a></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb32-4"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Q-Q Plot"</span>) <span class="sc">+</span></span>
-<span id="cb32-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">ggplot</span>(<span class="fu">augment</span>(m3), <span class="fu">aes</span>(<span class="at">sample =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb33-2"><a></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb33-3"><a></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Q-Q Plot"</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -806,7 +880,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h2>Multikolinearitas: VIF</h2>
 <p><strong>Variance Inflation Factor</strong> mengukur seberapa besar varians koefisien meningkat akibat korelasi antar prediktor.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">vif</span>(m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">vif</span>(m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>kepuasan_finansial  kebebasan_memilih       religiusitas               usia 
           1.328704           1.301577           1.012549           1.036567 </code></pre>
@@ -820,6 +894,58 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ul>
 </div>
 </section>
+<section id="diagnostik-breusch-pagan-test" class="slide level2">
+<h2>Diagnostik: Breusch-Pagan Test</h2>
+<p><strong>Breusch-Pagan test</strong> menguji asumsi homoskedastisitas (varians residual konstan).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">bptest</span>(m3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  m3
+BP = 219.08, df = 4, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Jika p-value &lt; 0.05, terdapat indikasi <strong>heteroskedastisitas</strong> — varians residual tidak konstan.</p>
+</div>
+</section>
+<section id="robust-standard-errors" class="slide level2">
+<h2>Robust Standard Errors</h2>
+<p>Jika p-value BP test &lt; 0.05, gunakan <strong>robust standard errors</strong> untuk inferensi yang lebih valid.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">coeftest</span>(m3, <span class="at">vcov =</span> <span class="fu">vcovHC</span>(m3, <span class="at">type =</span> <span class="st">"HC3"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+                     Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)        1.31388387 0.08886323 14.7855 &lt; 2.2e-16 ***
+kepuasan_finansial 0.37921502 0.01134592 33.4230 &lt; 2.2e-16 ***
+kebebasan_memilih  0.38907553 0.01354804 28.7182 &lt; 2.2e-16 ***
+religiusitas       0.03228555 0.00580773  5.5591 2.813e-08 ***
+usia               0.00569275 0.00093759  6.0717 1.333e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Robust standard errors (HC3) memberikan estimasi standard error yang valid meskipun terdapat heteroskedastisitas, sehingga p-value dan confidence interval lebih dapat dipercaya.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="latihan-2" class="slide level2 smaller">
 <h2>Latihan 2</h2>
 <blockquote>
@@ -828,23 +954,23 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Jawaban</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>m_latihan2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb35-2"><a></a>                   religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
-<span id="cb35-3"><a></a><span class="fu">tidy</span>(m_latihan2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>m_latihan2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb40-2"><a></a>                   religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
+<span id="cb40-3"><a></a><span class="fu">tidy</span>(m_latihan2, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 5
-  term               estimate std.error statistic  p.value
-  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)         1.31     0.0781       16.8  3.07e-62
-2 kepuasan_finansial  0.379    0.00792      47.9  0       
-3 kebebasan_memilih   0.389    0.00935      41.6  0       
-4 religiusitas        0.0323   0.00578       5.59 2.39e- 8
-5 usia                0.00569  0.000894      6.37 2.02e-10</code></pre>
+<pre><code># A tibble: 5 × 7
+  term               estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)         1.31     0.0781       16.8  3.07e-62  1.16      1.47   
+2 kepuasan_finansial  0.379    0.00792      47.9  0         0.364     0.395  
+3 kebebasan_memilih   0.389    0.00935      41.6  0         0.371     0.407  
+4 religiusitas        0.0323   0.00578       5.59 2.39e- 8  0.0210    0.0436 
+5 usia                0.00569  0.000894      6.37 2.02e-10  0.00394   0.00744</code></pre>
 </div>
 <details class="code-fold">
 <summary>Jawaban</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">vif</span>(m_latihan2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">vif</span>(m_latihan2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>kepuasan_finansial  kebebasan_memilih       religiusitas               usia 
@@ -866,16 +992,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
-<span id="cb39-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-3"><a></a>    <span class="at">jenis_kelamin =</span> <span class="fu">factor</span>(jenis_kelamin),</span>
-<span id="cb39-4"><a></a>    <span class="at">negara =</span> <span class="fu">factor</span>(negara)</span>
-<span id="cb39-5"><a></a>  )</span>
-<span id="cb39-6"><a></a><span class="fu">levels</span>(dat<span class="sc">$</span>jenis_kelamin)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-3"><a></a>    <span class="at">jenis_kelamin =</span> <span class="fu">factor</span>(jenis_kelamin),</span>
+<span id="cb44-4"><a></a>    <span class="at">negara =</span> <span class="fu">factor</span>(negara)</span>
+<span id="cb44-5"><a></a>  )</span>
+<span id="cb44-6"><a></a><span class="fu">levels</span>(dat<span class="sc">$</span>jenis_kelamin)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Laki-laki" "Perempuan"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">levels</span>(dat<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">levels</span>(dat<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Kanada"        "Selandia Baru" "Singapura"    </code></pre>
 </div>
@@ -885,9 +1011,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="model-dengan-variabel-kategorikal" class="slide level2">
 <h2>Model dengan Variabel Kategorikal</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb43-2"><a></a>           religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin, <span class="at">data =</span> dat)</span>
-<span id="cb43-3"><a></a><span class="fu">summary</span>(m4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb48-2"><a></a>           religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin, <span class="at">data =</span> dat)</span>
+<span id="cb48-3"><a></a><span class="fu">summary</span>(m4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -918,9 +1044,18 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="interpretasi-dummy-variable" class="slide level2">
 <h2>Interpretasi Dummy Variable</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">tidy</span>(m4) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">tidy</span>(m4, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -928,6 +1063,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: right;">std.error</th>
 <th style="text-align: right;">statistic</th>
 <th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr>
 </thead>
 <tbody>
@@ -937,6 +1074,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.080</td>
 <td style="text-align: right;">16.217</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.136</td>
+<td style="text-align: right;">1.449</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kepuasan_finansial</td>
@@ -944,6 +1083,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">47.885</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.364</td>
+<td style="text-align: right;">0.395</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">kebebasan_memilih</td>
@@ -951,6 +1092,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">41.567</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.370</td>
+<td style="text-align: right;">0.407</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">religiusitas</td>
@@ -958,6 +1101,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.006</td>
 <td style="text-align: right;">5.505</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.043</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">usia</td>
@@ -965,6 +1110,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.001</td>
 <td style="text-align: right;">6.451</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.008</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">jenis_kelaminPerempuan</td>
@@ -972,6 +1119,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.030</td>
 <td style="text-align: right;">1.348</td>
 <td style="text-align: right;">0.178</td>
+<td style="text-align: right;">-0.018</td>
+<td style="text-align: right;">0.099</td>
 </tr>
 </tbody>
 </table>
@@ -984,11 +1133,20 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="model-dengan-negara" class="slide level2">
 <h2>Model dengan Negara</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb46-2"><a></a>           religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> dat)</span>
-<span id="cb46-3"><a></a><span class="fu">tidy</span>(m5) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb51-2"><a></a>           religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> dat)</span>
+<span id="cb51-3"><a></a><span class="fu">tidy</span>(m5, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -996,6 +1154,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: right;">std.error</th>
 <th style="text-align: right;">statistic</th>
 <th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr>
 </thead>
 <tbody>
@@ -1005,6 +1165,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.081</td>
 <td style="text-align: right;">15.541</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.098</td>
+<td style="text-align: right;">1.414</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kepuasan_finansial</td>
@@ -1012,6 +1174,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">47.548</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.361</td>
+<td style="text-align: right;">0.392</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">kebebasan_memilih</td>
@@ -1019,6 +1183,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">41.623</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.376</td>
+<td style="text-align: right;">0.413</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">religiusitas</td>
@@ -1026,6 +1192,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.006</td>
 <td style="text-align: right;">4.679</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.039</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">usia</td>
@@ -1033,6 +1201,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.001</td>
 <td style="text-align: right;">5.781</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.007</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">jenis_kelaminPerempuan</td>
@@ -1040,6 +1210,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.030</td>
 <td style="text-align: right;">1.028</td>
 <td style="text-align: right;">0.304</td>
+<td style="text-align: right;">-0.028</td>
+<td style="text-align: right;">0.090</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">negaraSelandia Baru</td>
@@ -1047,6 +1219,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.046</td>
 <td style="text-align: right;">3.275</td>
 <td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.241</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">negaraSingapura</td>
@@ -1054,6 +1228,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.035</td>
 <td style="text-align: right;">4.427</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.087</td>
+<td style="text-align: right;">0.225</td>
 </tr>
 </tbody>
 </table>
@@ -1064,14 +1240,23 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>Mengubah Kategori Referensi</h2>
 <p>Gunakan <code>relevel()</code> untuk mengubah kategori referensi:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a></a>  <span class="fu">mutate</span>(<span class="at">negara =</span> <span class="fu">relevel</span>(negara, <span class="at">ref =</span> <span class="st">"Singapura"</span>))</span>
-<span id="cb47-3"><a></a></span>
-<span id="cb47-4"><a></a>m5b <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb47-5"><a></a>            religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> dat)</span>
-<span id="cb47-6"><a></a><span class="fu">tidy</span>(m5b) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a></a>  <span class="fu">mutate</span>(<span class="at">negara =</span> <span class="fu">relevel</span>(negara, <span class="at">ref =</span> <span class="st">"Singapura"</span>))</span>
+<span id="cb52-3"><a></a></span>
+<span id="cb52-4"><a></a>m5b <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb52-5"><a></a>            religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> dat)</span>
+<span id="cb52-6"><a></a><span class="fu">tidy</span>(m5b, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -1079,6 +1264,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: right;">std.error</th>
 <th style="text-align: right;">statistic</th>
 <th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr>
 </thead>
 <tbody>
@@ -1088,6 +1275,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.083</td>
 <td style="text-align: right;">16.969</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.249</td>
+<td style="text-align: right;">1.575</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kepuasan_finansial</td>
@@ -1095,6 +1284,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">47.548</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.361</td>
+<td style="text-align: right;">0.392</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">kebebasan_memilih</td>
@@ -1102,6 +1293,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">41.623</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.376</td>
+<td style="text-align: right;">0.413</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">religiusitas</td>
@@ -1109,6 +1302,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.006</td>
 <td style="text-align: right;">4.679</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.039</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">usia</td>
@@ -1116,6 +1311,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.001</td>
 <td style="text-align: right;">5.781</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.007</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">jenis_kelaminPerempuan</td>
@@ -1123,6 +1320,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.030</td>
 <td style="text-align: right;">1.028</td>
 <td style="text-align: right;">0.304</td>
+<td style="text-align: right;">-0.028</td>
+<td style="text-align: right;">0.090</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">negaraKanada</td>
@@ -1130,6 +1329,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.035</td>
 <td style="text-align: right;">-4.427</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.225</td>
+<td style="text-align: right;">-0.087</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">negaraSelandia Baru</td>
@@ -1137,6 +1338,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.051</td>
 <td style="text-align: right;">-0.104</td>
 <td style="text-align: right;">0.917</td>
+<td style="text-align: right;">-0.105</td>
+<td style="text-align: right;">0.094</td>
 </tr>
 </tbody>
 </table>
@@ -1147,16 +1350,18 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>Interaksi antar Variabel</h2>
 <p>Interaksi: efek satu variabel <strong>tergantung</strong> pada level variabel lain.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>m6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">*</span> jenis_kelamin <span class="sc">+</span></span>
-<span id="cb48-2"><a></a>           kebebasan_memilih <span class="sc">+</span> religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
-<span id="cb48-3"><a></a><span class="fu">tidy</span>(m6) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>m6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">*</span> jenis_kelamin <span class="sc">+</span></span>
+<span id="cb53-2"><a></a>           kebebasan_memilih <span class="sc">+</span> religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat)</span>
+<span id="cb53-3"><a></a><span class="fu">tidy</span>(m6, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top" style="width:100%;">
+<table class="caption-top">
 <colgroup>
-<col style="width: 53%">
-<col style="width: 11%">
-<col style="width: 12%">
-<col style="width: 12%">
+<col style="width: 42%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 9%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -1166,6 +1371,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: right;">std.error</th>
 <th style="text-align: right;">statistic</th>
 <th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr>
 </thead>
 <tbody>
@@ -1175,6 +1382,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.092</td>
 <td style="text-align: right;">13.075</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.018</td>
+<td style="text-align: right;">1.377</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kepuasan_finansial</td>
@@ -1182,6 +1391,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.011</td>
 <td style="text-align: right;">37.055</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.373</td>
+<td style="text-align: right;">0.415</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">jenis_kelaminPerempuan</td>
@@ -1189,6 +1400,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.095</td>
 <td style="text-align: right;">2.418</td>
 <td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.418</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kebebasan_memilih</td>
@@ -1196,6 +1409,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">41.504</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.370</td>
+<td style="text-align: right;">0.407</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">religiusitas</td>
@@ -1203,6 +1418,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.006</td>
 <td style="text-align: right;">5.488</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.043</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">usia</td>
@@ -1210,6 +1427,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.001</td>
 <td style="text-align: right;">6.469</td>
 <td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.008</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">kepuasan_finansial:jenis_kelaminPerempuan</td>
@@ -1217,6 +1436,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.014</td>
 <td style="text-align: right;">-2.101</td>
 <td style="text-align: right;">0.036</td>
+<td style="text-align: right;">-0.056</td>
+<td style="text-align: right;">-0.002</td>
 </tr>
 </tbody>
 </table>
@@ -1226,17 +1447,17 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="visualisasi-interaksi" class="slide level2">
 <h2>Visualisasi Interaksi</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup,</span>
-<span id="cb49-2"><a></a>                <span class="at">color =</span> jenis_kelamin)) <span class="sc">+</span></span>
-<span id="cb49-3"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb49-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb49-5"><a></a>  <span class="fu">labs</span>(</span>
-<span id="cb49-6"><a></a>    <span class="at">title =</span> <span class="st">"Interaksi: Kepuasan Finansial x Jenis Kelamin"</span>,</span>
-<span id="cb49-7"><a></a>    <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>,</span>
-<span id="cb49-8"><a></a>    <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>,</span>
-<span id="cb49-9"><a></a>    <span class="at">color =</span> <span class="st">"Jenis Kelamin"</span></span>
-<span id="cb49-10"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb49-11"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup,</span>
+<span id="cb54-2"><a></a>                <span class="at">color =</span> jenis_kelamin)) <span class="sc">+</span></span>
+<span id="cb54-3"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb54-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb54-5"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb54-6"><a></a>    <span class="at">title =</span> <span class="st">"Interaksi: Kepuasan Finansial x Jenis Kelamin"</span>,</span>
+<span id="cb54-7"><a></a>    <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>,</span>
+<span id="cb54-8"><a></a>    <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>,</span>
+<span id="cb54-9"><a></a>    <span class="at">color =</span> <span class="st">"Jenis Kelamin"</span></span>
+<span id="cb54-10"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb54-11"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 </section>
@@ -1244,23 +1465,24 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="02-regresi_files/figure-revealjs/unnamed-chunk-28-1.png" width="1344"></p>
+<p><img data-src="02-regresi_files/figure-revealjs/unnamed-chunk-30-1.png" width="1344"></p>
 </figure>
 </div>
 </div>
 </div></section><section id="perbandingan-semua-model" class="slide level2">
 <h2>Perbandingan Semua Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">tibble</span>(</span>
-<span id="cb50-2"><a></a>  <span class="at">Model =</span> <span class="fu">paste0</span>(<span class="st">"m"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>),</span>
-<span id="cb50-3"><a></a>  <span class="at">Formula =</span> <span class="fu">c</span>(<span class="st">"finansial"</span>, <span class="st">"+ kebebasan"</span>,</span>
-<span id="cb50-4"><a></a>              <span class="st">"+ religiusitas + usia"</span>, <span class="st">"+ jenis_kelamin"</span>,</span>
-<span id="cb50-5"><a></a>              <span class="st">"+ negara"</span>, <span class="st">"finansial * jk + lainnya"</span>),</span>
-<span id="cb50-6"><a></a>  <span class="at">R2_adj =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m2)<span class="sc">$</span>adj.r.squared,</span>
-<span id="cb50-7"><a></a>             <span class="fu">glance</span>(m3)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m4)<span class="sc">$</span>adj.r.squared,</span>
-<span id="cb50-8"><a></a>             <span class="fu">glance</span>(m5)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m6)<span class="sc">$</span>adj.r.squared),</span>
-<span id="cb50-9"><a></a>  <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(m1), <span class="fu">AIC</span>(m2), <span class="fu">AIC</span>(m3), <span class="fu">AIC</span>(m4), <span class="fu">AIC</span>(m5), <span class="fu">AIC</span>(m6))</span>
-<span id="cb50-10"><a></a>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">tibble</span>(</span>
+<span id="cb55-2"><a></a>  <span class="at">Model =</span> <span class="fu">paste0</span>(<span class="st">"m"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>),</span>
+<span id="cb55-3"><a></a>  <span class="at">Formula =</span> <span class="fu">c</span>(<span class="st">"finansial"</span>, <span class="st">"+ kebebasan"</span>,</span>
+<span id="cb55-4"><a></a>              <span class="st">"+ religiusitas + usia"</span>, <span class="st">"+ jenis_kelamin"</span>,</span>
+<span id="cb55-5"><a></a>              <span class="st">"+ negara"</span>, <span class="st">"finansial * jk + lainnya"</span>),</span>
+<span id="cb55-6"><a></a>  <span class="at">R2_adj =</span> <span class="fu">c</span>(<span class="fu">glance</span>(m1)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m2)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb55-7"><a></a>             <span class="fu">glance</span>(m3)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m4)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb55-8"><a></a>             <span class="fu">glance</span>(m5)<span class="sc">$</span>adj.r.squared, <span class="fu">glance</span>(m6)<span class="sc">$</span>adj.r.squared),</span>
+<span id="cb55-9"><a></a>  <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(m1), <span class="fu">AIC</span>(m2), <span class="fu">AIC</span>(m3), <span class="fu">AIC</span>(m4), <span class="fu">AIC</span>(m5), <span class="fu">AIC</span>(m6)),</span>
+<span id="cb55-10"><a></a>  <span class="at">f2 =</span> R2_adj <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> R2_adj)</span>
+<span id="cb55-11"><a></a>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1269,6 +1491,7 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: left;">Formula</th>
 <th style="text-align: right;">R2_adj</th>
 <th style="text-align: right;">AIC</th>
+<th style="text-align: right;">f2</th>
 </tr>
 </thead>
 <tbody>
@@ -1277,39 +1500,58 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: left;">finansial</td>
 <td style="text-align: right;">0.419</td>
 <td style="text-align: right;">24221.64</td>
+<td style="text-align: right;">0.721</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">m2</td>
 <td style="text-align: left;">+ kebebasan</td>
 <td style="text-align: right;">0.534</td>
 <td style="text-align: right;">22698.99</td>
+<td style="text-align: right;">1.144</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">m3</td>
 <td style="text-align: left;">+ religiusitas + usia</td>
 <td style="text-align: right;">0.539</td>
 <td style="text-align: right;">22623.47</td>
+<td style="text-align: right;">1.168</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">m4</td>
 <td style="text-align: left;">+ jenis_kelamin</td>
 <td style="text-align: right;">0.539</td>
 <td style="text-align: right;">22623.65</td>
+<td style="text-align: right;">1.169</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">m5</td>
 <td style="text-align: left;">+ negara</td>
 <td style="text-align: right;">0.540</td>
 <td style="text-align: right;">22602.88</td>
+<td style="text-align: right;">1.176</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">m6</td>
 <td style="text-align: left;">finansial * jk + lainnya</td>
 <td style="text-align: right;">0.539</td>
 <td style="text-align: right;">22621.24</td>
+<td style="text-align: right;">1.170</td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Cohen’s <span class="math inline">\(f^2\)</span></strong>: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).</p>
+</div>
 </div>
 </div>
 </section>
@@ -1318,8 +1560,21 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Cara melaporkan hasil regresi dalam format APA:</p>
 <div class="fragment">
 <blockquote>
-<p>Regresi linear berganda dilakukan untuk menguji pengaruh kepuasan finansial, kebebasan memilih, religiusitas, dan usia terhadap kepuasan hidup. Model secara keseluruhan signifikan, <span class="math inline">\(F(4, N) = ..., p &lt; .001\)</span>, dan menjelaskan …% varians kepuasan hidup (<span class="math inline">\(R^2_{adj} = ...\)</span>). Kepuasan finansial (<span class="math inline">\(\beta = ..., p &lt; .001\)</span>) dan kebebasan memilih (<span class="math inline">\(\beta = ..., p &lt; .001\)</span>) merupakan prediktor signifikan.</p>
+<p>Regresi linear berganda dilakukan untuk menguji pengaruh kepuasan finansial, kebebasan memilih, religiusitas, dan usia terhadap kepuasan hidup. Model secara keseluruhan signifikan, <span class="math inline">\(F(4, N) = \ldots, p &lt; .001\)</span>, dan menjelaskan <span class="math inline">\(\ldots\)</span>% varians kepuasan hidup (<span class="math inline">\(R^2_{adj} = \ldots\)</span>). Kepuasan finansial (<span class="math inline">\(B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p &lt; .001\)</span>) dan kebebasan memilih (<span class="math inline">\(B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p &lt; .001\)</span>) merupakan prediktor signifikan.</p>
 </blockquote>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Sertakan <strong>confidence interval 95%</strong> untuk setiap koefisien. Gunakan output <code>tidy(model, conf.int = TRUE)</code> untuk mendapatkan nilai <code>conf.low</code> dan <code>conf.high</code>.</p>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="tips-pelaporan" class="slide level2">
@@ -1327,6 +1582,7 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <ul>
 <li class="fragment">Laporkan <span class="math inline">\(R^2\)</span> adjusted (bukan <span class="math inline">\(R^2\)</span> biasa)</li>
 <li class="fragment">Gunakan <strong>unstandardized</strong> coefficients (<span class="math inline">\(B\)</span>) ATAU <strong>standardized</strong> (<span class="math inline">\(\beta\)</span>) — pilih satu dan konsisten</li>
+<li class="fragment">Sertakan <strong>95% CI</strong> untuk setiap koefisien</li>
 <li class="fragment">Laporkan F-test keseluruhan model</li>
 <li class="fragment">Sebutkan jumlah observasi</li>
 <li class="fragment">Jika ada variabel yang tidak signifikan, tetap laporkan</li>
@@ -1335,15 +1591,24 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="standardized-coefficients" class="slide level2">
 <h2>Standardized Coefficients</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="co"># Standardized: scaling semua variabel numerik</span></span>
-<span id="cb51-2"><a></a>dat_scaled <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
-<span id="cb51-3"><a></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), scale))</span>
-<span id="cb51-4"><a></a></span>
-<span id="cb51-5"><a></a>m3_std <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb51-6"><a></a>               religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat_scaled)</span>
-<span id="cb51-7"><a></a><span class="fu">tidy</span>(m3_std) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="co"># Standardized: scaling semua variabel numerik</span></span>
+<span id="cb56-2"><a></a>dat_scaled <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb56-3"><a></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), scale))</span>
+<span id="cb56-4"><a></a></span>
+<span id="cb56-5"><a></a>m3_std <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb56-6"><a></a>               religiusitas <span class="sc">+</span> usia, <span class="at">data =</span> dat_scaled)</span>
+<span id="cb56-7"><a></a><span class="fu">tidy</span>(m3_std, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 13%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -1351,6 +1616,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <th style="text-align: right;">std.error</th>
 <th style="text-align: right;">statistic</th>
 <th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr>
 </thead>
 <tbody>
@@ -1360,6 +1627,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">0.000</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.016</td>
+<td style="text-align: right;">0.016</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">kepuasan_finansial</td>
@@ -1367,6 +1636,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">47.870</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0.432</td>
+<td style="text-align: right;">0.469</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">kebebasan_memilih</td>
@@ -1374,6 +1645,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.009</td>
 <td style="text-align: right;">41.607</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0.369</td>
+<td style="text-align: right;">0.406</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">religiusitas</td>
@@ -1381,6 +1654,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">5.588</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">0.062</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">usia</td>
@@ -1388,6 +1663,8 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td style="text-align: right;">0.008</td>
 <td style="text-align: right;">6.369</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0.037</td>
+<td style="text-align: right;">0.069</td>
 </tr>
 </tbody>
 </table>
@@ -1397,20 +1674,20 @@ F-statistic:  1619 on 5 and 6916 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="latihan-3" class="slide level2 smaller">
 <h2>Latihan 3</h2>
 <blockquote>
-<p>Gabungkan data wvs1.csv dan wvs2.csv. Buatlah model regresi terbaik untuk memprediksi <code>kepuasan_hidup</code>. Bandingkan modelnya dan interpretasikan.</p>
+<p>Gabungkan data wvs1.xlsx dan wvs2.xlsx. Buatlah model regresi terbaik untuk memprediksi <code>kepuasan_hidup</code>. Bandingkan modelnya dan interpretasikan.</p>
 </blockquote>
 <div class="cell">
 <details class="code-fold">
 <summary>Jawaban</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>wvs2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs2.csv"</span>)</span>
-<span id="cb52-2"><a></a>wvs_all <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(wvs, wvs2) <span class="sc">|&gt;</span></span>
-<span id="cb52-3"><a></a>  <span class="fu">select</span>(kepuasan_hidup, kepuasan_finansial, religiusitas,</span>
-<span id="cb52-4"><a></a>         kebebasan_memilih, usia, jenis_kelamin, negara) <span class="sc">|&gt;</span></span>
-<span id="cb52-5"><a></a>  <span class="fu">drop_na</span>()</span>
-<span id="cb52-6"><a></a></span>
-<span id="cb52-7"><a></a>m_final <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
-<span id="cb52-8"><a></a>                religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> wvs_all)</span>
-<span id="cb52-9"><a></a><span class="fu">summary</span>(m_final)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>wvs2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/regresi/wvs2.xlsx"</span>)</span>
+<span id="cb57-2"><a></a>wvs_all <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(wvs, wvs2) <span class="sc">|&gt;</span></span>
+<span id="cb57-3"><a></a>  <span class="fu">select</span>(kepuasan_hidup, kepuasan_finansial, religiusitas,</span>
+<span id="cb57-4"><a></a>         kebebasan_memilih, usia, jenis_kelamin, negara) <span class="sc">|&gt;</span></span>
+<span id="cb57-5"><a></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb57-6"><a></a></span>
+<span id="cb57-7"><a></a>m_final <span class="ot">&lt;-</span> <span class="fu">lm</span>(kepuasan_hidup <span class="sc">~</span> kepuasan_finansial <span class="sc">+</span> kebebasan_memilih <span class="sc">+</span></span>
+<span id="cb57-8"><a></a>                religiusitas <span class="sc">+</span> usia <span class="sc">+</span> jenis_kelamin <span class="sc">+</span> negara, <span class="at">data =</span> wvs_all)</span>
+<span id="cb57-9"><a></a><span class="fu">summary</span>(m_final)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1442,6 +1719,26 @@ Residual standard error: 1.542 on 13548 degrees of freedom
 Multiple R-squared:  0.4343,    Adjusted R-squared:  0.4338 
 F-statistic:  1040 on 10 and 13548 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">tidy</span>(m_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 7
+   term                estimate std.error statistic   p.value conf.low conf.high
+   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+ 1 (Intercept)          2.25     0.0791       28.4  1.72e-172  2.09      2.40   
+ 2 kepuasan_finansial   0.420    0.00620      67.7  0          0.407     0.432  
+ 3 kebebasan_memilih    0.285    0.00685      41.6  0          0.271     0.298  
+ 4 religiusitas         0.0207   0.00571       3.63 2.87e-  4  0.00951   0.0319 
+ 5 usia                 0.00517  0.000863      5.99 2.16e-  9  0.00348   0.00686
+ 6 jenis_kelaminOthers -0.671    0.516        -1.30 1.93e-  1 -1.68      0.339  
+ 7 jenis_kelaminPerem…  0.0901   0.0267        3.38 7.30e-  4  0.0378    0.142  
+ 8 negaraKanada        -0.447    0.0403      -11.1  1.68e- 28 -0.526    -0.368  
+ 9 negaraSelandia Baru -0.290    0.0613       -4.74 2.15e-  6 -0.410    -0.170  
+10 negaraSingapura     -0.348    0.0389       -8.94 4.44e- 19 -0.424    -0.271  
+11 negaraThailand      -0.352    0.0523       -6.74 1.62e- 11 -0.455    -0.250  </code></pre>
+</div>
 </div>
 </section></section>
 <section>
@@ -1454,11 +1751,11 @@ F-statistic:  1040 on 10 and 13548 DF,  p-value: &lt; 2.2e-16</code></pre>
 <ul>
 <li class="fragment"><strong>Regresi sederhana</strong>: satu prediktor, <code>lm(Y ~ X)</code></li>
 <li class="fragment"><strong>Regresi berganda</strong>: banyak prediktor, <code>lm(Y ~ X1 + X2 + ...)</code></li>
-<li class="fragment"><strong>Interpretasi</strong>: koefisien, <span class="math inline">\(R^2\)</span>, p-value</li>
-<li class="fragment"><strong>Diagnostik</strong>: residual plots, VIF, asumsi</li>
+<li class="fragment"><strong>Interpretasi</strong>: koefisien, <span class="math inline">\(R^2\)</span>, p-value, confidence interval</li>
+<li class="fragment"><strong>Diagnostik</strong>: residual plots, VIF, Breusch-Pagan test, robust SE</li>
 <li class="fragment"><strong>Variabel kategorikal</strong>: dummy variable, <code>factor()</code></li>
 <li class="fragment"><strong>Interaksi</strong>: <code>X1 * X2</code></li>
-<li class="fragment"><strong>Perbandingan model</strong>: ANOVA, AIC</li>
+<li class="fragment"><strong>Perbandingan model</strong>: ANOVA, AIC, Cohen’s <span class="math inline">\(f^2\)</span></li>
 </ul>
 </section>
 <section id="paket-yang-digunakan" class="slide level2">
@@ -1476,15 +1773,35 @@ F-statistic:  1040 on 10 and 13548 DF,  p-value: &lt; 2.2e-16</code></pre>
 <td><code>read_csv()</code>, <code>select()</code>, <code>mutate()</code>, <code>filter()</code></td>
 </tr>
 <tr class="even">
+<td><code>readxl</code></td>
+<td><code>read_excel()</code></td>
+</tr>
+<tr class="odd">
 <td><code>broom</code></td>
 <td><code>tidy()</code>, <code>glance()</code>, <code>augment()</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>car</code></td>
 <td><code>vif()</code></td>
 </tr>
+<tr class="odd">
+<td><code>lmtest</code></td>
+<td><code>bptest()</code>, <code>coeftest()</code></td>
+</tr>
+<tr class="even">
+<td><code>sandwich</code></td>
+<td><code>vcovHC()</code></td>
+</tr>
 </tbody>
 </table>
+</section>
+<section id="referensi" class="slide level2">
+<h2>Referensi</h2>
+<ul>
+<li>Diener, E., Suh, E. M., Lucas, R. E., &amp; Smith, H. L. (1999). Subjective well-being: Three decades of progress. <em>Psychological Bulletin</em>, 125(2), 276-302.</li>
+<li>Norman, G. (2010). Likert scales, levels of measurement and the “laws” of statistics. <em>Advances in Health Sciences Education</em>, 15(5), 625-632.</li>
+<li>Inglehart, R. (2000). Globalization and postmodern values. <em>The Washington Quarterly</em>, 23(1), 215-228.</li>
+</ul>
 </section>
 <section id="sesi-berikutnya" class="slide level2">
 <h2>Sesi Berikutnya</h2>

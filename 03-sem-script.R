@@ -5,34 +5,35 @@
 
 # ---- BAGIAN A: CB-SEM dengan lavaan ----
 
+library(tidyverse)
+library(readxl)
 library(lavaan)
 library(semPlot)
-library(dplyr)
+library(knitr)
+set.seed(2026)
 
 # --- 1. Import Data ---
-dat <- read.csv("data/sem_ecommerce.csv")
+dat <- read_excel("data/sem/data.xlsx")
+dat <- dat |> select(-No)
 glimpse(dat)
 
 # --- 2. CFA (Confirmatory Factor Analysis) ---
-model_cfa <- '
-  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
-  PV =~ PV1 + PV2 + PV3
-  TR =~ TR1 + TR2 + TR3 + TR4
-  CS =~ CS1 + CS2 + CS3 + CS4
-  CL =~ CL1 + CL2 + CL3
-  RI =~ RI1 + RI2 + RI3
+cfa_model <- '
+  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4
+  HV   =~ HV1 + HV2 + HV3 + HV4
+  ELOY =~ ELOY1 + ELOY2 + ELOY3
 '
 
-fit_cfa <- cfa(model_cfa, data = dat)
-fitMeasures(fit_cfa, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+cfa_fit <- cfa(cfa_model, data = dat)
+fitMeasures(cfa_fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 
 # Standardized loadings
-standardizedSolution(fit_cfa) |>
+standardizedSolution(cfa_fit) |>
   filter(op == "=~") |>
   select(konstruk = lhs, indikator = rhs, loading = est.std, p = pvalue)
 
 # CR & AVE
-std_load <- standardizedSolution(fit_cfa) |>
+std_load <- standardizedSolution(cfa_fit) |>
   filter(op == "=~") |>
   select(konstruk = lhs, loading = est.std)
 
@@ -43,33 +44,45 @@ std_load |>
     .by = konstruk
   )
 
-# --- 3. Full SEM ---
-model_sem <- '
-  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
-  PV =~ PV1 + PV2 + PV3
-  TR =~ TR1 + TR2 + TR3 + TR4
-  CS =~ CS1 + CS2 + CS3 + CS4
-  CL =~ CL1 + CL2 + CL3
-  RI =~ RI1 + RI2 + RI3
-  CS ~ SQ + PV + TR
-  CL ~ CS + TR
-  RI ~ CS + CL
+# Fornell-Larcker: korelasi antar konstruk
+cor_matrix <- lavInspect(cfa_fit, "cor.lv")
+cor_matrix
+
+# --- 3. Full SEM dengan Mediasi ---
+sem_model <- '
+  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4
+  HV   =~ HV1 + HV2 + HV3 + HV4
+  ELOY =~ ELOY1 + ELOY2 + ELOY3
+
+  HV   ~ a*PMB
+  ELOY ~ c*PMB + b*HV
+
+  # Indirect & total effects
+  indirect := a*b
+  total := c + a*b
 '
 
-fit_sem <- sem(model_sem, data = dat)
+sem_fit <- sem(sem_model, data = dat, se = "bootstrap", bootstrap = 1000)
+
+# Fit indices
+fitMeasures(sem_fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 
 # Path coefficients
-parameterEstimates(fit_sem, standardized = TRUE) |>
+parameterEstimates(sem_fit, standardized = TRUE) |>
   filter(op == "~") |>
   select(DV = lhs, IV = rhs, B = est, SE = se, Z = z, p = pvalue, Beta = std.all)
 
 # R-squared
-lavInspect(fit_sem, "r2")[c("CS", "CL", "RI")]
+lavInspect(sem_fit, "r2")
+
+# Mediation
+parameterEstimates(sem_fit) |>
+  filter(op == ":=")
 
 # Path diagram
-semPaths(fit_sem, what = "std", layout = "tree2",
-  edge.label.cex = 0.9, sizeMan = 7, sizeLat = 9,
-  style = "lisrel", residuals = FALSE, edge.color = "darkblue")
+semPaths(sem_fit, whatLabels = "std", layout = "tree2",
+  edge.label.cex = 0.8, sizeMan = 6, sizeLat = 8,
+  style = "lisrel", residuals = FALSE, rotation = 2, nCharNodes = 4)
 
 
 # ---- BAGIAN B: PLS-SEM dengan seminr ----
@@ -77,42 +90,69 @@ semPaths(fit_sem, what = "std", layout = "tree2",
 library(seminr)
 
 # --- 4. Import Data ---
-dat_pls <- read.csv("data/sem_innovation.csv")
-glimpse(dat_pls)
+mobi <- read_excel("data/plssem/sem_mobi.xlsx")
+glimpse(mobi)
 
 # --- 5. Spesifikasi & Estimasi Model ---
 mm <- constructs(
-  composite("IC", multi_items("IC", 1:4), weights = mode_B),
-  composite("MO", multi_items("MO", 1:3), weights = mode_B),
-  composite("EO", multi_items("EO", 1:3), weights = mode_B),
-  composite("CA", multi_items("CA", 1:4), weights = mode_A),
-  composite("FP", multi_items("FP", 1:4), weights = mode_A)
+  composite("IMAG", multi_items("IMAG", 1:5)),
+  composite("CUEX", multi_items("CUEX", 1:3)),
+  composite("PERQ", multi_items("PERQ", 1:7)),
+  composite("PERV", multi_items("PERV", 1:2)),
+  composite("CUSA", multi_items("CUSA", 1:3)),
+  composite("CUSCO", single_item("CUSCO")),
+  composite("CUSL", multi_items("CUSL", 1:3))
 )
 
 sm <- relationships(
-  paths(from = c("IC", "MO", "EO"), to = "CA"),
-  paths(from = c("CA", "IC"), to = "FP")
+  paths(from = "IMAG",  to = c("CUEX", "CUSA", "CUSL")),
+  paths(from = "CUEX",  to = c("PERQ", "PERV", "CUSA")),
+  paths(from = "PERQ",  to = c("PERV", "CUSA")),
+  paths(from = "PERV",  to = "CUSA"),
+  paths(from = "CUSA",  to = c("CUSCO", "CUSL")),
+  paths(from = "CUSCO", to = "CUSL")
 )
 
-pls_model <- estimate_pls(data = dat_pls,
+pls_model <- estimate_pls(data = mobi,
   measurement_model = mm, structural_model = sm)
-model_sum <- summary(pls_model)
+pls_summary <- summary(pls_model)
 
-# --- 6. Evaluasi Model Pengukuran ---
-model_sum$loadings
-model_sum$reliability
-model_sum$weights
-model_sum$validity$vif_items
+# --- 6. Evaluasi Outer Model ---
+pls_summary$reliability
+pls_summary$loadings
+pls_summary$validity$htmt
+pls_summary$validity$fl_criteria
+pls_summary$validity$cross_loadings
 
 # --- 7. Bootstrap ---
 set.seed(2026)
-boot_model <- bootstrap_model(pls_model, nboot = 1000)
-boot_sum <- summary(boot_model)
+boot <- bootstrap_model(pls_model, nboot = 5000)
+boot_sum <- summary(boot)
 boot_sum$bootstrapped_paths
 
-# --- 8. R² dan f² ---
-model_sum$paths
-model_sum$fSquare
+# --- 8. Inner Model ---
+pls_summary$paths
+pls_summary$fSquare
 
-# --- 9. Path Diagram ---
+# --- 9. Mediasi ---
+med <- specific_effect_significance(boot,
+  from = "IMAG", through = "CUSA", to = "CUSL")
+med
+
+# --- 10. PLS-Predict ---
+pred <- tryCatch(
+  predict_pls(
+    model = pls_model,
+    technique = predict_DA,
+    noFolds = 10,
+    reps = 10
+  ),
+  error = function(e) {
+    message("PLS-Predict error (sering terjadi pada model dengan single-item construct): ", e$message)
+    NULL
+  }
+)
+if (!is.null(pred)) summary(pred)
+
+# --- 11. Path Diagram ---
 plot(pls_model)

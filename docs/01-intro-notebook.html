@@ -251,14 +251,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="muat-paket" class="level2">
 <h2 class="anchored" data-anchor-id="muat-paket">2. Muat Paket</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="import-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-data">3. Import Data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>wvs1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/wvs1.csv"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>wvs2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/wvs2.csv"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>wvs1 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/regresi/wvs1.xlsx"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>wvs2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/regresi/wvs2.xlsx"</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gabungkan kedua dataset</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>wvs <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(wvs1, wvs2)</span>
@@ -267,19 +268,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Rows: 13,799
 Columns: 16
 $ negara                 &lt;chr&gt; "Kanada", "Kanada", "Kanada", "Kanada", "Kanada…
-$ id_responden           &lt;int&gt; 124070003, 124070004, 124070005, 124070006, 124…
-$ pentingnya_keluarga    &lt;int&gt; 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,…
-$ pentingnya_teman       &lt;int&gt; 1, 1, 2, 2, 2, 2, 1, 2, 1, 3, 1, 2, 1, 1, 1, 3,…
-$ pentingnya_waktu_luang &lt;int&gt; 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2,…
-$ pentingnya_pekerjaan   &lt;int&gt; 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 2, 4, 1, 3, 3,…
-$ kebebasan_memilih      &lt;int&gt; 7, 5, 8, 4, 7, 6, 9, 7, 8, 6, 8, 10, 8, 9, 7, 6…
-$ kepuasan_hidup         &lt;int&gt; 5, 8, 9, 7, 1, 7, 9, 6, 7, 6, 7, 10, 8, 10, 6, …
-$ kepuasan_finansial     &lt;int&gt; 8, 2, 8, 8, 9, 8, 9, 5, 6, 9, 5, 7, 9, 9, 7, 8,…
-$ religiusitas           &lt;chr&gt; "Religius", "Religius", "Ateis", "Religius", "T…
-$ skala_politik          &lt;int&gt; 10, 5, 2, 8, 6, 6, 7, 5, 6, 4, 5, 4, 1, 7, 2, 8…
+$ id_responden           &lt;dbl&gt; 124070003, 124070004, 124070005, 124070006, 124…
+$ pentingnya_keluarga    &lt;dbl&gt; 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,…
+$ pentingnya_teman       &lt;dbl&gt; 1, 1, 2, 2, 2, 2, 1, 2, 1, 3, 1, 2, 1, 1, 1, 3,…
+$ pentingnya_waktu_luang &lt;dbl&gt; 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2,…
+$ pentingnya_pekerjaan   &lt;dbl&gt; 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 2, 4, 1, 3, 3,…
+$ kebebasan_memilih      &lt;dbl&gt; 7, 5, 8, 4, 7, 6, 9, 7, 8, 6, 8, 10, 8, 9, 7, 6…
+$ kepuasan_hidup         &lt;dbl&gt; 5, 8, 9, 7, 1, 7, 9, 6, 7, 6, 7, 10, 8, 10, 6, …
+$ kepuasan_finansial     &lt;dbl&gt; 8, 2, 8, 8, 9, 8, 9, 5, 6, 9, 5, 7, 9, 9, 7, 8,…
+$ religiusitas           &lt;dbl&gt; 9, 10, 3, 8, 3, 1, 3, 7, 5, 8, 5, 3, 3, 4, 3, 7…
+$ skala_politik          &lt;dbl&gt; 10, 5, 2, 8, 6, 6, 7, 5, 6, 4, 5, 4, 1, 7, 2, 8…
 $ jenis_kelamin          &lt;chr&gt; "Perempuan", "Laki-laki", "Perempuan", "Laki-la…
-$ tahun_lahir            &lt;int&gt; 1944, 1951, 1984, 1975, 1988, 1982, 1981, 1985,…
-$ usia                   &lt;int&gt; 76, 69, 35, 45, 32, 38, 38, 34, 65, 31, 27, 33,…
+$ tahun_lahir            &lt;dbl&gt; 1944, 1951, 1984, 1975, 1988, 1982, 1981, 1985,…
+$ usia                   &lt;dbl&gt; 76, 69, 35, 45, 32, 38, 38, 34, 65, 31, 27, 33,…
 $ status_pernikahan      &lt;chr&gt; "Pisah", "Menikah", "Kohabitasi", "Menikah", "B…
 $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "Penuh…</code></pre>
 </div>
@@ -312,13 +313,15 @@ $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "P
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(negara, kelompok_usia, kepuasan_hidup) <span class="sc">|&gt;</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  negara kelompok_usia kepuasan_hidup
-1 Kanada        Senior              5
-2 Kanada        Senior              8
-3 Kanada        Dewasa              9
-4 Kanada        Dewasa              7
-5 Kanada        Dewasa              1
-6 Kanada        Dewasa              7</code></pre>
+<pre><code># A tibble: 6 × 3
+  negara kelompok_usia kepuasan_hidup
+  &lt;chr&gt;  &lt;chr&gt;                  &lt;dbl&gt;
+1 Kanada Senior                     5
+2 Kanada Senior                     8
+3 Kanada Dewasa                     9
+4 Kanada Dewasa                     7
+5 Kanada Dewasa                     1
+6 Kanada Dewasa                     7</code></pre>
 </div>
 </div>
 </section>
@@ -333,12 +336,14 @@ $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "P
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> negara</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         negara rata_rata       sd    n
-1        Kanada  7.041563 1.809172 4018
-2 Selandia Baru  7.545366 1.872431 1057
-3     Singapura  6.978861 1.833845 4024
-4     Indonesia  7.548609 2.431950 3200
-5      Thailand  6.572000 2.209692 1500</code></pre>
+<pre><code># A tibble: 5 × 4
+  negara        rata_rata    sd     n
+  &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+1 Kanada             7.04  1.81  4018
+2 Selandia Baru      7.55  1.87  1057
+3 Singapura          6.98  1.83  4024
+4 Indonesia          7.55  2.43  3200
+5 Thailand           6.57  2.21  1500</code></pre>
 </div>
 </div>
 </section>
@@ -375,7 +380,7 @@ $ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "P
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   variabel               M    SD   Min   Max
-  &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+  &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 kepuasan_hidup      7.14  2.03     1    10
 2 kebebasan_memilih   7.19  2.09     1    10
 3 kepuasan_finansial  6.50  2.30     1    10

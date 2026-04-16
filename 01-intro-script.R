@@ -18,11 +18,12 @@ sd(angka)
 # --- 2. Muat Paket ---
 
 library(tidyverse)
+library(readxl)
 
 # --- 3. Import Data ---
 
-wvs1 <- read.csv("data/wvs1.csv")
-wvs2 <- read.csv("data/wvs2.csv")
+wvs1 <- read_excel("data/regresi/wvs1.xlsx")
+wvs2 <- read_excel("data/regresi/wvs2.xlsx")
 
 # Gabungkan kedua dataset
 wvs <- bind_rows(wvs1, wvs2)

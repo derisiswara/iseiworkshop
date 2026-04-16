@@ -11,15 +11,33 @@ execute:
 
 ```{r}
 library(tidyverse)
+library(readxl)
 library(broom)
 library(car)
+library(lmtest)
+library(sandwich)
 library(knitr)
+
+set.seed(2026)
 ```
 
-## 2. Import & Pembersihan Data
+## 2. Landasan Teori
+
+Analisis ini didasarkan pada kerangka teori berikut:
+
+- **Subjective Well-Being (SWB)**: Diener (1999) mendefinisikan SWB sebagai evaluasi kognitif dan afektif seseorang terhadap kehidupannya, yang mencakup kepuasan hidup secara keseluruhan, emosi positif, dan rendahnya emosi negatif.
+- **Kebebasan dan Kesejahteraan**: Inglehart (2000) menunjukkan bahwa kebebasan memilih (*freedom of choice*) merupakan prediktor penting bagi kesejahteraan subjektif, terutama di masyarakat yang telah mencapai tingkat keamanan eksistensial tertentu.
+
+::: {.callout-note}
+## Catatan: Skala Ordinal sebagai Kontinu
+
+Variabel dependen dan beberapa prediktor dalam dataset ini diukur menggunakan skala Likert 1–10. Norman (2010) menunjukkan bahwa data ordinal dengan skala yang cukup lebar (≥ 5 poin) dapat diperlakukan sebagai data kontinu dalam analisis parametrik tanpa menimbulkan bias yang berarti.
+:::
+
+## 3. Import & Pembersihan Data
 
 ```{r}
-wvs <- read_csv("data/wvs1.csv")
+wvs <- read_excel("data/regresi/wvs1.xlsx")
 
 dat <- wvs |>
   select(kepuasan_hidup, kebebasan_memilih, kepuasan_finansial, usia,
@@ -29,13 +47,13 @@ dat <- wvs |>
 nrow(dat)
 ```
 
-## 3. Regresi Linear Sederhana (M1)
+## 4. Regresi Linear Sederhana (M1)
 
 $$\text{kepuasan\_hidup} = \beta_0 + \beta_1 \cdot \text{kepuasan\_finansial} + \varepsilon$$
 
 ```{r}
 m1 <- lm(kepuasan_hidup ~ kepuasan_finansial, data = dat)
-tidy(m1)
+tidy(m1, conf.int = TRUE)
 ```
 
 ```{r}
@@ -52,23 +70,23 @@ ggplot(dat, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
        x = "Kepuasan Finansial", y = "Kepuasan Hidup")
 ```
 
-## 4. Regresi Linear Berganda (M2)
+## 5. Regresi Linear Berganda (M2)
 
 ```{r}
 m2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih,
          data = dat)
-tidy(m2)
+tidy(m2, conf.int = TRUE)
 ```
 
-## 5. Regresi Berganda Penuh (M3)
+## 6. Regresi Berganda Penuh (M3)
 
 ```{r}
 m3 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia, data = dat)
-tidy(m3)
+tidy(m3, conf.int = TRUE)
 ```
 
-## 6. Regresi dengan Variabel Kategorikal (M4)
+## 7. Regresi dengan Variabel Kategorikal (M4)
 
 ```{r}
 dat <- dat |>
@@ -79,26 +97,26 @@ dat <- dat |>
 
 m4 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia + jenis_kelamin, data = dat)
-tidy(m4)
+tidy(m4, conf.int = TRUE)
 ```
 
-## 7. Model dengan Negara (M5)
+## 8. Model dengan Negara (M5)
 
 ```{r}
 m5 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia + jenis_kelamin + negara, data = dat)
-tidy(m5) |> kable(digits = 3)
+tidy(m5, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-## 8. Model dengan Interaksi (M6)
+## 9. Model dengan Interaksi (M6)
 
 ```{r}
 m6 <- lm(kepuasan_hidup ~ kepuasan_finansial * jenis_kelamin +
            kebebasan_memilih + religiusitas + usia, data = dat)
-tidy(m6) |> kable(digits = 3)
+tidy(m6, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-## 9. Perbandingan Model
+## 10. Perbandingan Model
 
 ### ANOVA
 
@@ -106,19 +124,26 @@ tidy(m6) |> kable(digits = 3)
 anova(m1, m2, m3)
 ```
 
-### Tabel Perbandingan
+### Tabel Perbandingan (dengan Cohen's f²)
+
+Cohen's $f^2$ dihitung sebagai $\frac{R^2_{adj,k} - R^2_{adj,k-1}}{1 - R^2_{adj,k}}$, mengukur kontribusi inkremental setiap model.
 
 ```{r}
+r2_adj <- c(glance(m1)$adj.r.squared, glance(m2)$adj.r.squared,
+            glance(m3)$adj.r.squared, glance(m4)$adj.r.squared,
+            glance(m5)$adj.r.squared, glance(m6)$adj.r.squared)
+
+cohens_f2 <- c(NA, diff(r2_adj) / (1 - r2_adj[-1]))
+
 tibble(
   Model = paste0("m", 1:6),
-  R2_adj = c(glance(m1)$adj.r.squared, glance(m2)$adj.r.squared,
-             glance(m3)$adj.r.squared, glance(m4)$adj.r.squared,
-             glance(m5)$adj.r.squared, glance(m6)$adj.r.squared),
-  AIC = c(AIC(m1), AIC(m2), AIC(m3), AIC(m4), AIC(m5), AIC(m6))
+  R2_adj = r2_adj,
+  AIC = c(AIC(m1), AIC(m2), AIC(m3), AIC(m4), AIC(m5), AIC(m6)),
+  Cohens_f2 = cohens_f2
 ) |> kable(digits = 3)
 ```
 
-## 10. Diagnostik Model
+## 11. Diagnostik Model
 
 ### Diagnostic Plots
 
@@ -133,6 +158,20 @@ plot(m3)
 vif(m3)
 ```
 
+### Uji Heteroskedastisitas (Breusch-Pagan)
+
+```{r}
+bptest(m3)
+```
+
+### Robust Standard Errors
+
+Jika terdapat heteroskedastisitas, kita dapat menggunakan *robust standard errors* (HC3) untuk mendapatkan inferensi yang lebih valid:
+
+```{r}
+coeftest(m3, vcov = vcovHC(m3, type = "HC3"))
+```
+
 ### Residual vs Fitted (ggplot)
 
 ```{r}
@@ -144,7 +183,7 @@ ggplot(augment(m3), aes(x = .fitted, y = .resid)) +
   theme_minimal()
 ```
 
-## 11. Standardized Coefficients
+## 12. Standardized Coefficients
 
 ```{r}
 dat_scaled <- dat |>
@@ -152,11 +191,11 @@ dat_scaled <- dat |>
 
 m3_std <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                religiusitas + usia, data = dat_scaled)
-tidy(m3_std) |> kable(digits = 3)
+tidy(m3_std, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 ## Latihan
 
-1. Gabungkan data wvs1.csv dan wvs2.csv. Buatlah model regresi terbaik untuk memprediksi `kepuasan_hidup`.
+1. Gabungkan data `read_excel("data/regresi/wvs1.xlsx")` dan `read_excel("data/regresi/wvs2.xlsx")`. Buatlah model regresi terbaik untuk memprediksi `kepuasan_hidup`.
 2. Ganti variabel dependen menjadi `kepuasan_finansial` dan bandingkan R-squared.
 3. Buat model hanya untuk data dari satu negara. Apakah hasilnya berbeda?

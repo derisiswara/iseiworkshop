@@ -1,0 +1,57 @@
+Tentu, sebagai seorang ekonom yang mengutamakan presisi, deskripsi data `mobi` perlu disusun 
+## Deskripsi Metadata Dataset: `mobi`
+**Konteks:** Instrumen pengukuran untuk *European Customer Satisfaction Index* (ECSI) yang diadaptasi pada industri telepon seluler.
+**Dimensi:** 250 Observasi (Responden) dengan 24 Variabel Manifes (Indikator).
+
+### 1. Corporate Image (Citra Perusahaan)
+Konstruk ini mengukur persepsi eksternal terhadap perusahaan penyedia layanan.
+* **IMAG1:** Kepercayaan (*Trustworthiness*) terhadap pernyataan dan tindakan perusahaan.
+* **IMAG2:** Stabilitas dan reputasi perusahaan di pasar.
+* **IMAG3:** Kontribusi sosial perusahaan terhadap masyarakat.
+* **IMAG4:** Kepedulian perusahaan terhadap pelanggan.
+* **IMAG5:** Inovasi dan orientasi masa depan (*Forward-looking*).
+
+### 2. Customer Expectations (Ekspektasi Pelanggan)
+Mengukur ekspektasi awal sebelum atau saat menjadi pelanggan.
+* **CUEX1:** Ekspektasi terhadap kualitas keseluruhan saat pertama kali menjadi pelanggan.
+* **CUEX2:** Ekspektasi kemampuan penyedia dalam memenuhi kebutuhan personal.
+* **CUEX3:** Ekspektasi frekuensi terjadinya kesalahan layanan (*Anticipated reliability*).
+
+### 3. Perceived Quality (Kualitas yang Dirasakan)
+Evaluasi teknis dan fungsional setelah menggunakan layanan.
+* **PERQ1:** Penilaian kualitas keseluruhan.
+* **PERQ2:** Kualitas teknis jaringan (*Network quality*).
+* **PERQ3:** Kualitas layanan pelanggan dan saran personal.
+* **PERQ4:** Kualitas spesifik pada layanan yang sering digunakan.
+* **PERQ5:** Keragaman rentang produk dan layanan yang ditawarkan.
+* **PERQ6:** Reliabilitas dan akurasi produk/layanan.
+* **PERQ7:** Kejelasan dan transparansi informasi yang diberikan.
+
+### 4. Perceived Value (Nilai yang Dirasakan)
+Analisis *cost-benefit* dari perspektif pelanggan.
+* **PERV1:** Penilaian kesesuaian harga/biaya dibandingkan kualitas yang didapat.
+* **PERV2:** Penilaian kualitas layanan dibandingkan dengan harga yang dibayar.
+
+### 5. Customer Satisfaction (Kepuasan Pelanggan)
+Inti dari model ECSI, mengukur respon afektif pelanggan.
+* **CUSA1:** Skor kepuasan keseluruhan.
+* **CUSA2:** Tingkat pemenuhan ekspektasi (*Fulfillment*).
+* **CUSA3:** Perbandingan dengan penyedia layanan ideal.
+
+### 6. Customer Complaints (Keluhan Pelanggan)
+* **CUSCO:** Penanganan keluhan (aktual maupun imajiner). Mengukur persepsi sejauh mana perusahaan peduli jika terjadi masalah.
+
+### 7. Customer Loyalty (Loyalitas Pelanggan)
+Konstruk endogen utama yang mengukur niat perilaku masa depan.
+* **CUSL1:** Probabilitas memilih kembali penyedia yang sama (*Repurchase intention*).
+* **CUSL2:** Ketahanan terhadap perubahan harga (*Price tolerance/elasticity*).
+* **CUSL3:** Probabilitas merekomendasikan kepada kolega (*Word of mouth*).
+
+---
+
+
+
+### Catatan Teknis untuk Estimasi:
+1.  **Skala Data:** Data ini menggunakan skala Likert (biasanya 1–10). Untuk CB-SEM, pastikan Anda memeriksa *univariate* dan *multivariate normality*.
+2.  **Variabel CUSCO:** Variabel ini sering dianggap unik karena bersifat *single-indicator* dalam beberapa spesifikasi model.
+3.  **Identifikasi Model:** Untuk estimasi di R (Lavaan), pastikan Anda melakukan *scaling* atau pengikatan parameter (*loading* = 1 pada indikator pertama) untuk setiap konstruk guna identifikasi model.

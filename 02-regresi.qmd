@@ -11,9 +11,13 @@ format: revealjs
 #| warning: false
 #| message: false
 library(tidyverse)
+library(readxl)
 library(broom)
 library(car)
+library(lmtest)
+library(sandwich)
 library(knitr)
+set.seed(2026)
 ```
 
 ## Rencana Hari Ini
@@ -42,7 +46,7 @@ Kita akan menggunakan data **World Values Survey (WVS)** Wave 7 yang sudah diter
 
 ```{r}
 #| echo: true
-wvs <- read_csv("data/wvs1.csv")
+wvs <- read_excel("data/regresi/wvs1.xlsx")
 glimpse(wvs)
 ```
 
@@ -71,6 +75,10 @@ dat <- wvs |>
 nrow(dat)
 ```
 
+::: {.callout-note}
+Variabel skala 1–10 diperlakukan sebagai kontinu berdasarkan Norman (2010) yang menunjukkan bahwa Likert data dengan ≥ 5 kategori bersifat robust untuk analisis parametrik.
+:::
+
 # Bagian 1: Regresi Linear Sederhana
 
 ## Apa itu Regresi?
@@ -80,6 +88,14 @@ nrow(dat)
 -   Variabel **dependen** (Y): variabel yang ingin kita prediksi/jelaskan
 -   Variabel **independen** (X): variabel yang digunakan sebagai prediktor
 -   Model: $Y = \beta_0 + \beta_1 X + \varepsilon$
+:::
+
+## Landasan Teori: Subjective Well-Being
+
+::: incremental
+-   **Teori Subjective Well-Being** (Diener et al., 1999): kepuasan hidup merupakan komponen kognitif dari SWB, yang mencerminkan evaluasi individu terhadap kehidupannya secara keseluruhan.
+-   **Kebebasan dan kesejahteraan**: Inglehart (2000) dan Sen (1999) menunjukkan bahwa kebebasan individual berperan penting dalam meningkatkan kesejahteraan subjektif.
+-   **Justifikasi variabel**: Pemilihan variabel prediktor (kepuasan finansial, kebebasan memilih, religiusitas) didasarkan pada literatur WVS yang secara konsisten menemukan hubungan signifikan antara faktor-faktor tersebut dengan kepuasan hidup.
 :::
 
 ## Komponen Model Regresi
@@ -175,7 +191,7 @@ summary(m1)
 
 ```{r}
 #| echo: true
-tidy(m1)
+tidy(m1, conf.int = TRUE)
 ```
 
 . . .
@@ -217,6 +233,7 @@ plot(m1)
 #| code-summary: "Jawaban"
 m_latihan <- lm(kepuasan_hidup ~ kebebasan_memilih, data = dat)
 summary(m_latihan)
+tidy(m_latihan, conf.int = TRUE)
 ```
 
 # Bagian 2: Regresi Linear Berganda
@@ -259,7 +276,7 @@ summary(m2)
 
 ```{r}
 #| echo: true
-tidy(m2)
+tidy(m2, conf.int = TRUE)
 ```
 
 . . .
@@ -310,9 +327,14 @@ tibble(
   R2_adj = c(glance(m1)$adj.r.squared,
              glance(m2)$adj.r.squared,
              glance(m3)$adj.r.squared),
-  AIC = c(AIC(m1), AIC(m2), AIC(m3))
-)
+  AIC = c(AIC(m1), AIC(m2), AIC(m3)),
+  f2 = R2_adj / (1 - R2_adj)
+) |> kable(digits = 3)
 ```
+
+::: {.callout-note}
+**Cohen's $f^2$**: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).
+:::
 
 ## Asumsi Regresi Linear
 
@@ -367,6 +389,34 @@ vif(m3)
 -   **VIF > 10**: multikolinearitas serius
 :::
 
+## Diagnostik: Breusch-Pagan Test
+
+**Breusch-Pagan test** menguji asumsi homoskedastisitas (varians residual konstan).
+
+```{r}
+#| echo: true
+bptest(m3)
+```
+
+. . .
+
+Jika p-value < 0.05, terdapat indikasi **heteroskedastisitas** — varians residual tidak konstan.
+
+## Robust Standard Errors
+
+Jika p-value BP test < 0.05, gunakan **robust standard errors** untuk inferensi yang lebih valid.
+
+```{r}
+#| echo: true
+coeftest(m3, vcov = vcovHC(m3, type = "HC3"))
+```
+
+. . .
+
+::: {.callout-tip}
+Robust standard errors (HC3) memberikan estimasi standard error yang valid meskipun terdapat heteroskedastisitas, sehingga p-value dan confidence interval lebih dapat dipercaya.
+:::
+
 ## Latihan 2 {.smaller}
 
 > Buatlah model regresi berganda dengan `kepuasan_hidup` sebagai DV dan semua variabel numerik sebagai prediktor. Periksa VIF-nya.
@@ -377,7 +427,7 @@ vif(m3)
 #| code-summary: "Jawaban"
 m_latihan2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                    religiusitas + usia, data = dat)
-tidy(m_latihan2)
+tidy(m_latihan2, conf.int = TRUE)
 vif(m_latihan2)
 ```
 
@@ -417,7 +467,7 @@ summary(m4)
 
 ```{r}
 #| echo: true
-tidy(m4) |> kable(digits = 3)
+tidy(m4, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 . . .
@@ -430,7 +480,7 @@ Koefisien `jenis_kelaminPerempuan` menunjukkan perbedaan rata-rata kepuasan hidu
 #| echo: true
 m5 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia + jenis_kelamin + negara, data = dat)
-tidy(m5) |> kable(digits = 3)
+tidy(m5, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 ## Mengubah Kategori Referensi
@@ -444,7 +494,7 @@ dat <- dat |>
 
 m5b <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
             religiusitas + usia + jenis_kelamin + negara, data = dat)
-tidy(m5b) |> kable(digits = 3)
+tidy(m5b, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 ## Interaksi antar Variabel
@@ -455,7 +505,7 @@ Interaksi: efek satu variabel **tergantung** pada level variabel lain.
 #| echo: true
 m6 <- lm(kepuasan_hidup ~ kepuasan_finansial * jenis_kelamin +
            kebebasan_memilih + religiusitas + usia, data = dat)
-tidy(m6) |> kable(digits = 3)
+tidy(m6, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 ## Visualisasi Interaksi
@@ -488,9 +538,14 @@ tibble(
   R2_adj = c(glance(m1)$adj.r.squared, glance(m2)$adj.r.squared,
              glance(m3)$adj.r.squared, glance(m4)$adj.r.squared,
              glance(m5)$adj.r.squared, glance(m6)$adj.r.squared),
-  AIC = c(AIC(m1), AIC(m2), AIC(m3), AIC(m4), AIC(m5), AIC(m6))
+  AIC = c(AIC(m1), AIC(m2), AIC(m3), AIC(m4), AIC(m5), AIC(m6)),
+  f2 = R2_adj / (1 - R2_adj)
 ) |> kable(digits = 3)
 ```
+
+::: {.callout-note}
+**Cohen's $f^2$**: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).
+:::
 
 ## Pelaporan Hasil Regresi (APA Style)
 
@@ -498,13 +553,18 @@ Cara melaporkan hasil regresi dalam format APA:
 
 . . .
 
-> Regresi linear berganda dilakukan untuk menguji pengaruh kepuasan finansial, kebebasan memilih, religiusitas, dan usia terhadap kepuasan hidup. Model secara keseluruhan signifikan, $F(4, N) = ..., p < .001$, dan menjelaskan ...% varians kepuasan hidup ($R^2_{adj} = ...$). Kepuasan finansial ($\beta = ..., p < .001$) dan kebebasan memilih ($\beta = ..., p < .001$) merupakan prediktor signifikan.
+> Regresi linear berganda dilakukan untuk menguji pengaruh kepuasan finansial, kebebasan memilih, religiusitas, dan usia terhadap kepuasan hidup. Model secara keseluruhan signifikan, $F(4, N) = \ldots, p < .001$, dan menjelaskan $\ldots$% varians kepuasan hidup ($R^2_{adj} = \ldots$). Kepuasan finansial ($B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p < .001$) dan kebebasan memilih ($B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p < .001$) merupakan prediktor signifikan.
+
+::: {.callout-tip}
+Sertakan **confidence interval 95%** untuk setiap koefisien. Gunakan output `tidy(model, conf.int = TRUE)` untuk mendapatkan nilai `conf.low` dan `conf.high`.
+:::
 
 ## Tips Pelaporan
 
 ::: incremental
 -   Laporkan $R^2$ adjusted (bukan $R^2$ biasa)
 -   Gunakan **unstandardized** coefficients ($B$) ATAU **standardized** ($\beta$) --- pilih satu dan konsisten
+-   Sertakan **95% CI** untuk setiap koefisien
 -   Laporkan F-test keseluruhan model
 -   Sebutkan jumlah observasi
 -   Jika ada variabel yang tidak signifikan, tetap laporkan
@@ -520,18 +580,18 @@ dat_scaled <- dat |>
 
 m3_std <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                religiusitas + usia, data = dat_scaled)
-tidy(m3_std) |> kable(digits = 3)
+tidy(m3_std, conf.int = TRUE) |> kable(digits = 3)
 ```
 
 ## Latihan 3 {.smaller}
 
-> Gabungkan data wvs1.csv dan wvs2.csv. Buatlah model regresi terbaik untuk memprediksi `kepuasan_hidup`. Bandingkan modelnya dan interpretasikan.
+> Gabungkan data wvs1.xlsx dan wvs2.xlsx. Buatlah model regresi terbaik untuk memprediksi `kepuasan_hidup`. Bandingkan modelnya dan interpretasikan.
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Jawaban"
-wvs2 <- read_csv("data/wvs2.csv")
+wvs2 <- read_excel("data/regresi/wvs2.xlsx")
 wvs_all <- bind_rows(wvs, wvs2) |>
   select(kepuasan_hidup, kepuasan_finansial, religiusitas,
          kebebasan_memilih, usia, jenis_kelamin, negara) |>
@@ -540,6 +600,7 @@ wvs_all <- bind_rows(wvs, wvs2) |>
 m_final <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                 religiusitas + usia + jenis_kelamin + negara, data = wvs_all)
 summary(m_final)
+tidy(m_final, conf.int = TRUE)
 ```
 
 # Ringkasan Sesi 2
@@ -549,11 +610,11 @@ summary(m_final)
 ::: incremental
 -   **Regresi sederhana**: satu prediktor, `lm(Y ~ X)`
 -   **Regresi berganda**: banyak prediktor, `lm(Y ~ X1 + X2 + ...)`
--   **Interpretasi**: koefisien, $R^2$, p-value
--   **Diagnostik**: residual plots, VIF, asumsi
+-   **Interpretasi**: koefisien, $R^2$, p-value, confidence interval
+-   **Diagnostik**: residual plots, VIF, Breusch-Pagan test, robust SE
 -   **Variabel kategorikal**: dummy variable, `factor()`
 -   **Interaksi**: `X1 * X2`
--   **Perbandingan model**: ANOVA, AIC
+-   **Perbandingan model**: ANOVA, AIC, Cohen's $f^2$
 :::
 
 ## Paket yang Digunakan
@@ -561,8 +622,17 @@ summary(m_final)
 | Paket | Fungsi Utama |
 |-------|--------------|
 | `tidyverse` | `read_csv()`, `select()`, `mutate()`, `filter()` |
+| `readxl` | `read_excel()` |
 | `broom` | `tidy()`, `glance()`, `augment()` |
 | `car` | `vif()` |
+| `lmtest` | `bptest()`, `coeftest()` |
+| `sandwich` | `vcovHC()` |
+
+## Referensi
+
+-   Diener, E., Suh, E. M., Lucas, R. E., & Smith, H. L. (1999). Subjective well-being: Three decades of progress. *Psychological Bulletin*, 125(2), 276-302.
+-   Norman, G. (2010). Likert scales, levels of measurement and the "laws" of statistics. *Advances in Health Sciences Education*, 15(5), 625-632.
+-   Inglehart, R. (2000). Globalization and postmodern values. *The Washington Quarterly*, 23(1), 215-228.
 
 ## Sesi Berikutnya
 

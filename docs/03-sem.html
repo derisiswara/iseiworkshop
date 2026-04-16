@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="ISEI Workshop">
-  <title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio – Structural Equation Modeling (SEM)</title>
+  <title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio – Structural Equation Modelling (SEM)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -190,13 +190,23 @@
       margin-right: 0; 
     }
   </style>
+  <link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+  <script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+  <script src="site_libs/viz-1.8.2/viz.js"></script>
+
+  <link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+
+  <script src="site_libs/grViz-binding-1.0.11/grViz.js"></script>
+
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Structural Equation Modeling (SEM)</h1>
+  <h1 class="title">Structural Equation Modelling (SEM)</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -208,42 +218,41 @@ ISEI Workshop
 
 </section>
 <section>
-<section id="selamat-datang-di-sesi-3" class="title-slide slide level1 center">
-<h1>Selamat Datang di Sesi 3!</h1>
+<section id="selamat-datang" class="title-slide slide level1 center">
+<h1>Selamat Datang!</h1>
 
 </section>
 <section id="rencana-hari-ini" class="slide level2">
 <h2>Rencana Hari Ini</h2>
-<p><strong>Bagian 1: Pengantar SEM</strong></p>
+<p><strong>Bagian A: CB-SEM dengan <code>lavaan</code></strong></p>
 <ul>
-<li>Konsep SEM dan terminologi</li>
-<li>Variabel laten vs manifes</li>
-<li>CB-SEM vs PLS-SEM</li>
+<li>Pengantar SEM &amp; terminologi</li>
+<li>Two-Step Approach: CFA → Full SEM</li>
+<li>Dataset E-Loyalty</li>
+<li>Evaluasi model: fit indices, reliabilitas, validitas</li>
+<li>Mediasi &amp; pelaporan APA</li>
 </ul>
-<p><strong>Bagian 2: CB-SEM dengan lavaan</strong></p>
+<div class="fragment">
+<p><strong>Bagian B: PLS-SEM dengan <code>seminr</code></strong></p>
 <ul>
-<li>Confirmatory Factor Analysis (CFA)</li>
-<li>Full Structural Model</li>
-<li>Fit indices dan interpretasi</li>
+<li>Kapan menggunakan PLS-SEM</li>
+<li>Dataset ECSI (mobi)</li>
+<li>Outer &amp; inner model evaluation</li>
+<li>Bootstrap, mediasi, PLS-Predict</li>
 </ul>
-<p><strong>Bagian 3: PLS-SEM dengan seminr</strong></p>
-<ul>
-<li>Measurement model (reflective/formative)</li>
-<li>Structural model</li>
-<li>Bootstrap dan evaluasi</li>
-</ul>
+</div>
 </section>
 <section id="apa-itu-sem" class="slide level2">
 <h2>Apa itu SEM?</h2>
 <ul>
 <li class="fragment"><strong>Structural Equation Modeling</strong> = teknik statistik multivariat yang menggabungkan analisis faktor dan regresi</li>
 <li class="fragment">Memungkinkan pengujian hubungan <strong>simultan</strong> antara beberapa variabel</li>
-<li class="fragment">Dapat menguji variabel <strong>laten</strong> (tidak langsung teramati)</li>
-<li class="fragment">Digunakan luas di ilmu sosial, psikologi, manajemen, ekonomi</li>
+<li class="fragment">Dapat menguji variabel <strong>laten</strong> (tidak langsung teramati) melalui indikator-indikator terukur</li>
+<li class="fragment">Terdiri dari dua komponen: <strong>measurement model</strong> dan <strong>structural model</strong></li>
 </ul>
 </section>
-<section id="terminologi-dasar" class="slide level2">
-<h2>Terminologi Dasar</h2>
+<section id="variabel-laten-manifes" class="slide level2">
+<h2>Variabel Laten &amp; Manifes</h2>
 <table class="caption-top">
 <colgroup>
 <col style="width: 42%">
@@ -258,19 +267,19 @@ ISEI Workshop
 <tbody>
 <tr class="odd">
 <td><strong>Variabel Laten</strong></td>
-<td>Konstruk yang tidak dapat diukur langsung (diberi simbol oval/lingkaran)</td>
+<td>Konstruk yang tidak dapat diukur langsung (simbol oval)</td>
 </tr>
 <tr class="even">
 <td><strong>Variabel Manifes/Indikator</strong></td>
-<td>Variabel yang dapat diukur langsung, misal item kuesioner (simbol kotak)</td>
+<td>Item kuesioner atau pengukuran langsung (simbol kotak)</td>
 </tr>
 <tr class="odd">
 <td><strong>Variabel Eksogen</strong></td>
-<td>Variabel independen (tidak diprediksi oleh variabel lain di model)</td>
+<td>Variabel independen — tidak diprediksi oleh variabel lain</td>
 </tr>
 <tr class="even">
 <td><strong>Variabel Endogen</strong></td>
-<td>Variabel dependen (diprediksi oleh variabel lain di model)</td>
+<td>Variabel dependen — diprediksi oleh variabel lain</td>
 </tr>
 </tbody>
 </table>
@@ -278,42 +287,33 @@ ISEI Workshop
 <section id="measurement-model-vs-structural-model" class="slide level2">
 <h2>Measurement Model vs Structural Model</h2>
 <ul>
-<li class="fragment"><strong>Measurement Model</strong>: hubungan antara variabel laten dan indikator-indikatornya
+<li><strong>Measurement Model</strong>: hubungan antara variabel laten dan indikator-indikatornya
 <ul>
-<li class="fragment">“Seberapa baik indikator mengukur konstruk?”</li>
+<li>“Seberapa baik indikator mengukur konstruk?”</li>
 </ul></li>
-<li class="fragment"><strong>Structural Model</strong>: hubungan antar variabel laten
+<li><strong>Structural Model</strong>: hubungan antar variabel laten
 <ul>
-<li class="fragment">“Bagaimana konstruk saling mempengaruhi?”</li>
+<li>“Bagaimana konstruk saling mempengaruhi?”</li>
 </ul></li>
-<li class="fragment">SEM menguji <strong>keduanya</strong> secara bersamaan</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>SEM menguji <strong>keduanya</strong> secara bersamaan, sehingga memberikan gambaran yang lebih komprehensif dibanding regresi biasa.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="cb-sem-vs-pls-sem" class="slide level2">
-<h2>CB-SEM vs PLS-SEM</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>CB-SEM (Covariance-Based)</strong></p>
-<ul>
-<li>Berbasis kovarians</li>
-<li>Memerlukan asumsi normalitas</li>
-<li>Cocok untuk konfirmatori (teori sudah kuat)</li>
-<li>Menggunakan fit indices</li>
-<li>Paket R: <code>lavaan</code></li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><strong>PLS-SEM (Partial Least Squares)</strong></p>
-<ul>
-<li>Berbasis varians</li>
-<li>Tidak memerlukan normalitas</li>
-<li>Cocok untuk eksploratori/prediktif</li>
-<li>Tidak menggunakan fit indices tradisional</li>
-<li>Paket R: <code>seminr</code></li>
-</ul>
-</div></div>
-</section>
-<section id="kapan-menggunakan-yang-mana" class="slide level2">
-<h2>Kapan Menggunakan yang Mana?</h2>
+<section id="kapan-menggunakan-cb-sem-vs-pls-sem" class="slide level2 smaller">
+<h2>Kapan Menggunakan CB-SEM vs PLS-SEM?</h2>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -324,73 +324,107 @@ ISEI Workshop
 </thead>
 <tbody>
 <tr class="odd">
+<td>Basis</td>
+<td>Kovarians</td>
+<td>Varians</td>
+</tr>
+<tr class="even">
 <td>Tujuan</td>
 <td>Konfirmasi teori</td>
 <td>Prediksi &amp; eksplorasi</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Ukuran sampel</td>
 <td>Besar (&gt;200)</td>
-<td>Kecil-menengah (&gt;50)</td>
-</tr>
-<tr class="odd">
-<td>Distribusi</td>
-<td>Normal</td>
-<td>Fleksibel</td>
+<td>Kecil–menengah (&gt;50)</td>
 </tr>
 <tr class="even">
-<td>Model</td>
+<td>Distribusi</td>
+<td>Memerlukan normalitas</td>
+<td>Fleksibel</td>
+</tr>
+<tr class="odd">
+<td>Tipe indikator</td>
 <td>Reflektif</td>
 <td>Reflektif &amp; formatif</td>
 </tr>
+<tr class="even">
+<td>Fit indices</td>
+<td>CFI, TLI, RMSEA, SRMR</td>
+<td>Tidak ada (gunakan R², HTMT)</td>
+</tr>
 <tr class="odd">
 <td>Kompleksitas</td>
-<td>Sederhana-menengah</td>
+<td>Sederhana–menengah</td>
 <td>Bisa sangat kompleks</td>
+</tr>
+<tr class="even">
+<td>Paket R</td>
+<td><code>lavaan</code></td>
+<td><code>seminr</code></td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="two-step-approach" class="slide level2">
+<h2>Two-Step Approach</h2>
+<p><strong>Anderson &amp; Gerbing (1988)</strong> merekomendasikan:</p>
+<ol type="1">
+<li><strong>Langkah 1 — CFA</strong>: Evaluasi measurement model terlebih dahulu
+<ul>
+<li>Apakah indikator mengukur konstruk dengan baik?</li>
+<li>Validitas konvergen &amp; diskriminan</li>
+</ul></li>
+<li><strong>Langkah 2 — Full SEM</strong>: Tambahkan jalur struktural
+<ul>
+<li>Uji hipotesis antar konstruk</li>
+</ul></li>
+</ol>
+<div class="fragment">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>Jangan langsung menjalankan full SEM tanpa memastikan measurement model sudah baik! Jika pengukuran buruk, kesimpulan struktural tidak dapat dipercaya.</p>
+</div>
+</div>
+</div>
+</div>
 </section></section>
 <section>
-<section id="bagian-2-cb-sem-dengan-lavaan" class="title-slide slide level1 center">
-<h1>Bagian 2: CB-SEM dengan lavaan</h1>
+<section id="bagian-a-cb-sem-dengan-lavaan" class="title-slide slide level1 center">
+<h1>Bagian A: CB-SEM dengan lavaan</h1>
 
 </section>
-<section id="dataset-e-commerce" class="slide level2">
-<h2>Dataset: E-Commerce</h2>
-<p>Data simulasi tentang perilaku konsumen e-commerce (n = 300).</p>
+<section id="dataset-e-loyalty" class="slide level2 smaller">
+<h2>Dataset: E-Loyalty</h2>
+<p>Data tentang pengaruh Perceived Mental Benefits dan Hedonic Value terhadap E-Loyalty.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>ecom <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/sem_ecommerce.csv"</span>)</span>
-<span id="cb1-2"><a></a><span class="fu">glimpse</span>(ecom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>dat <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/sem/data.xlsx"</span>)</span>
+<span id="cb1-2"><a></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>No)</span>
+<span id="cb1-3"><a></a><span class="fu">glimpse</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 300
-Columns: 26
-$ id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
-$ gender    &lt;chr&gt; "Perempuan", "Laki-laki", "Perempuan", "Perempuan", "Laki-la…
-$ age       &lt;dbl&gt; 50, 25, 48, 21, 43, 25, 39, 30, 54, 55, 46, 22, 46, 20, 32, …
-$ education &lt;chr&gt; "S2", "S1", "S2", "SMA", "D3", "S1", "S2", "SMA", "S2", "S1"…
-$ income    &lt;chr&gt; "6-10 juta", "&gt; 10 juta", "&lt; 3 juta", "3-6 juta", "6-10 juta…
-$ SQ1       &lt;dbl&gt; 5, 2, 4, 4, 3, 1, 3, 3, 4, 4, 3, 3, 4, 4, 1, 5, 5, 4, 3, 4, …
-$ SQ2       &lt;dbl&gt; 4, 3, 4, 5, 3, 2, 3, 3, 4, 4, 4, 4, 5, 4, 2, 4, 5, 4, 4, 6, …
-$ SQ3       &lt;dbl&gt; 5, 4, 4, 3, 4, 2, 3, 4, 3, 3, 4, 4, 5, 4, 2, 3, 5, 4, 3, 5, …
-$ SQ4       &lt;dbl&gt; 5, 3, 5, 5, 4, 2, 3, 3, 4, 4, 5, 3, 5, 4, 3, 5, 3, 3, 3, 4, …
-$ PV1       &lt;dbl&gt; 4, 3, 4, 3, 4, 4, 4, 3, 5, 4, 6, 4, 4, 3, 3, 6, 6, 5, 4, 5, …
-$ PV2       &lt;dbl&gt; 5, 5, 5, 3, 4, 3, 6, 3, 4, 3, 5, 4, 3, 2, 4, 6, 5, 4, 3, 3, …
-$ PV3       &lt;dbl&gt; 5, 3, 4, 4, 5, 2, 4, 2, 3, 3, 5, 3, 3, 2, 3, 7, 5, 5, 4, 5, …
-$ TR1       &lt;dbl&gt; 2, 3, 4, 5, 5, 3, 3, 4, 6, 4, 3, 4, 3, 4, 2, 4, 4, 4, 3, 5, …
-$ TR2       &lt;dbl&gt; 5, 3, 3, 5, 3, 2, 5, 4, 5, 3, 2, 4, 3, 5, 2, 4, 3, 4, 3, 4, …
-$ TR3       &lt;dbl&gt; 4, 3, 3, 4, 3, 3, 4, 4, 5, 4, 4, 4, 4, 5, 3, 5, 4, 4, 4, 5, …
-$ TR4       &lt;dbl&gt; 4, 3, 5, 3, 4, 3, 4, 5, 5, 1, 3, 2, 4, 5, 2, 4, 4, 4, 5, 5, …
-$ CS1       &lt;dbl&gt; 5, 3, 4, 3, 4, 2, 4, 4, 3, 3, 4, 4, 4, 4, 2, 5, 2, 4, 4, 5, …
-$ CS2       &lt;dbl&gt; 4, 3, 4, 4, 4, 3, 4, 4, 3, 4, 4, 3, 5, 5, 2, 3, 3, 3, 4, 5, …
-$ CS3       &lt;dbl&gt; 3, 3, 5, 5, 5, 4, 3, 4, 3, 4, 5, 4, 4, 5, 3, 5, 2, 4, 4, 5, …
-$ CS4       &lt;dbl&gt; 4, 3, 3, 6, 4, 2, 4, 4, 3, 3, 5, 3, 4, 5, 3, 5, 3, 4, 4, 4, …
-$ CL1       &lt;dbl&gt; 5, 5, 4, 4, 5, 3, 5, 4, 3, 3, 6, 3, 5, 5, 2, 4, 2, 4, 4, 4, …
-$ CL2       &lt;dbl&gt; 4, 4, 4, 4, 4, 2, 4, 5, 3, 4, 4, 3, 5, 5, 3, 4, 3, 3, 4, 4, …
-$ CL3       &lt;dbl&gt; 4, 4, 3, 4, 5, 2, 5, 5, 3, 4, 5, 1, 5, 5, 5, 4, 4, 3, 3, 5, …
-$ RI1       &lt;dbl&gt; 4, 4, 3, 3, 4, 4, 4, 5, 3, 3, 5, 3, 5, 6, 3, 5, 2, 4, 4, 4, …
-$ RI2       &lt;dbl&gt; 3, 4, 4, 4, 5, 3, 4, 5, 2, 2, 6, 3, 5, 4, 3, 4, 2, 3, 4, 6, …
-$ RI3       &lt;dbl&gt; 4, 4, 3, 5, 4, 2, 3, 5, 2, 2, 6, 3, 4, 5, 3, 4, 4, 3, 4, 6, …</code></pre>
+<pre><code>Rows: 485
+Columns: 14
+$ HV1        &lt;dbl&gt; 5, 4, 5, 5, 4, 5, 4, 5, 4, 4, 5, 4, 5, 2, 4, 4, 5, 5, 4, 4,…
+$ HV2        &lt;dbl&gt; 5, 4, 4, 5, 4, 4, 4, 4, 5, 4, 5, 4, 5, 2, 4, 4, 5, 5, 5, 4,…
+$ HV3        &lt;dbl&gt; 5, 4, 5, 4, 4, 5, 4, 4, 4, 3, 5, 4, 5, 2, 4, 4, 5, 5, 4, 4,…
+$ HV4        &lt;dbl&gt; 5, 4, 5, 5, 4, 5, 4, 5, 5, 4, 5, 4, 5, 2, 3, 4, 4, 4, 4, 5,…
+$ PMB1       &lt;dbl&gt; 4, 4, 4, 4, 5, 4, 3, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 5, 5, 4,…
+$ PMB2       &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 3, 3, 4, 3, 4, 5, 4,…
+$ PMB3       &lt;dbl&gt; 4, 4, 4, 4, 5, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 4, 3, 3, 5, 4,…
+$ PMB4       &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 3, 4, 3, 3, 4, 4, 4, 3, 3, 3, 4, 3, 4, 4,…
+$ ELOY1      &lt;dbl&gt; 5, 4, 4, 4, 4, 5, 3, 3, 5, 4, 4, 3, 3, 3, 4, 3, 5, 5, 3, 4,…
+$ ELOY2      &lt;dbl&gt; 5, 4, 4, 4, 4, 4, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 5, 5, 3, 4,…
+$ ELOY3      &lt;dbl&gt; 4, 5, 4, 4, 4, 4, 4, 4, 5, 5, 4, 4, 5, 3, 3, 4, 4, 5, 4, 5,…
+$ gender     &lt;dbl&gt; 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1,…
+$ occupation &lt;dbl&gt; 4, 6, 3, 5, 1, 5, 5, 2, 1, 4, 7, 4, 6, 5, 2, 3, 6, 3, 5, 5,…
+$ times      &lt;dbl&gt; 3, 4, 3, 1, 4, 4, 3, 2, 3, 4, 1, 4, 4, 2, 1, 2, 4, 4, 1, 1,…</code></pre>
 </div>
 </div>
 </section>
@@ -411,45 +445,60 @@ $ RI3       &lt;dbl&gt; 4, 4, 3, 5, 4, 2, 3, 5, 2, 2, 6, 3, 4, 5, 3, 4, 4, 3, 4,
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Service Quality</strong> (SQ)</td>
-<td>SQ1, SQ2, SQ3, SQ4</td>
-<td>Responsif, keandalan, jaminan, empati</td>
+<td><strong>PMB</strong> (Perceived Mental Benefits)</td>
+<td>PMB1, PMB2, PMB3, PMB4</td>
+<td>Manfaat mental yang dirasakan</td>
 </tr>
 <tr class="even">
-<td><strong>Perceived Value</strong> (PV)</td>
-<td>PV1, PV2, PV3</td>
-<td>Nilai fungsional, emosional, sosial</td>
+<td><strong>HV</strong> (Hedonic Value)</td>
+<td>HV1, HV2, HV3, HV4</td>
+<td>Nilai hedonik</td>
 </tr>
 <tr class="odd">
-<td><strong>Trust</strong> (TR)</td>
-<td>TR1, TR2, TR3</td>
-<td>Integritas, kompetensi, benevolence</td>
-</tr>
-<tr class="even">
-<td><strong>Customer Satisfaction</strong> (CS)</td>
-<td>CS1, CS2, CS3</td>
-<td>Puas keseluruhan, memenuhi harapan, senang</td>
-</tr>
-<tr class="odd">
-<td><strong>Customer Loyalty</strong> (CL)</td>
-<td>CL1, CL2, CL3</td>
-<td>Niat beli ulang, rekomendasi, pilihan utama</td>
+<td><strong>ELOY</strong> (Electronic Loyalty)</td>
+<td>ELOY1, ELOY2, ELOY3</td>
+<td>Loyalitas elektronik</td>
 </tr>
 </tbody>
 </table>
+<div class="fragment">
+<p>Semua konstruk bersifat <strong>reflektif</strong> — indikator merupakan efek dari konstruk.</p>
+</div>
 </section>
-<section id="apa-itu-cfa" class="slide level2">
-<h2>Apa itu CFA?</h2>
-<ul>
-<li class="fragment"><strong>Confirmatory Factor Analysis</strong> = menguji apakah indikator mengukur konstruk dengan baik</li>
-<li class="fragment">Langkah pertama sebelum full SEM</li>
-<li class="fragment">Mengevaluasi <strong>validitas</strong> dan <strong>reliabilitas</strong> pengukuran</li>
-<li class="fragment">Berbeda dari EFA (Exploratory) yang mencari faktor; CFA <strong>mengkonfirmasi</strong> struktur yang sudah dihipotesiskan</li>
-</ul>
+<section id="hipotesis-penelitian" class="slide level2">
+<h2>Hipotesis Penelitian</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Hipotesis</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>H1</td>
+<td>PMB berpengaruh positif terhadap ELOY</td>
+<td>ELOY ~ PMB</td>
+</tr>
+<tr class="even">
+<td>H2</td>
+<td>PMB berpengaruh positif terhadap HV</td>
+<td>HV ~ PMB</td>
+</tr>
+<tr class="odd">
+<td>H3</td>
+<td>HV berpengaruh positif terhadap ELOY</td>
+<td>ELOY ~ HV</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>Model ini juga memungkinkan pengujian <strong>efek mediasi</strong> HV dalam hubungan PMB → ELOY.</p>
+</div>
 </section>
 <section id="sintaks-lavaan" class="slide level2">
 <h2>Sintaks lavaan</h2>
-<p>Sintaks <code>lavaan</code> menggunakan notasi khusus:</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -462,201 +511,63 @@ $ RI3       &lt;dbl&gt; 4, 4, 3, 5, 4, 2, 3, 5, 2, 2, 6, 3, 4, 5, 3, 4, 4, 3, 4,
 <tr class="odd">
 <td><code>=~</code></td>
 <td>“diukur oleh” (measurement)</td>
-<td><code>SQ =~ SQ1 + SQ2 + SQ3</code></td>
+<td><code>PMB =~ PMB1 + PMB2</code></td>
 </tr>
 <tr class="even">
 <td><code>~</code></td>
 <td>“diregresikan terhadap” (structural)</td>
-<td><code>CS ~ SQ + KI</code></td>
+<td><code>ELOY ~ PMB + HV</code></td>
 </tr>
 <tr class="odd">
 <td><code>~~</code></td>
 <td>kovarians/varians</td>
-<td><code>KL ~~ KI</code></td>
+<td><code>HV ~~ ELOY</code></td>
+</tr>
+<tr class="even">
+<td><code>:=</code></td>
+<td>defined parameter (mediasi)</td>
+<td><code>indirect := a*b</code></td>
 </tr>
 </tbody>
 </table>
-<div class="fragment">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># CFA model</span></span>
-<span id="cb3-2"><a></a>model <span class="ot">&lt;-</span> <span class="st">'</span></span>
-<span id="cb3-3"><a></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
-<span id="cb3-4"><a></a><span class="st">  PV =~ PV1 + PV2 + PV3</span></span>
+</section>
+<section id="langkah-1-spesifikasi-model-cfa" class="slide level2">
+<h2>Langkah 1: Spesifikasi Model CFA</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>cfa_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb3-2"><a></a><span class="st">  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4</span></span>
+<span id="cb3-3"><a></a><span class="st">  HV   =~ HV1 + HV2 + HV3 + HV4</span></span>
+<span id="cb3-4"><a></a><span class="st">  ELOY =~ ELOY1 + ELOY2 + ELOY3</span></span>
 <span id="cb3-5"><a></a><span class="st">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="menspesifikasi-model-cfa" class="slide level2">
-<h2>Menspesifikasi Model CFA</h2>
+<section id="estimasi-cfa" class="slide level2">
+<h2>Estimasi CFA</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cfa_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
-<span id="cb4-2"><a></a><span class="st">  # Measurement model</span></span>
-<span id="cb4-3"><a></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
-<span id="cb4-4"><a></a><span class="st">  PV =~ PV1 + PV2 + PV3</span></span>
-<span id="cb4-5"><a></a><span class="st">  TR =~ TR1 + TR2 + TR3 + TR4</span></span>
-<span id="cb4-6"><a></a><span class="st">  CS =~ CS1 + CS2 + CS3 + CS4</span></span>
-<span id="cb4-7"><a></a><span class="st">  CL =~ CL1 + CL2 + CL3</span></span>
-<span id="cb4-8"><a></a><span class="st">  RI =~ RI1 + RI2 + RI3</span></span>
-<span id="cb4-9"><a></a><span class="st">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="mengestimasi-model-cfa" class="slide level2">
-<h2>Mengestimasi Model CFA</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cfa_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(cfa_model, <span class="at">data =</span> ecom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>cfa_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(cfa_model, <span class="at">data =</span> dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
-<p>Fungsi <code>cfa()</code> dari paket <code>lavaan</code>:</p>
 <ul>
-<li>Argumen pertama: spesifikasi model</li>
-<li><code>data</code>: dataset</li>
-<li>Estimator default: ML (Maximum Likelihood)</li>
-<li>Secara otomatis menetapkan loading pertama = 1 (untuk identifikasi)</li>
+<li>Estimator default: <strong>ML</strong> (Maximum Likelihood)</li>
+<li>Secara otomatis menetapkan loading pertama = 1 untuk identifikasi model</li>
+<li><code>cfa()</code> hanya mengestimasi measurement model (tanpa jalur struktural)</li>
 </ul>
 </div>
 </section>
-<section id="hasil-cfa-ringkasan" class="slide level2">
-<h2>Hasil CFA: Ringkasan</h2>
+<section id="fit-indices-cfa" class="slide level2">
+<h2>Fit Indices CFA</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">summary</span>(cfa_fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">fitMeasures</span>(cfa_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
+<span id="cb5-2"><a></a>                        <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-19 ended normally after 38 iterations
-
-  Estimator                                         ML
-  Optimization method                           NLMINB
-  Number of model parameters                        57
-
-  Number of observations                           300
-
-Model Test User Model:
-                                                      
-  Test statistic                               149.543
-  Degrees of freedom                               174
-  P-value (Chi-square)                           0.910
-
-Model Test Baseline Model:
-
-  Test statistic                              2274.102
-  Degrees of freedom                               210
-  P-value                                        0.000
-
-User Model versus Baseline Model:
-
-  Comparative Fit Index (CFI)                    1.000
-  Tucker-Lewis Index (TLI)                       1.014
-
-Loglikelihood and Information Criteria:
-
-  Loglikelihood user model (H0)              -7765.037
-  Loglikelihood unrestricted model (H1)      -7690.265
-                                                      
-  Akaike (AIC)                               15644.074
-  Bayesian (BIC)                             15855.189
-  Sample-size adjusted Bayesian (SABIC)      15674.419
-
-Root Mean Square Error of Approximation:
-
-  RMSEA                                          0.000
-  90 Percent confidence interval - lower         0.000
-  90 Percent confidence interval - upper         0.011
-  P-value H_0: RMSEA &lt;= 0.050                    1.000
-  P-value H_0: RMSEA &gt;= 0.080                    0.000
-
-Standardized Root Mean Square Residual:
-
-  SRMR                                           0.035
-
-Parameter Estimates:
-
-  Standard errors                             Standard
-  Information                                 Expected
-  Information saturated (h1) model          Structured
-
-Latent Variables:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-  SQ =~                                                                 
-    SQ1               1.000                               0.901    0.834
-    SQ2               0.859    0.063   13.693    0.000    0.774    0.779
-    SQ3               0.783    0.063   12.428    0.000    0.706    0.709
-    SQ4               0.718    0.065   10.973    0.000    0.647    0.635
-  PV =~                                                                 
-    PV1               1.000                               0.712    0.740
-    PV2               1.041    0.104   10.052    0.000    0.741    0.727
-    PV3               1.086    0.107   10.114    0.000    0.773    0.744
-  TR =~                                                                 
-    TR1               1.000                               0.772    0.738
-    TR2               1.098    0.088   12.450    0.000    0.848    0.799
-    TR3               1.053    0.088   11.985    0.000    0.813    0.760
-    TR4               0.922    0.089   10.378    0.000    0.712    0.652
-  CS =~                                                                 
-    CS1               1.000                               0.722    0.774
-    CS2               0.877    0.081   10.881    0.000    0.633    0.679
-    CS3               0.877    0.087   10.117    0.000    0.633    0.631
-    CS4               0.781    0.081    9.692    0.000    0.564    0.604
-  CL =~                                                                 
-    CL1               1.000                               0.648    0.726
-    CL2               0.827    0.103    8.069    0.000    0.536    0.565
-    CL3               1.114    0.118    9.422    0.000    0.722    0.708
-  RI =~                                                                 
-    RI1               1.000                               0.573    0.688
-    RI2               1.080    0.120    9.002    0.000    0.619    0.682
-    RI3               1.092    0.120    9.063    0.000    0.625    0.691
-
-Covariances:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-  SQ ~~                                                                 
-    PV                0.139    0.047    2.954    0.003    0.217    0.217
-    TR                0.310    0.055    5.662    0.000    0.445    0.445
-    CS                0.347    0.054    6.439    0.000    0.534    0.534
-    CL                0.216    0.047    4.595    0.000    0.371    0.371
-    RI                0.169    0.041    4.113    0.000    0.327    0.327
-  PV ~~                                                                 
-    TR                0.104    0.041    2.561    0.010    0.189    0.189
-    CS                0.196    0.042    4.676    0.000    0.382    0.382
-    CL                0.069    0.036    1.913    0.056    0.150    0.150
-    RI                0.092    0.033    2.819    0.005    0.225    0.225
-  TR ~~                                                                 
-    CS                0.307    0.048    6.346    0.000    0.551    0.551
-    CL                0.247    0.044    5.602    0.000    0.494    0.494
-    RI                0.156    0.036    4.304    0.000    0.354    0.354
-  CS ~~                                                                 
-    CL                0.300    0.045    6.661    0.000    0.641    0.641
-    RI                0.261    0.040    6.472    0.000    0.632    0.632
-  CL ~~                                                                 
-    RI                0.226    0.037    6.031    0.000    0.609    0.609
-
-Variances:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .SQ1               0.355    0.049    7.244    0.000    0.355    0.304
-   .SQ2               0.387    0.044    8.796    0.000    0.387    0.393
-   .SQ3               0.492    0.049   10.048    0.000    0.492    0.497
-   .SQ4               0.617    0.057   10.801    0.000    0.617    0.596
-   .PV1               0.419    0.053    7.895    0.000    0.419    0.453
-   .PV2               0.491    0.060    8.234    0.000    0.491    0.472
-   .PV3               0.482    0.062    7.782    0.000    0.482    0.446
-   .TR1               0.497    0.052    9.489    0.000    0.497    0.455
-   .TR2               0.407    0.050    8.173    0.000    0.407    0.362
-   .TR3               0.482    0.053    9.083    0.000    0.482    0.422
-   .TR4               0.687    0.065   10.577    0.000    0.687    0.575
-   .CS1               0.349    0.042    8.369    0.000    0.349    0.401
-   .CS2               0.469    0.047   10.050    0.000    0.469    0.539
-   .CS3               0.607    0.057   10.565    0.000    0.607    0.602
-   .CS4               0.552    0.051   10.786    0.000    0.552    0.635
-   .CL1               0.377    0.047    7.975    0.000    0.377    0.474
-   .CL2               0.611    0.058   10.500    0.000    0.611    0.681
-   .CL3               0.519    0.062    8.383    0.000    0.519    0.499
-   .RI1               0.364    0.041    8.776    0.000    0.364    0.526
-   .RI2               0.440    0.049    8.898    0.000    0.440    0.535
-   .RI3               0.428    0.049    8.728    0.000    0.428    0.523
-    SQ                0.811    0.099    8.199    0.000    1.000    1.000
-    PV                0.507    0.079    6.440    0.000    1.000    1.000
-    TR                0.596    0.086    6.922    0.000    1.000    1.000
-    CS                0.521    0.072    7.253    0.000    1.000    1.000
-    CL                0.419    0.068    6.204    0.000    1.000    1.000
-    RI                0.328    0.056    5.846    0.000    1.000    1.000</code></pre>
+<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+969.080  41.000   0.000   0.742   0.654   0.216   0.124 </code></pre>
 </div>
 </div>
 </section>
-<section id="fit-indices-kriteria" class="slide level2">
-<h2>Fit Indices: Kriteria</h2>
+<section id="kriteria-fit-indices" class="slide level2">
+<h2>Kriteria Fit Indices</h2>
+<p>Berdasarkan <strong>Hu &amp; Bentler (1999)</strong>:</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -693,7 +604,6 @@ Variances:
 </tr>
 </tbody>
 </table>
-<div class="fragment">
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -703,401 +613,684 @@ Variances:
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>Jangan hanya mengandalkan satu indeks. Laporkan minimal CFI, RMSEA, dan SRMR.</p>
-</div>
+<p>Laporkan minimal CFI, RMSEA, dan SRMR. Jangan hanya mengandalkan satu indeks.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="mengekstrak-fit-indices" class="slide level2">
-<h2>Mengekstrak Fit Indices</h2>
+<section id="standardized-factor-loadings" class="slide level2 smaller">
+<h2>Standardized Factor Loadings</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">fitMeasures</span>(cfa_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb8-2"><a></a>                        <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
-149.543 174.000   0.910   1.000   1.014   0.000   0.035 </code></pre>
-</div>
-</div>
-</section>
-<section id="factor-loadings" class="slide level2">
-<h2>Factor Loadings</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a></a>  <span class="fu">select</span>(lhs, rhs, est, std.all, pvalue) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Laten"</span>, <span class="st">"Indikator"</span>,</span>
-<span id="cb10-5"><a></a>                                   <span class="st">"Loading"</span>, <span class="st">"Std. Loading"</span>, <span class="st">"p"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-</section>
-<section id="factor-loadings-output" class="slide level2 output-location-slide"><h2>Factor Loadings</h2><div class="cell output-location-slide">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a></a>  <span class="fu">select</span>(<span class="at">Konstruk =</span> lhs, <span class="at">Indikator =</span> rhs,</span>
+<span id="cb7-4"><a></a>         <span class="at">Loading =</span> est, <span class="at">Std.Loading =</span> std.all, <span class="at">p =</span> pvalue) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a></a>  <span class="fu">mutate</span>(<span class="at">Memadai =</span> <span class="fu">ifelse</span>(Std.Loading <span class="sc">&gt;=</span> <span class="fl">0.50</span>, <span class="st">"Ya"</span>, <span class="st">"Tidak"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th style="text-align: left;">Laten</th>
+<th style="text-align: left;">Konstruk</th>
 <th style="text-align: left;">Indikator</th>
 <th style="text-align: right;">Loading</th>
-<th style="text-align: right;">Std. Loading</th>
+<th style="text-align: right;">Std.Loading</th>
 <th style="text-align: right;">p</th>
+<th style="text-align: left;">Memadai</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">SQ</td>
-<td style="text-align: left;">SQ1</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: left;">PMB1</td>
 <td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.834</td>
+<td style="text-align: right;">0.868</td>
 <td style="text-align: right;">NA</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">SQ</td>
-<td style="text-align: left;">SQ2</td>
-<td style="text-align: right;">0.859</td>
-<td style="text-align: right;">0.779</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: left;">PMB2</td>
+<td style="text-align: right;">0.733</td>
+<td style="text-align: right;">0.841</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">SQ</td>
-<td style="text-align: left;">SQ3</td>
-<td style="text-align: right;">0.783</td>
-<td style="text-align: right;">0.709</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SQ</td>
-<td style="text-align: left;">SQ4</td>
-<td style="text-align: right;">0.718</td>
-<td style="text-align: right;">0.635</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">PV</td>
-<td style="text-align: left;">PV1</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.740</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">PV</td>
-<td style="text-align: left;">PV2</td>
-<td style="text-align: right;">1.041</td>
-<td style="text-align: right;">0.727</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">PV</td>
-<td style="text-align: left;">PV3</td>
-<td style="text-align: right;">1.086</td>
-<td style="text-align: right;">0.744</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">TR</td>
-<td style="text-align: left;">TR1</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.738</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">TR</td>
-<td style="text-align: left;">TR2</td>
-<td style="text-align: right;">1.098</td>
-<td style="text-align: right;">0.799</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">TR</td>
-<td style="text-align: left;">TR3</td>
-<td style="text-align: right;">1.053</td>
-<td style="text-align: right;">0.760</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">TR</td>
-<td style="text-align: left;">TR4</td>
-<td style="text-align: right;">0.922</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: left;">PMB3</td>
+<td style="text-align: right;">0.698</td>
 <td style="text-align: right;">0.652</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">CS1</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: left;">PMB4</td>
+<td style="text-align: right;">0.558</td>
+<td style="text-align: right;">0.577</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HV</td>
+<td style="text-align: left;">HV1</td>
 <td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.774</td>
+<td style="text-align: right;">0.828</td>
 <td style="text-align: right;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">CS2</td>
-<td style="text-align: right;">0.877</td>
-<td style="text-align: right;">0.679</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">CS3</td>
-<td style="text-align: right;">0.877</td>
-<td style="text-align: right;">0.631</td>
+<td style="text-align: left;">HV</td>
+<td style="text-align: left;">HV2</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: right;">0.873</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">CS4</td>
-<td style="text-align: right;">0.781</td>
-<td style="text-align: right;">0.604</td>
+<td style="text-align: left;">HV</td>
+<td style="text-align: left;">HV3</td>
+<td style="text-align: right;">0.840</td>
+<td style="text-align: right;">0.734</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CL</td>
-<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">HV</td>
+<td style="text-align: left;">HV4</td>
+<td style="text-align: right;">1.049</td>
+<td style="text-align: right;">0.847</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ELOY</td>
+<td style="text-align: left;">ELOY1</td>
 <td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.726</td>
+<td style="text-align: right;">0.908</td>
 <td style="text-align: right;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CL</td>
-<td style="text-align: left;">CL2</td>
-<td style="text-align: right;">0.827</td>
-<td style="text-align: right;">0.565</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CL</td>
-<td style="text-align: left;">CL3</td>
-<td style="text-align: right;">1.114</td>
-<td style="text-align: right;">0.708</td>
+<td style="text-align: left;">ELOY</td>
+<td style="text-align: left;">ELOY2</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.847</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">RI</td>
-<td style="text-align: left;">RI1</td>
-<td style="text-align: right;">1.000</td>
-<td style="text-align: right;">0.688</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">RI</td>
-<td style="text-align: left;">RI2</td>
-<td style="text-align: right;">1.080</td>
-<td style="text-align: right;">0.682</td>
+<td style="text-align: left;">ELOY</td>
+<td style="text-align: left;">ELOY3</td>
+<td style="text-align: right;">0.464</td>
+<td style="text-align: right;">0.546</td>
 <td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">RI</td>
-<td style="text-align: left;">RI3</td>
-<td style="text-align: right;">1.092</td>
-<td style="text-align: right;">0.691</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 </tbody>
 </table>
 </div>
-</div></section><section id="evaluasi-factor-loadings" class="slide level2">
-<h2>Evaluasi Factor Loadings</h2>
+</div>
+<div class="fragment">
 <ul>
-<li class="fragment"><strong>Standardized loading</strong> (<span class="math inline">\(\lambda\)</span>) <span class="math inline">\(\geq\)</span> 0.50 (ideal <span class="math inline">\(\geq\)</span> 0.70)</li>
-<li class="fragment">Loading &lt; 0.50: indikator mungkin perlu dihapus</li>
-<li class="fragment">Semua loading harus <strong>signifikan</strong> (p &lt; 0.05)</li>
-<li class="fragment"><strong>AVE</strong> (Average Variance Extracted) <span class="math inline">\(\geq\)</span> 0.50 untuk convergent validity</li>
+<li>Standardized loading (<span class="math inline">\(\lambda\)</span>) <span class="math inline">\(\geq\)</span> 0.50 (ideal <span class="math inline">\(\geq\)</span> 0.70)</li>
+<li>Loading &lt; 0.50 → indikator perlu dipertimbangkan untuk dihapus</li>
 </ul>
+</div>
 </section>
-<section id="reliabilitas-konstruk" class="slide level2">
-<h2>Reliabilitas Konstruk</h2>
+<section id="composite-reliability-cr-ave" class="slide level2 smaller">
+<h2>Composite Reliability (CR) &amp; AVE</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># Menghitung Composite Reliability (CR) secara manual</span></span>
-<span id="cb11-2"><a></a>std_loadings <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-4"><a></a>  <span class="fu">select</span>(lhs, std.all)</span>
-<span id="cb11-5"><a></a></span>
-<span id="cb11-6"><a></a>std_loadings <span class="sc">|&gt;</span></span>
-<span id="cb11-7"><a></a>  <span class="fu">group_by</span>(lhs) <span class="sc">|&gt;</span></span>
-<span id="cb11-8"><a></a>  <span class="fu">summarize</span>(</span>
-<span id="cb11-9"><a></a>    <span class="at">n_items =</span> <span class="fu">n</span>(),</span>
-<span id="cb11-10"><a></a>    <span class="at">sum_loading =</span> <span class="fu">sum</span>(std.all),</span>
-<span id="cb11-11"><a></a>    <span class="at">sum_loading_sq =</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb11-12"><a></a>    <span class="at">AVE =</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">n</span>(),</span>
-<span id="cb11-13"><a></a>    <span class="at">CR =</span> sum_loading<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (sum_loading<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> (<span class="fu">n</span>() <span class="sc">-</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb11-14"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb11-15"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>std_loadings <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a></a>  <span class="fu">select</span>(lhs, std.all)</span>
+<span id="cb8-4"><a></a></span>
+<span id="cb8-5"><a></a>reliabilitas <span class="ot">&lt;-</span> std_loadings <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a></a>  <span class="fu">group_by</span>(<span class="at">Konstruk =</span> lhs) <span class="sc">|&gt;</span></span>
+<span id="cb8-7"><a></a>  <span class="fu">summarize</span>(</span>
+<span id="cb8-8"><a></a>    <span class="at">n_items =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-9"><a></a>    <span class="at">sum_lambda =</span> <span class="fu">sum</span>(std.all),</span>
+<span id="cb8-10"><a></a>    <span class="at">sum_lambda2 =</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb8-11"><a></a>    <span class="at">AVE =</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">n</span>(),</span>
+<span id="cb8-12"><a></a>    <span class="at">CR =</span> sum_lambda<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (sum_lambda<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> (<span class="fu">n</span>() <span class="sc">-</span> <span class="fu">sum</span>(std.all<span class="sc">^</span><span class="dv">2</span>))),</span>
+<span id="cb8-13"><a></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-14"><a></a>  )</span>
+<span id="cb8-15"><a></a>reliabilitas <span class="sc">|&gt;</span> <span class="fu">select</span>(Konstruk, n_items, AVE, CR) <span class="sc">|&gt;</span> <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th style="text-align: left;">lhs</th>
+<th style="text-align: left;">Konstruk</th>
 <th style="text-align: right;">n_items</th>
-<th style="text-align: right;">sum_loading</th>
-<th style="text-align: right;">sum_loading_sq</th>
 <th style="text-align: right;">AVE</th>
 <th style="text-align: right;">CR</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">CL</td>
+<td style="text-align: left;">ELOY</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">1.999</td>
-<td style="text-align: right;">1.347</td>
-<td style="text-align: right;">0.449</td>
-<td style="text-align: right;">0.707</td>
+<td style="text-align: right;">0.613</td>
+<td style="text-align: right;">0.820</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CS</td>
+<td style="text-align: left;">HV</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">2.688</td>
-<td style="text-align: right;">1.823</td>
-<td style="text-align: right;">0.456</td>
-<td style="text-align: right;">0.768</td>
+<td style="text-align: right;">0.676</td>
+<td style="text-align: right;">0.893</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">PV</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">2.210</td>
-<td style="text-align: right;">1.629</td>
-<td style="text-align: right;">0.543</td>
-<td style="text-align: right;">0.781</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">RI</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">2.061</td>
-<td style="text-align: right;">1.416</td>
-<td style="text-align: right;">0.472</td>
-<td style="text-align: right;">0.728</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SQ</td>
+<td style="text-align: left;">PMB</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">2.958</td>
-<td style="text-align: right;">2.210</td>
-<td style="text-align: right;">0.553</td>
-<td style="text-align: right;">0.830</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">TR</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">2.949</td>
-<td style="text-align: right;">2.186</td>
-<td style="text-align: right;">0.547</td>
-<td style="text-align: right;">0.827</td>
+<td style="text-align: right;">0.555</td>
+<td style="text-align: right;">0.829</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-</section>
-<section id="kriteria-validitas-dan-reliabilitas" class="slide level2">
-<h2>Kriteria Validitas dan Reliabilitas</h2>
-<table class="caption-top" style="width:100%;">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 33%">
-<col style="width: 41%">
-</colgroup>
+<div class="fragment">
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th>Kriteria</th>
 <th>Ambang Batas</th>
-<th>Apa yang Diuji</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Standardized Loading</td>
-<td><span class="math inline">\(\geq\)</span> 0.50</td>
-<td>Validitas indikator</td>
+<td>AVE</td>
+<td><span class="math inline">\(\geq\)</span> 0.50 (convergent validity)</td>
 </tr>
 <tr class="even">
-<td>AVE</td>
-<td><span class="math inline">\(\geq\)</span> 0.50</td>
-<td>Convergent validity</td>
+<td>CR</td>
+<td><span class="math inline">\(\geq\)</span> 0.70 (reliabilitas konstruk)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="discriminant-validity-fornell-larcker" class="slide level2 smaller">
+<h2>Discriminant Validity: Fornell-Larcker</h2>
+<p><strong>Fornell &amp; Larcker (1981)</strong>: <span class="math inline">\(\sqrt{AVE}\)</span> setiap konstruk harus lebih besar dari korelasi antar konstruk.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># Matriks korelasi antar konstruk laten</span></span>
+<span id="cb9-2"><a></a>cor_lv <span class="ot">&lt;-</span> <span class="fu">lavInspect</span>(cfa_fit, <span class="st">"cor.lv"</span>)</span>
+<span id="cb9-3"><a></a></span>
+<span id="cb9-4"><a></a><span class="co"># Hitung sqrt(AVE)</span></span>
+<span id="cb9-5"><a></a>ave_vals <span class="ot">&lt;-</span> reliabilitas<span class="sc">$</span>AVE</span>
+<span id="cb9-6"><a></a><span class="fu">names</span>(ave_vals) <span class="ot">&lt;-</span> reliabilitas<span class="sc">$</span>Konstruk</span>
+<span id="cb9-7"><a></a>sqrt_ave <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(ave_vals)</span>
+<span id="cb9-8"><a></a></span>
+<span id="cb9-9"><a></a><span class="co"># Tampilkan perbandingan</span></span>
+<span id="cb9-10"><a></a><span class="fu">cat</span>(<span class="st">"Korelasi antar konstruk:</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Korelasi antar konstruk:</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">round</span>(cor_lv, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       PMB    HV  ELOY
+PMB  1.000            
+HV   0.434 1.000      
+ELOY 0.548 0.413 1.000</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">cat</span>(<span class="st">"Sqrt(AVE) per konstruk:</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sqrt(AVE) per konstruk:</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">round</span>(sqrt_ave, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> ELOY    HV   PMB 
+0.783 0.822 0.745 </code></pre>
+</div>
+</div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Jika <span class="math inline">\(\sqrt{AVE}\)</span> lebih besar dari semua korelasi pada baris/kolomnya, discriminant validity terpenuhi.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="langkah-2-full-structural-model" class="slide level2 smaller">
+<h2>Langkah 2: Full Structural Model</h2>
+<p>Setelah CFA memadai, tambahkan jalur struktural dengan <strong>label</strong> untuk analisis mediasi:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>sem_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb17-2"><a></a><span class="st">  # Measurement model</span></span>
+<span id="cb17-3"><a></a><span class="st">  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4</span></span>
+<span id="cb17-4"><a></a><span class="st">  HV   =~ HV1 + HV2 + HV3 + HV4</span></span>
+<span id="cb17-5"><a></a><span class="st">  ELOY =~ ELOY1 + ELOY2 + ELOY3</span></span>
+<span id="cb17-6"><a></a></span>
+<span id="cb17-7"><a></a><span class="st">  # Structural model (dengan label untuk mediasi)</span></span>
+<span id="cb17-8"><a></a><span class="st">  HV   ~ a*PMB</span></span>
+<span id="cb17-9"><a></a><span class="st">  ELOY ~ c*PMB + b*HV</span></span>
+<span id="cb17-10"><a></a></span>
+<span id="cb17-11"><a></a><span class="st">  # Defined parameters</span></span>
+<span id="cb17-12"><a></a><span class="st">  indirect := a*b</span></span>
+<span id="cb17-13"><a></a><span class="st">  total    := c + a*b</span></span>
+<span id="cb17-14"><a></a><span class="st">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="estimasi-full-sem-dengan-bootstrap" class="slide level2">
+<h2>Estimasi Full SEM dengan Bootstrap</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>sem_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model, <span class="at">data =</span> dat, <span class="at">se =</span> <span class="st">"bootstrap"</span>, <span class="at">bootstrap =</span> <span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Bootstrap SE digunakan agar confidence interval untuk efek mediasi (indirect effect) tidak bergantung pada asumsi normalitas distribusi sampling.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-indices-full-sem" class="slide level2">
+<h2>Fit Indices Full SEM</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">fitMeasures</span>(sem_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
+<span id="cb19-2"><a></a>                        <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+969.080  41.000   0.000   0.742   0.654   0.216   0.124 </code></pre>
+</div>
+</div>
+</section>
+<section id="path-coefficients-uji-hipotesis" class="slide level2 smaller">
+<h2>Path Coefficients (Uji Hipotesis)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">parameterEstimates</span>(sem_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a></a>  <span class="fu">select</span>(<span class="at">DV =</span> lhs, <span class="at">IV =</span> rhs, <span class="at">B =</span> est, <span class="at">SE =</span> se, <span class="at">Z =</span> z,</span>
+<span id="cb21-4"><a></a>         <span class="at">p =</span> pvalue, <span class="at">Beta =</span> std.all) <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a></a>  <span class="fu">mutate</span>(<span class="at">Sig =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="st">"Ya"</span>, <span class="st">"Tidak"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-6"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">DV</th>
+<th style="text-align: left;">IV</th>
+<th style="text-align: right;">B</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">Z</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">Beta</th>
+<th style="text-align: left;">Sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">HV</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: right;">0.424</td>
+<td style="text-align: right;">0.081</td>
+<td style="text-align: right;">5.239</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.434</td>
+<td style="text-align: left;">Ya</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ELOY</td>
+<td style="text-align: left;">PMB</td>
+<td style="text-align: right;">0.564</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">4.856</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.454</td>
+<td style="text-align: left;">Ya</td>
 </tr>
 <tr class="odd">
-<td>CR</td>
-<td><span class="math inline">\(\geq\)</span> 0.70</td>
-<td>Reliabilitas konstruk</td>
+<td style="text-align: left;">ELOY</td>
+<td style="text-align: left;">HV</td>
+<td style="text-align: right;">0.275</td>
+<td style="text-align: right;">0.067</td>
+<td style="text-align: right;">4.113</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.216</td>
+<td style="text-align: left;">Ya</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="r2-variabel-endogen" class="slide level2">
+<h2><span class="math inline">\(R^2\)</span> Variabel Endogen</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">lavInspect</span>(sem_fit, <span class="st">"r2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> PMB1  PMB2  PMB3  PMB4   HV1   HV2   HV3   HV4 ELOY1 ELOY2 ELOY3    HV  ELOY 
+0.754 0.708 0.426 0.333 0.685 0.763 0.539 0.718 0.824 0.717 0.298 0.188 0.339 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(R^2\)</span> menunjukkan proporsi varians variabel endogen yang dijelaskan oleh prediktor</li>
+<li>Semakin tinggi <span class="math inline">\(R^2\)</span>, semakin baik model menjelaskan variabel tersebut</li>
+</ul>
+</div>
+</section>
+<section id="analisis-mediasi" class="slide level2 smaller">
+<h2>Analisis Mediasi</h2>
+<p>HV sebagai mediator dalam hubungan PMB → ELOY:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">parameterEstimates</span>(sem_fit) <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">":="</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a></a>  <span class="fu">select</span>(<span class="at">Label =</span> label, <span class="at">Estimate =</span> est, <span class="at">SE =</span> se, <span class="at">Z =</span> z,</span>
+<span id="cb24-4"><a></a>         <span class="at">p =</span> pvalue, <span class="at">CI.Lower =</span> ci.lower, <span class="at">CI.Upper =</span> ci.upper) <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Label</th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">Z</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">CI.Lower</th>
+<th style="text-align: right;">CI.Upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">indirect</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">2.992</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.203</td>
 </tr>
 <tr class="even">
-<td>Discriminant validity</td>
-<td><span class="math inline">\(\sqrt{AVE} &gt; r\)</span></td>
-<td>Konstruk berbeda satu sama lain</td>
+<td style="text-align: left;">total</td>
+<td style="text-align: right;">0.680</td>
+<td style="text-align: right;">0.088</td>
+<td style="text-align: right;">7.702</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.491</td>
+<td style="text-align: right;">0.841</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Interpretasi</strong>: Efek tidak langsung (indirect) signifikan jika bootstrap CI tidak melewati nol. Ini menunjukkan bahwa HV memediasi hubungan PMB → ELOY.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="path-diagram" class="slide level2">
+<h2>Path Diagram</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">semPaths</span>(sem_fit,</span>
+<span id="cb25-2"><a></a>         <span class="at">whatLabels =</span> <span class="st">"std"</span>,</span>
+<span id="cb25-3"><a></a>         <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
+<span id="cb25-4"><a></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb25-5"><a></a>         <span class="at">style =</span> <span class="st">"lisrel"</span>,</span>
+<span id="cb25-6"><a></a>         <span class="at">residuals =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-7"><a></a>         <span class="at">rotation =</span> <span class="dv">2</span>,</span>
+<span id="cb25-8"><a></a>         <span class="at">nCharNodes =</span> <span class="dv">4</span>,</span>
+<span id="cb25-9"><a></a>         <span class="at">sizeMan =</span> <span class="dv">6</span>,</span>
+<span id="cb25-10"><a></a>         <span class="at">sizeLat =</span> <span class="dv">9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="03-sem_files/figure-revealjs/unnamed-chunk-16-1.png" width="1344" class="r-stretch"></section>
+<section id="common-method-bias-cmb" class="slide level2 smaller">
+<h2>Common Method Bias (CMB)</h2>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Perhatian</strong>: Data dalam penelitian ini dikumpulkan melalui <strong>self-report questionnaire</strong> dengan sumber yang sama (single-source), sehingga berpotensi terkena <strong>Common Method Bias</strong> (CMB).</p>
+</div>
+</div>
+</div>
+<p>Langkah mitigasi yang dapat dilakukan:</p>
+<ul>
+<li><strong>Harman’s single-factor test</strong>: Jalankan EFA dengan satu faktor; jika varians yang dijelaskan &lt; 50%, CMB tidak menjadi masalah serius</li>
+<li><strong>Common Latent Factor</strong> (CLF): Tambahkan satu faktor laten umum ke model CFA</li>
+<li><strong>Procedural remedies</strong>: Gunakan sumber data berbeda, jaminan anonimitas, counterbalancing item order</li>
+</ul>
+<div class="fragment">
+<blockquote>
+<p>CMB bukan berarti hasil tidak valid, tetapi harus dilaporkan sebagai <strong>limitasi</strong> dan diuji.</p>
+</blockquote>
+</div>
+</section>
+<section id="pelaporan-cb-sem-template-apa" class="slide level2 smaller">
+<h2>Pelaporan CB-SEM (Template APA)</h2>
+<blockquote>
+<p>Model pengukuran (CFA) menunjukkan fit yang memadai (<span class="math inline">\(\chi^2\)</span>(df) = …, p = …; CFI = …; TLI = …; RMSEA = …; SRMR = …). Semua standardized factor loadings berada di atas 0.50, dengan AVE &gt; 0.50 dan CR &gt; 0.70 untuk seluruh konstruk, menunjukkan convergent validity dan reliabilitas yang baik. Discriminant validity terpenuhi berdasarkan kriteria Fornell-Larcker.</p>
+<p>Model struktural menunjukkan bahwa PMB berpengaruh positif signifikan terhadap HV (<span class="math inline">\(\beta\)</span> = …, p &lt; …) dan terhadap ELOY (<span class="math inline">\(\beta\)</span> = …, p &lt; …). HV juga berpengaruh positif signifikan terhadap ELOY (<span class="math inline">\(\beta\)</span> = …, p &lt; …). Analisis mediasi dengan bootstrap (1000 resamples) menunjukkan efek tidak langsung PMB → HV → ELOY yang signifikan (indirect = …, 95% CI […, …]), mengindikasikan mediasi parsial.</p>
+</blockquote>
+</section>
+<section id="referensi-cb-sem" class="slide level2">
+<h2>Referensi CB-SEM</h2>
+<ul>
+<li>Anderson, J.C. &amp; Gerbing, D.W. (1988). Structural equation modeling in practice. <em>Psychological Bulletin</em>, 103(3), 411–423.</li>
+<li>Hu, L. &amp; Bentler, P.M. (1999). Cutoff criteria for fit indexes. <em>Structural Equation Modeling</em>, 6(1), 1–55.</li>
+<li>Fornell, C. &amp; Larcker, D.F. (1981). Evaluating SEM with unobserved variables. <em>Journal of Marketing Research</em>, 18(1), 39–50.</li>
+<li>Khoa, B.T. &amp; Nguyen, T.D. (2020). Electronic loyalty in social commerce. <em>Sustainability</em>, 12(7), 2804.</li>
+<li>Lee, W.I. &amp; Wu, C.C. (2017). Customer loyalty in e-commerce. <em>Journal of Internet Commerce</em>, 16(3), 305–326.</li>
+<li>Nguyen, T.D. &amp; Khoa, B.T. (2019). Hedonic value and e-loyalty. <em>Journal of Distribution Science</em>, 17(2), 33–42.</li>
+</ul>
+</section></section>
+<section>
+<section id="bagian-b-pls-sem-dengan-seminr" class="title-slide slide level1 center">
+<h1>Bagian B: PLS-SEM dengan seminr</h1>
+
+</section>
+<section id="mengapa-pls-sem" class="slide level2">
+<h2>Mengapa PLS-SEM?</h2>
+<ul>
+<li class="fragment">Tidak memerlukan asumsi distribusi normal</li>
+<li class="fragment">Bisa menangani <strong>sampel kecil</strong></li>
+<li class="fragment">Mendukung indikator <strong>formatif</strong> dan <strong>reflektif</strong></li>
+<li class="fragment">Cocok untuk model yang <strong>kompleks</strong> dengan banyak variabel</li>
+<li class="fragment">Fokus pada <strong>prediksi</strong>, bukan hanya konfirmasi teori</li>
+<li class="fragment">Sangat populer di bidang manajemen, pemasaran, dan sistem informasi</li>
+</ul>
+</section>
+<section id="reflektif-vs-formatif" class="slide level2">
+<h2>Reflektif vs Formatif</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Reflektif</strong> (Mode A)</p>
+<ul>
+<li>Indikator adalah <strong>efek</strong> dari konstruk</li>
+<li>Menghapus satu indikator tidak mengubah makna konstruk</li>
+<li>Indikator saling berkorelasi tinggi</li>
+<li>Contoh: item kepuasan pelanggan</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Formatif</strong> (Mode B)</p>
+<ul>
+<li>Indikator <strong>membentuk</strong> konstruk</li>
+<li>Menghapus satu indikator mengubah makna konstruk</li>
+<li>Indikator tidak harus berkorelasi</li>
+<li>Contoh: SES (pendidikan + pendapatan + pekerjaan)</li>
+</ul>
+</div></div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Model ECSI yang kita gunakan hari ini menggunakan <strong>semua konstruk reflektif</strong> (Mode A).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="dataset-ecsi-mobile-operator" class="slide level2 smaller">
+<h2>Dataset: ECSI Mobile Operator</h2>
+<p>European Customer Satisfaction Index untuk operator telekomunikasi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>mobi <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/plssem/sem_mobi.xlsx"</span>)</span>
+<span id="cb26-2"><a></a><span class="fu">glimpse</span>(mobi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 250
+Columns: 24
+$ CUEX1 &lt;dbl&gt; 7, 10, 7, 7, 8, 10, 9, 5, 7, 8, 7, 10, 8, 10, 5, 5, 8, 5, 8, 5, …
+$ CUEX2 &lt;dbl&gt; 7, 10, 7, 10, 7, 9, 6, 6, 7, 7, 6, 10, 6, 10, 5, 7, 8, 7, 8, 7, …
+$ CUEX3 &lt;dbl&gt; 6, 9, 7, 5, 10, 7, 2, 1, 7, 3, 8, 9, 9, 10, 10, 9, 6, 7, 10, 6, …
+$ CUSA1 &lt;dbl&gt; 6, 10, 8, 10, 10, 8, 8, 7, 7, 7, 10, 8, 8, 10, 8, 9, 9, 8, 9, 8,…
+$ CUSA2 &lt;dbl&gt; 4, 10, 7, 10, 8, 7, 8, 6, 7, 5, 6, 8, 8, 8, 6, 6, 8, 5, 8, 8, 9,…
+$ CUSA3 &lt;dbl&gt; 7, 8, 7, 10, 8, 7, 8, 7, 7, 5, 7, 7, 7, 8, 7, 7, 7, 5, 9, 6, 8, …
+$ CUSCO &lt;dbl&gt; 7, 10, 6, 5, 5, 8, 7, 8, 8, 6, 7, 7, 8, 8, 7, 7, 5, 5, 10, 5, 7,…
+$ CUSL1 &lt;dbl&gt; 6, 10, 6, 10, 10, 10, 7, 5, 6, 10, 10, 5, 7, 10, 5, 9, 10, 3, 9,…
+$ CUSL2 &lt;dbl&gt; 5, 2, 2, 4, 3, 3, 6, 7, 3, 4, 4, 2, 3, 4, 2, 4, 2, 3, 5, 1, 4, 6…
+$ CUSL3 &lt;dbl&gt; 6, 10, 7, 10, 8, 10, 8, 8, 7, 6, 8, 5, 8, 10, 10, 8, 10, 3, 10, …
+$ IMAG1 &lt;dbl&gt; 7, 10, 8, 10, 10, 8, 8, 8, 7, 6, 7, 9, 8, 10, 10, 7, 8, 7, 9, 7,…
+$ IMAG2 &lt;dbl&gt; 5, 9, 7, 10, 10, 9, 7, 8, 9, 7, 10, 9, 9, 10, 8, 9, 7, 5, 9, 7, …
+$ IMAG3 &lt;dbl&gt; 5, 10, 6, 5, 5, 10, 1, 9, 6, 7, 7, 5, 8, 10, 4, 7, 8, 2, 9, 5, 7…
+$ IMAG4 &lt;dbl&gt; 5, 10, 4, 5, 8, 8, 7, 7, 6, 8, 7, 8, 8, 10, 6, 10, 10, 5, 8, 6, …
+$ IMAG5 &lt;dbl&gt; 4, 9, 7, 10, 9, 9, 7, 9, 8, 8, 7, 9, 7, 10, 10, 9, 10, 5, 9, 7, …
+$ PERQ1 &lt;dbl&gt; 7, 10, 7, 8, 10, 9, 7, 8, 7, 6, 8, 7, 9, 10, 8, 10, 9, 7, 8, 8, …
+$ PERQ2 &lt;dbl&gt; 6, 9, 8, 10, 9, 10, 8, 6, 8, 6, 8, 8, 9, 7, 8, 9, 8, 6, 8, 7, 8,…
+$ PERQ3 &lt;dbl&gt; 4, 10, 5, 10, 8, 9, 9, 7, 6, 8, 8, 8, 7, 10, 8, 9, 10, 5, 9, 7, …
+$ PERQ4 &lt;dbl&gt; 7, 10, 7, 8, 10, 10, 7, 8, 7, 8, 8, 8, 8, 10, 9, 9, 9, 8, 9, 8, …
+$ PERQ5 &lt;dbl&gt; 6, 9, 8, 4, 9, 8, 8, 7, 7, 8, 8, 9, 8, 10, 6, 9, 10, 7, 8, 8, 9,…
+$ PERQ6 &lt;dbl&gt; 5, 10, 7, 5, 9, 9, 7, 8, 7, 7, 8, 9, 9, 10, 9, 9, 9, 7, 9, 7, 8,…
+$ PERQ7 &lt;dbl&gt; 5, 10, 7, 8, 8, 9, 8, 7, 8, 8, 8, 8, 8, 10, 7, 9, 4, 7, 9, 6, 8,…
+$ PERV1 &lt;dbl&gt; 2, 10, 7, 5, 6, 10, 5, 5, 5, 4, 7, 5, 5, 7, 2, 2, 5, 7, 8, 7, 7,…
+$ PERV2 &lt;dbl&gt; 3, 10, 7, 5, 6, 10, 7, 7, 7, 6, 7, 7, 6, 8, 5, 7, 10, 7, 7, 7, 7…</code></pre>
+</div>
+</div>
+</section>
+<section id="konstruk-dan-indikator-ecsi" class="slide level2 smaller">
+<h2>Konstruk dan Indikator ECSI</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Konstruk</th>
+<th>Indikator</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>IMAG</strong> (Image)</td>
+<td>IMAG1–5</td>
+<td>Trustworthiness, stability, social contribution, concern, innovation</td>
+</tr>
+<tr class="even">
+<td><strong>CUEX</strong> (Customer Expectation)</td>
+<td>CUEX1–3</td>
+<td>Overall quality expectation, need fulfillment, error frequency</td>
+</tr>
+<tr class="odd">
+<td><strong>PERQ</strong> (Perceived Quality)</td>
+<td>PERQ1–7</td>
+<td>Overall quality, technical, service, product, variety, reliability, transparency</td>
+</tr>
+<tr class="even">
+<td><strong>PERV</strong> (Perceived Value)</td>
+<td>PERV1–2</td>
+<td>Price vs quality, quality vs price</td>
+</tr>
+<tr class="odd">
+<td><strong>CUSA</strong> (Customer Satisfaction)</td>
+<td>CUSA1–3</td>
+<td>Overall satisfaction, fulfillment, ideal comparison</td>
+</tr>
+<tr class="even">
+<td><strong>CUSCO</strong> (Customer Complaints)</td>
+<td>CUSCO</td>
+<td>Single item: complaint handling</td>
+</tr>
+<tr class="odd">
+<td><strong>CUSL</strong> (Customer Loyalty)</td>
+<td>CUSL1–3</td>
+<td>Repurchase, price tolerance, word of mouth</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="path-diagram-cfa" class="slide level2">
-<h2>Path Diagram CFA</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">semPaths</span>(cfa_fit,</span>
-<span id="cb12-2"><a></a>         <span class="at">whatLabels =</span> <span class="st">"std"</span>,</span>
-<span id="cb12-3"><a></a>         <span class="at">layout =</span> <span class="st">"tree"</span>,</span>
-<span id="cb12-4"><a></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>,</span>
-<span id="cb12-5"><a></a>         <span class="at">style =</span> <span class="st">"lisrel"</span>,</span>
-<span id="cb12-6"><a></a>         <span class="at">residuals =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb12-7"><a></a>         <span class="at">rotation =</span> <span class="dv">2</span>,</span>
-<span id="cb12-8"><a></a>         <span class="at">nCharNodes =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="catatan-tentang-indikator" class="slide level2 smaller">
+<h2>Catatan tentang Indikator</h2>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-
-</section>
-<section id="path-diagram-cfa-output" class="slide level2 output-location-slide"><h2>Path Diagram CFA</h2><div class="cell output-location-slide">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="03-sem_files/figure-revealjs/unnamed-chunk-9-1.png" width="1344"></p>
-</figure>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>CUSCO</strong> hanya memiliki <strong>1 indikator</strong> (single item). Ini berarti:</p>
+<ul>
+<li>Tidak dapat menghitung reliabilitas internal (Alpha, CR)</li>
+<li>AVE otomatis = 1.0 (hanya satu loading)</li>
+<li>Interpretasi harus hati-hati — error variance tidak dapat diestimasi secara terpisah</li>
+</ul>
 </div>
 </div>
-</div></section><section id="latihan-cfa" class="slide level2 smaller">
-<h2>Latihan CFA</h2>
-<blockquote>
-<p>Jalankan CFA hanya dengan 3 konstruk: SQ, TR, dan CS. Evaluasi fit indices dan factor loadings.</p>
-</blockquote>
-<div class="cell">
-<details class="code-fold">
-<summary>Jawaban</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>cfa_3 <span class="ot">&lt;-</span> <span class="st">'</span></span>
-<span id="cb13-2"><a></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
-<span id="cb13-3"><a></a><span class="st">  TR =~ TR1 + TR2 + TR3 + TR4</span></span>
-<span id="cb13-4"><a></a><span class="st">  CS =~ CS1 + CS2 + CS3 + CS4</span></span>
-<span id="cb13-5"><a></a><span class="st">'</span></span>
-<span id="cb13-6"><a></a>cfa_3_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(cfa_3, <span class="at">data =</span> ecom)</span>
-<span id="cb13-7"><a></a><span class="fu">fitMeasures</span>(cfa_3_fit, <span class="fu">c</span>(<span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  cfi   tli rmsea  srmr 
-1.000 1.004 0.000 0.034 </code></pre>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>PERV</strong> hanya memiliki <strong>2 indikator</strong>. Konstruk dengan 2 indikator masih dapat diidentifikasi dalam PLS-SEM, tetapi memiliki keterbatasan dalam estimasi reliabilitas. Gunakan rhoA sebagai ukuran reliabilitas yang lebih robust.</p>
+</div>
 </div>
 </div>
 </section>
-<section id="full-structural-model" class="slide level2">
-<h2>Full Structural Model</h2>
-<p>Setelah CFA menunjukkan pengukuran yang baik, kita tambahkan <strong>jalur struktural</strong> (regresi antar laten).</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>sem_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
-<span id="cb15-2"><a></a><span class="st">  # Measurement model</span></span>
-<span id="cb15-3"><a></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
-<span id="cb15-4"><a></a><span class="st">  PV =~ PV1 + PV2 + PV3</span></span>
-<span id="cb15-5"><a></a><span class="st">  TR =~ TR1 + TR2 + TR3 + TR4</span></span>
-<span id="cb15-6"><a></a><span class="st">  CS =~ CS1 + CS2 + CS3 + CS4</span></span>
-<span id="cb15-7"><a></a><span class="st">  CL =~ CL1 + CL2 + CL3</span></span>
-<span id="cb15-8"><a></a><span class="st">  RI =~ RI1 + RI2 + RI3</span></span>
-<span id="cb15-9"><a></a></span>
-<span id="cb15-10"><a></a><span class="st">  # Structural model (hipotesis)</span></span>
-<span id="cb15-11"><a></a><span class="st">  CS ~ SQ + PV + TR</span></span>
-<span id="cb15-12"><a></a><span class="st">  CL ~ CS + TR</span></span>
-<span id="cb15-13"><a></a><span class="st">  RI ~ CS + CL</span></span>
-<span id="cb15-14"><a></a><span class="st">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="hipotesis-penelitian" class="slide level2">
-<h2>Hipotesis Penelitian</h2>
+<section id="hipotesis-ecsi-h1h12" class="slide level2 smaller">
+<h2>Hipotesis ECSI (H1–H12)</h2>
 <table class="caption-top">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 52%">
-<col style="width: 28%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>No</th>
@@ -1108,449 +1301,276 @@ Variances:
 <tbody>
 <tr class="odd">
 <td>H1</td>
-<td>Service Quality berpengaruh positif terhadap Customer Satisfaction</td>
-<td>CS ~ SQ</td>
+<td>IMAG → CUEX</td>
+<td>CUEX ~ IMAG</td>
 </tr>
 <tr class="even">
 <td>H2</td>
-<td>Perceived Value berpengaruh positif terhadap Customer Satisfaction</td>
-<td>CS ~ PV</td>
+<td>IMAG → CUSA</td>
+<td>CUSA ~ IMAG</td>
 </tr>
 <tr class="odd">
 <td>H3</td>
-<td>Trust berpengaruh positif terhadap Customer Satisfaction</td>
-<td>CS ~ TR</td>
+<td>IMAG → CUSL</td>
+<td>CUSL ~ IMAG</td>
 </tr>
 <tr class="even">
 <td>H4</td>
-<td>Customer Satisfaction berpengaruh positif terhadap Customer Loyalty</td>
-<td>CL ~ CS</td>
+<td>CUEX → PERQ</td>
+<td>PERQ ~ CUEX</td>
 </tr>
 <tr class="odd">
 <td>H5</td>
-<td>Trust berpengaruh positif terhadap Customer Loyalty</td>
-<td>CL ~ TR</td>
+<td>CUEX → PERV</td>
+<td>PERV ~ CUEX</td>
 </tr>
 <tr class="even">
 <td>H6</td>
-<td>Customer Satisfaction berpengaruh positif terhadap Repurchase Intention</td>
-<td>RI ~ CS</td>
+<td>CUEX → CUSA</td>
+<td>CUSA ~ CUEX</td>
 </tr>
 <tr class="odd">
 <td>H7</td>
-<td>Customer Loyalty berpengaruh positif terhadap Repurchase Intention</td>
-<td>RI ~ CL</td>
+<td>PERQ → PERV</td>
+<td>PERV ~ PERQ</td>
+</tr>
+<tr class="even">
+<td>H8</td>
+<td>PERQ → CUSA</td>
+<td>CUSA ~ PERQ</td>
+</tr>
+<tr class="odd">
+<td>H9</td>
+<td>PERV → CUSA</td>
+<td>CUSA ~ PERV</td>
+</tr>
+<tr class="even">
+<td>H10</td>
+<td>CUSA → CUSCO</td>
+<td>CUSCO ~ CUSA</td>
+</tr>
+<tr class="odd">
+<td>H11</td>
+<td>CUSA → CUSL</td>
+<td>CUSL ~ CUSA</td>
+</tr>
+<tr class="even">
+<td>H12</td>
+<td>CUSCO → CUSL</td>
+<td>CUSL ~ CUSCO</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="mengestimasi-full-sem" class="slide level2">
-<h2>Mengestimasi Full SEM</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>sem_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model, <span class="at">data =</span> ecom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="fit-indices-full-sem" class="slide level2">
-<h2>Fit Indices Full SEM</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">fitMeasures</span>(sem_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb17-2"><a></a>                        <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
-152.229 179.000   0.927   1.000   1.015   0.000   0.036 </code></pre>
-</div>
-</div>
-</section>
-<section id="hasil-path-hipotesis" class="slide level2">
-<h2>Hasil Path (Hipotesis)</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">parameterEstimates</span>(sem_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"~"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-3"><a></a>  <span class="fu">select</span>(lhs, rhs, est, std.all, pvalue) <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a></a>  <span class="fu">mutate</span>(<span class="at">signifikan =</span> <span class="fu">ifelse</span>(pvalue <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="st">"Ya"</span>, <span class="st">"Tidak"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb19-5"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"DV"</span>, <span class="st">"IV"</span>, <span class="st">"Estimate"</span>,</span>
-<span id="cb19-6"><a></a>                                   <span class="st">"Std. Estimate"</span>, <span class="st">"p-value"</span>, <span class="st">"Signifikan"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th style="text-align: left;">DV</th>
-<th style="text-align: left;">IV</th>
-<th style="text-align: right;">Estimate</th>
-<th style="text-align: right;">Std. Estimate</th>
-<th style="text-align: right;">p-value</th>
-<th style="text-align: left;">Signifikan</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">SQ</td>
-<td style="text-align: right;">0.257</td>
-<td style="text-align: right;">0.320</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">PV</td>
-<td style="text-align: right;">0.238</td>
-<td style="text-align: right;">0.234</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CS</td>
-<td style="text-align: left;">TR</td>
-<td style="text-align: right;">0.337</td>
-<td style="text-align: right;">0.359</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">CL</td>
-<td style="text-align: left;">CS</td>
-<td style="text-align: right;">0.466</td>
-<td style="text-align: right;">0.522</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CL</td>
-<td style="text-align: left;">TR</td>
-<td style="text-align: right;">0.170</td>
-<td style="text-align: right;">0.203</td>
-<td style="text-align: right;">0.016</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">RI</td>
-<td style="text-align: left;">CS</td>
-<td style="text-align: right;">0.319</td>
-<td style="text-align: right;">0.403</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">RI</td>
-<td style="text-align: left;">CL</td>
-<td style="text-align: right;">0.309</td>
-<td style="text-align: right;">0.349</td>
-<td style="text-align: right;">0.001</td>
-<td style="text-align: left;">Ya</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="interpretasi-hasil" class="slide level2">
-<h2>Interpretasi Hasil</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>paths <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(sem_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"~"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-3"><a></a>  <span class="fu">select</span>(lhs, rhs, std.all, pvalue) <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb20-5"><a></a>    <span class="at">hipotesis =</span> <span class="fu">paste0</span>(<span class="st">"H"</span>, <span class="fu">row_number</span>()),</span>
-<span id="cb20-6"><a></a>    <span class="at">path =</span> <span class="fu">paste</span>(rhs, <span class="st">"-&gt;"</span>, lhs),</span>
-<span id="cb20-7"><a></a>    <span class="at">kesimpulan =</span> <span class="fu">ifelse</span>(pvalue <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> std.all <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"Didukung"</span>, <span class="st">"Tidak Didukung"</span>)</span>
-<span id="cb20-8"><a></a>  )</span>
-<span id="cb20-9"><a></a>paths <span class="sc">|&gt;</span> <span class="fu">select</span>(hipotesis, path, std.all, pvalue, kesimpulan) <span class="sc">|&gt;</span></span>
-<span id="cb20-10"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-</section>
-<section id="interpretasi-hasil-output" class="slide level2 output-location-slide"><h2>Interpretasi Hasil</h2><div class="cell output-location-slide">
-<div class="cell-output-display">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th style="text-align: left;">hipotesis</th>
-<th style="text-align: left;">path</th>
-<th style="text-align: right;">std.all</th>
-<th style="text-align: right;">pvalue</th>
-<th style="text-align: left;">kesimpulan</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">H1</td>
-<td style="text-align: left;">SQ -&gt; CS</td>
-<td style="text-align: right;">0.320</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">H2</td>
-<td style="text-align: left;">PV -&gt; CS</td>
-<td style="text-align: right;">0.234</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">H3</td>
-<td style="text-align: left;">TR -&gt; CS</td>
-<td style="text-align: right;">0.359</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">H4</td>
-<td style="text-align: left;">CS -&gt; CL</td>
-<td style="text-align: right;">0.522</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">H5</td>
-<td style="text-align: left;">TR -&gt; CL</td>
-<td style="text-align: right;">0.203</td>
-<td style="text-align: right;">0.016</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">H6</td>
-<td style="text-align: left;">CS -&gt; RI</td>
-<td style="text-align: right;">0.403</td>
-<td style="text-align: right;">0.000</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">H7</td>
-<td style="text-align: left;">CL -&gt; RI</td>
-<td style="text-align: right;">0.349</td>
-<td style="text-align: right;">0.001</td>
-<td style="text-align: left;">Didukung</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div></section><section id="path-diagram-full-sem" class="slide level2">
-<h2>Path Diagram Full SEM</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">semPaths</span>(sem_fit,</span>
-<span id="cb21-2"><a></a>         <span class="at">whatLabels =</span> <span class="st">"std"</span>,</span>
-<span id="cb21-3"><a></a>         <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb21-4"><a></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.7</span>,</span>
-<span id="cb21-5"><a></a>         <span class="at">style =</span> <span class="st">"lisrel"</span>,</span>
-<span id="cb21-6"><a></a>         <span class="at">residuals =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb21-7"><a></a>         <span class="at">rotation =</span> <span class="dv">2</span>,</span>
-<span id="cb21-8"><a></a>         <span class="at">nCharNodes =</span> <span class="dv">3</span>,</span>
-<span id="cb21-9"><a></a>         <span class="at">sizeMan =</span> <span class="dv">5</span>,</span>
-<span id="cb21-10"><a></a>         <span class="at">sizeLat =</span> <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-</section>
-<section id="path-diagram-full-sem-output" class="slide level2 output-location-slide"><h2>Path Diagram Full SEM</h2><div class="cell output-location-slide">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="03-sem_files/figure-revealjs/unnamed-chunk-16-1.png" width="1344"></p>
-</figure>
-</div>
-</div>
-</div></section><section id="r2-variabel-endogen" class="slide level2">
-<h2><span class="math inline">\(R^2\)</span> Variabel Endogen</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">lavInspect</span>(sem_fit, <span class="st">"r2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  SQ1   SQ2   SQ3   SQ4   PV1   PV2   PV3   TR1   TR2   TR3   TR4   CS1   CS2 
-0.696 0.607 0.503 0.404 0.548 0.533 0.547 0.545 0.637 0.579 0.425 0.602 0.463 
-  CS3   CS4   CL1   CL2   CL3   RI1   RI2   RI3    CS    CL    RI 
-0.398 0.368 0.525 0.322 0.503 0.474 0.466 0.477 0.452 0.430 0.463 </code></pre>
-</div>
-</div>
-<div class="fragment">
-<ul>
-<li><span class="math inline">\(R^2\)</span> menunjukkan seberapa besar varians variabel endogen yang dijelaskan oleh prediktor-prediktornya</li>
-<li>Semakin tinggi <span class="math inline">\(R^2\)</span>, semakin baik model menjelaskan variabel tersebut</li>
-</ul>
-</div>
-</section>
-<section id="pelaporan-cb-sem-apa" class="slide level2">
-<h2>Pelaporan CB-SEM (APA)</h2>
-<blockquote>
-<p>Model struktural menunjukkan fit yang baik (<span class="math inline">\(\chi^2\)</span> = …, df = …, p = …; CFI = …; TLI = …; RMSEA = …; SRMR = …). Dari 7 hipotesis yang diuji, … hipotesis didukung oleh data. Kepercayaan secara signifikan dipengaruhi oleh service quality (<span class="math inline">\(\beta\)</span> = …, p &lt; …) dan perceived value (<span class="math inline">\(\beta\)</span> = …, p &lt; …).</p>
-</blockquote>
-</section></section>
-<section>
-<section id="bagian-3-pls-sem-dengan-seminr" class="title-slide slide level1 center">
-<h1>Bagian 3: PLS-SEM dengan seminr</h1>
-
-</section>
-<section id="mengapa-pls-sem" class="slide level2">
-<h2>Mengapa PLS-SEM?</h2>
-<ul>
-<li class="fragment">Tidak memerlukan asumsi distribusi normal</li>
-<li class="fragment">Bisa menangani sampel kecil</li>
-<li class="fragment">Mendukung indikator <strong>formatif</strong> dan <strong>reflektif</strong></li>
-<li class="fragment">Cocok untuk model yang <strong>kompleks</strong> dengan banyak variabel</li>
-<li class="fragment">Fokus pada <strong>prediksi</strong> (bukan konfirmasi teori)</li>
-</ul>
-</section>
-<section id="dataset-inovasi" class="slide level2">
-<h2>Dataset: Inovasi</h2>
-<p>Data simulasi tentang faktor inovasi organisasi (n = 200).</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>inov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/sem_innovation.csv"</span>)</span>
-<span id="cb24-2"><a></a><span class="fu">glimpse</span>(inov)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 200
-Columns: 22
-$ id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
-$ IC1       &lt;dbl&gt; 5, 3, 5, 4, 4, 1, 4, 3, 5, 4, 4, 4, 4, 4, 1, 6, 5, 5, 4, 5, …
-$ IC2       &lt;dbl&gt; 4, 5, 5, 3, 4, 7, 4, 4, 5, 7, 4, 6, 4, 4, 4, 6, 5, 6, 6, 7, …
-$ IC3       &lt;dbl&gt; 6, 6, 4, 5, 4, 3, 7, 7, 5, 4, 6, 4, 6, 6, 5, 5, 6, 6, 5, 5, …
-$ IC4       &lt;dbl&gt; 6, 4, 4, 5, 4, 4, 4, 4, 3, 5, 5, 3, 7, 4, 4, 2, 4, 3, 5, 5, …
-$ MO1       &lt;dbl&gt; 3, 4, 4, 4, 6, 5, 6, 5, 5, 7, 4, 5, 7, 5, 7, 3, 5, 4, 3, 4, …
-$ MO2       &lt;dbl&gt; 7, 6, 6, 4, 6, 4, 5, 5, 4, 5, 6, 5, 3, 3, 4, 3, 5, 4, 4, 2, …
-$ MO3       &lt;dbl&gt; 5, 6, 5, 4, 6, 3, 6, 5, 2, 4, 6, 2, 6, 6, 6, 5, 4, 3, 5, 4, …
-$ EO1       &lt;dbl&gt; 7, 2, 3, 6, 6, 4, 3, 3, 6, 2, 4, 5, 4, 5, 7, 4, 5, 4, 5, 4, …
-$ EO2       &lt;dbl&gt; 3, 6, 4, 6, 4, 6, 4, 4, 5, 3, 4, 4, 6, 3, 6, 4, 4, 6, 5, 6, …
-$ EO3       &lt;dbl&gt; 3, 4, 5, 4, 6, 5, 4, 4, 4, 4, 6, 4, 6, 5, 3, 4, 3, 7, 5, 5, …
-$ CA1       &lt;dbl&gt; 4, 4, 4, 4, 3, 4, 4, 3, 4, 4, 4, 4, 4, 4, 5, 4, 3, 5, 3, 4, …
-$ CA2       &lt;dbl&gt; 4, 4, 2, 4, 4, 5, 5, 4, 3, 4, 4, 4, 4, 4, 5, 4, 5, 4, 4, 5, …
-$ CA3       &lt;dbl&gt; 5, 4, 2, 4, 3, 4, 4, 3, 3, 3, 4, 4, 4, 3, 4, 3, 5, 5, 5, 4, …
-$ CA4       &lt;dbl&gt; 3, 4, 5, 3, 4, 5, 5, 2, 4, 3, 4, 2, 4, 5, 5, 3, 5, 4, 3, 4, …
-$ FP1       &lt;dbl&gt; 4, 5, 4, 4, 3, 4, 3, 5, 4, 4, 3, 4, 4, 4, 4, 3, 6, 4, 4, 3, …
-$ FP2       &lt;dbl&gt; 4, 5, 3, 3, 4, 4, 5, 5, 4, 5, 4, 3, 5, 4, 5, 4, 4, 5, 4, 4, …
-$ FP3       &lt;dbl&gt; 5, 4, 4, 3, 5, 4, 4, 4, 4, 5, 3, 4, 5, 5, 4, 4, 4, 5, 3, 3, …
-$ FP4       &lt;dbl&gt; 4, 5, 4, 5, 3, 4, 4, 5, 5, 4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 4, …
-$ firm_size &lt;chr&gt; "Menengah", "Kecil", "Kecil", "Kecil", "Menengah", "Kecil", …
-$ sector    &lt;chr&gt; "Manufaktur", "Perdagangan", "Teknologi", "Manufaktur", "Man…
-$ firm_age  &lt;dbl&gt; 12, 12, 16, 17, 2, 17, 12, 2, 3, 5, 14, 17, 7, 24, 11, 18, 2…</code></pre>
-</div>
-</div>
-</section>
-<section id="konstruk-dan-indikator-1" class="slide level2">
-<h2>Konstruk dan Indikator</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Konstruk</th>
-<th>Indikator</th>
-<th>Tipe</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Innovation Culture</strong> (IC)</td>
-<td>IC1, IC2, IC3, IC4</td>
-<td>Reflektif</td>
-</tr>
-<tr class="even">
-<td><strong>Market Orientation</strong> (MO)</td>
-<td>MO1, MO2, MO3</td>
-<td>Reflektif</td>
-</tr>
-<tr class="odd">
-<td><strong>Entrepreneurial Orientation</strong> (EO)</td>
-<td>EO1, EO2, EO3</td>
-<td>Reflektif</td>
-</tr>
-<tr class="even">
-<td><strong>Competitive Advantage</strong> (CA)</td>
-<td>PV1, PV2, PV3</td>
-<td>Reflektif</td>
-</tr>
-<tr class="odd">
-<td><strong>Firm Performance</strong> (FP)</td>
-<td>FP1, FP2, FP3, FP4</td>
-<td>Reflektif</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="reflektif-vs-formatif" class="slide level2">
-<h2>Reflektif vs Formatif</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Reflektif</strong> (efek)</p>
-<ul>
-<li>Indikator adalah <strong>efek</strong> dari konstruk</li>
-<li>Menghapus satu indikator tidak mengubah konstruk</li>
-<li>Indikator saling berkorelasi tinggi</li>
-<li>Contoh: item kuesioner kepuasan</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><strong>Formatif</strong> (sebab)</p>
-<ul>
-<li>Indikator <strong>membentuk</strong> konstruk</li>
-<li>Menghapus satu indikator mengubah makna konstruk</li>
-<li>Indikator tidak harus berkorelasi</li>
-<li>Contoh: SES (pendidikan + pendapatan + pekerjaan)</li>
-</ul>
-</div></div>
-</section>
-<section id="langkah-pls-sem-dengan-seminr" class="slide level2">
-<h2>Langkah PLS-SEM dengan seminr</h2>
-<ol type="1">
-<li class="fragment">Spesifikasi <strong>measurement model</strong> (<code>constructs()</code>)</li>
-<li class="fragment">Spesifikasi <strong>structural model</strong> (<code>relationships()</code>)</li>
-<li class="fragment">Estimasi model (<code>estimate_pls()</code>)</li>
-<li class="fragment">Bootstrap (<code>bootstrap_model()</code>)</li>
-<li class="fragment">Evaluasi measurement model (outer model)</li>
-<li class="fragment">Evaluasi structural model (inner model)</li>
-</ol>
 </section>
 <section id="spesifikasi-measurement-model" class="slide level2">
 <h2>Spesifikasi Measurement Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>mm <span class="ot">&lt;-</span> <span class="fu">constructs</span>(</span>
-<span id="cb26-2"><a></a>  <span class="fu">composite</span>(<span class="st">"IC"</span>, <span class="fu">multi_items</span>(<span class="st">"IC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_B),</span>
-<span id="cb26-3"><a></a>  <span class="fu">composite</span>(<span class="st">"MO"</span>, <span class="fu">multi_items</span>(<span class="st">"MO"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">weights =</span> mode_B),</span>
-<span id="cb26-4"><a></a>  <span class="fu">composite</span>(<span class="st">"EO"</span>, <span class="fu">multi_items</span>(<span class="st">"EO"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">weights =</span> mode_B),</span>
-<span id="cb26-5"><a></a>  <span class="fu">composite</span>(<span class="st">"CA"</span>, <span class="fu">multi_items</span>(<span class="st">"CA"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_A),</span>
-<span id="cb26-6"><a></a>  <span class="fu">composite</span>(<span class="st">"FP"</span>, <span class="fu">multi_items</span>(<span class="st">"FP"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_A)</span>
-<span id="cb26-7"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<ul>
-<li><code>composite()</code>: mendefinisikan konstruk</li>
-<li><code>multi_items("prefix", 1:3)</code>: mengambil kolom prefix1, prefix2, prefix3</li>
-<li><code>mode_A</code>: reflektif (mode_B untuk formatif)</li>
-</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>mm <span class="ot">&lt;-</span> <span class="fu">constructs</span>(</span>
+<span id="cb28-2"><a></a>  <span class="fu">composite</span>(<span class="st">"IMAG"</span>,  <span class="fu">multi_items</span>(<span class="st">"IMAG"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb28-3"><a></a>  <span class="fu">composite</span>(<span class="st">"CUEX"</span>,  <span class="fu">multi_items</span>(<span class="st">"CUEX"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)),</span>
+<span id="cb28-4"><a></a>  <span class="fu">composite</span>(<span class="st">"PERQ"</span>,  <span class="fu">multi_items</span>(<span class="st">"PERQ"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)),</span>
+<span id="cb28-5"><a></a>  <span class="fu">composite</span>(<span class="st">"PERV"</span>,  <span class="fu">multi_items</span>(<span class="st">"PERV"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)),</span>
+<span id="cb28-6"><a></a>  <span class="fu">composite</span>(<span class="st">"CUSA"</span>,  <span class="fu">multi_items</span>(<span class="st">"CUSA"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)),</span>
+<span id="cb28-7"><a></a>  <span class="fu">composite</span>(<span class="st">"CUSCO"</span>, <span class="fu">single_item</span>(<span class="st">"CUSCO"</span>)),</span>
+<span id="cb28-8"><a></a>  <span class="fu">composite</span>(<span class="st">"CUSL"</span>,  <span class="fu">multi_items</span>(<span class="st">"CUSL"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb28-9"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="spesifikasi-structural-model" class="slide level2">
 <h2>Spesifikasi Structural Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>sm <span class="ot">&lt;-</span> <span class="fu">relationships</span>(</span>
-<span id="cb27-2"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="fu">c</span>(<span class="st">"IC"</span>, <span class="st">"MO"</span>, <span class="st">"EO"</span>), <span class="at">to =</span> <span class="st">"CA"</span>),</span>
-<span id="cb27-3"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="fu">c</span>(<span class="st">"CA"</span>, <span class="st">"IC"</span>), <span class="at">to =</span> <span class="st">"FP"</span>)</span>
-<span id="cb27-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<p>Hipotesis:</p>
-<ul>
-<li>H1: Innovation Culture <span class="math inline">\(\rightarrow\)</span> Knowledge Management</li>
-<li>H2: Market Orientation <span class="math inline">\(\rightarrow\)</span> Knowledge Management</li>
-<li>H3: Innovation Culture <span class="math inline">\(\rightarrow\)</span> Kapasitas Inovasi</li>
-<li>H4: Competitive Advantage <span class="math inline">\(\rightarrow\)</span> Kapasitas Inovasi</li>
-<li>H5: Competitive Advantage <span class="math inline">\(\rightarrow\)</span> Kinerja Inovasi</li>
-</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>sm <span class="ot">&lt;-</span> <span class="fu">relationships</span>(</span>
+<span id="cb29-2"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"IMAG"</span>,  <span class="at">to =</span> <span class="fu">c</span>(<span class="st">"CUEX"</span>, <span class="st">"CUSA"</span>, <span class="st">"CUSL"</span>)),</span>
+<span id="cb29-3"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"CUEX"</span>,  <span class="at">to =</span> <span class="fu">c</span>(<span class="st">"PERQ"</span>, <span class="st">"PERV"</span>, <span class="st">"CUSA"</span>)),</span>
+<span id="cb29-4"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"PERQ"</span>,  <span class="at">to =</span> <span class="fu">c</span>(<span class="st">"PERV"</span>, <span class="st">"CUSA"</span>)),</span>
+<span id="cb29-5"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"PERV"</span>,  <span class="at">to =</span> <span class="st">"CUSA"</span>),</span>
+<span id="cb29-6"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"CUSA"</span>,  <span class="at">to =</span> <span class="fu">c</span>(<span class="st">"CUSCO"</span>, <span class="st">"CUSL"</span>)),</span>
+<span id="cb29-7"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"CUSCO"</span>, <span class="at">to =</span> <span class="st">"CUSL"</span>)</span>
+<span id="cb29-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="estimasi-model-pls" class="slide level2">
 <h2>Estimasi Model PLS</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>pls_model <span class="ot">&lt;-</span> <span class="fu">estimate_pls</span>(</span>
-<span id="cb28-2"><a></a>  <span class="at">data =</span> inov,</span>
-<span id="cb28-3"><a></a>  <span class="at">measurement_model =</span> mm,</span>
-<span id="cb28-4"><a></a>  <span class="at">structural_model =</span> sm</span>
-<span id="cb28-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>pls_model <span class="ot">&lt;-</span> <span class="fu">estimate_pls</span>(</span>
+<span id="cb30-2"><a></a>  <span class="at">data =</span> mobi,</span>
+<span id="cb30-3"><a></a>  <span class="at">measurement_model =</span> mm,</span>
+<span id="cb30-4"><a></a>  <span class="at">structural_model =</span> sm</span>
+<span id="cb30-5"><a></a>)</span>
+<span id="cb30-6"><a></a>pls_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(pls_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="bootstrap" class="slide level2">
-<h2>Bootstrap</h2>
+<section id="evaluasi-outer-model-reliabilitas" class="slide level2 smaller">
+<h2>Evaluasi Outer Model: Reliabilitas</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>boot <span class="ot">&lt;-</span> <span class="fu">bootstrap_model</span>(</span>
-<span id="cb29-2"><a></a>  <span class="at">seminr_model =</span> pls_model,</span>
-<span id="cb29-3"><a></a>  <span class="at">nboot =</span> <span class="dv">1000</span>,</span>
-<span id="cb29-4"><a></a>  <span class="at">seed =</span> <span class="dv">42</span></span>
-<span id="cb29-5"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>pls_summary<span class="sc">$</span>reliability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      alpha  rhoC   AVE  rhoA
+IMAG  0.723 0.819 0.478 0.740
+CUEX  0.452 0.733 0.480 0.462
+PERQ  0.877 0.905 0.577 0.884
+PERV  0.824 0.918 0.848 0.855
+CUSA  0.779 0.871 0.693 0.789
+CUSCO 1.000 1.000 1.000 1.000
+CUSL  0.472 0.722 0.517 0.746
+
+Alpha, rhoC, and rhoA should exceed 0.7 while AVE should exceed 0.5</code></pre>
+</div>
 </div>
 <div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Kriteria</th>
+<th>Ambang Batas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cronbach’s Alpha</td>
+<td><span class="math inline">\(\geq\)</span> 0.70</td>
+</tr>
+<tr class="even">
+<td>rhoC (Composite Reliability)</td>
+<td><span class="math inline">\(\geq\)</span> 0.70</td>
+</tr>
+<tr class="odd">
+<td>AVE</td>
+<td><span class="math inline">\(\geq\)</span> 0.50</td>
+</tr>
+<tr class="even">
+<td>rhoA</td>
+<td><span class="math inline">\(\geq\)</span> 0.70</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="outer-loadings" class="slide level2 smaller">
+<h2>Outer Loadings</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>pls_summary<span class="sc">$</span>loadings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       IMAG  CUEX  PERQ  PERV  CUSA CUSCO  CUSL
+IMAG1 0.745 0.000 0.000 0.000 0.000 0.000 0.000
+IMAG2 0.599 0.000 0.000 0.000 0.000 0.000 0.000
+IMAG3 0.576 0.000 0.000 0.000 0.000 0.000 0.000
+IMAG4 0.769 0.000 0.000 0.000 0.000 0.000 0.000
+IMAG5 0.744 0.000 0.000 0.000 0.000 0.000 0.000
+CUEX1 0.000 0.771 0.000 0.000 0.000 0.000 0.000
+CUEX2 0.000 0.691 0.000 0.000 0.000 0.000 0.000
+CUEX3 0.000 0.608 0.000 0.000 0.000 0.000 0.000
+PERQ1 0.000 0.000 0.803 0.000 0.000 0.000 0.000
+PERQ2 0.000 0.000 0.638 0.000 0.000 0.000 0.000
+PERQ3 0.000 0.000 0.784 0.000 0.000 0.000 0.000
+PERQ4 0.000 0.000 0.769 0.000 0.000 0.000 0.000
+PERQ5 0.000 0.000 0.755 0.000 0.000 0.000 0.000
+PERQ6 0.000 0.000 0.775 0.000 0.000 0.000 0.000
+PERQ7 0.000 0.000 0.780 0.000 0.000 0.000 0.000
+PERV1 0.000 0.000 0.000 0.902 0.000 0.000 0.000
+PERV2 0.000 0.000 0.000 0.940 0.000 0.000 0.000
+CUSA1 0.000 0.000 0.000 0.000 0.792 0.000 0.000
+CUSA2 0.000 0.000 0.000 0.000 0.847 0.000 0.000
+CUSA3 0.000 0.000 0.000 0.000 0.857 0.000 0.000
+CUSCO 0.000 0.000 0.000 0.000 0.000 1.000 0.000
+CUSL1 0.000 0.000 0.000 0.000 0.000 0.000 0.820
+CUSL2 0.000 0.000 0.000 0.000 0.000 0.000 0.202
+CUSL3 0.000 0.000 0.000 0.000 0.000 0.000 0.915</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Outer loading <span class="math inline">\(\geq\)</span> 0.70: ideal</li>
+<li>Loading antara 0.40–0.70: pertimbangkan dampak penghapusan terhadap AVE/CR</li>
+</ul>
+</div>
+</section>
+<section id="discriminant-validity-htmt" class="slide level2 smaller">
+<h2>Discriminant Validity: HTMT</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>pls_summary<span class="sc">$</span>validity<span class="sc">$</span>htmt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       IMAG  CUEX  PERQ  PERV  CUSA CUSCO CUSL
+IMAG      .     .     .     .     .     .    .
+CUEX  0.888     .     .     .     .     .    .
+PERQ  0.929 0.878     .     .     .     .    .
+PERV  0.652 0.589 0.673     .     .     .    .
+CUSA  0.910 0.865 0.954 0.741     .     .    .
+CUSCO 0.545 0.383 0.564 0.387 0.588     .    .
+CUSL  0.867 0.770 0.759 0.797 0.957 0.561    .</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>HTMT</strong> (Heterotrait-Monotrait Ratio) &lt; 0.90: memadai</li>
+<li>HTMT &lt; 0.85: lebih konservatif (<strong>Henseler et al., 2015</strong>)</li>
+</ul>
+</div>
+</section>
+<section id="discriminant-validity-fornell-larcker-1" class="slide level2 smaller">
+<h2>Discriminant Validity: Fornell-Larcker</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>pls_summary<span class="sc">$</span>validity<span class="sc">$</span>fl_criteria</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       IMAG  CUEX  PERQ  PERV  CUSA CUSCO  CUSL
+IMAG  0.692     .     .     .     .     .     .
+CUEX  0.505 0.693     .     .     .     .     .
+PERQ  0.749 0.557 0.759     .     .     .     .
+PERV  0.509 0.361 0.586 0.921     .     .     .
+CUSA  0.693 0.508 0.795 0.608 0.833     .     .
+CUSCO 0.475 0.258 0.532 0.355 0.528 1.000     .
+CUSL  0.564 0.380 0.538 0.529 0.656 0.416 0.719
+
+FL Criteria table reports square root of AVE on the diagonal and construct correlations on the lower triangle.</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Diagonal = <span class="math inline">\(\sqrt{AVE}\)</span>, off-diagonal = korelasi antar konstruk. Discriminant validity terpenuhi jika nilai diagonal &gt; semua nilai off-diagonal pada baris/kolomnya.</p>
+</div>
+</section>
+<section id="discriminant-validity-cross-loadings" class="slide level2 smaller">
+<h2>Discriminant Validity: Cross-Loadings</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>pls_summary<span class="sc">$</span>validity<span class="sc">$</span>cross_loadings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       IMAG  CUEX  PERQ  PERV  CUSA CUSCO  CUSL
+IMAG1 0.745 0.350 0.571 0.397 0.549 0.423 0.355
+IMAG2 0.599 0.380 0.497 0.275 0.417 0.188 0.304
+IMAG3 0.576 0.285 0.367 0.339 0.332 0.207 0.308
+IMAG4 0.769 0.370 0.573 0.476 0.548 0.440 0.459
+IMAG5 0.744 0.360 0.552 0.271 0.513 0.337 0.494
+CUEX1 0.352 0.771 0.436 0.294 0.371 0.183 0.271
+CUEX2 0.408 0.691 0.348 0.180 0.364 0.225 0.320
+CUEX3 0.287 0.608 0.369 0.274 0.318 0.126 0.195
+PERQ1 0.634 0.512 0.803 0.470 0.679 0.380 0.477
+PERQ2 0.430 0.319 0.638 0.308 0.489 0.300 0.345
+PERQ3 0.628 0.434 0.784 0.474 0.646 0.472 0.472
+PERQ4 0.496 0.391 0.769 0.395 0.600 0.379 0.368
+PERQ5 0.608 0.419 0.755 0.465 0.523 0.389 0.377
+PERQ6 0.568 0.445 0.775 0.411 0.548 0.418 0.343
+PERQ7 0.586 0.416 0.780 0.554 0.700 0.465 0.451
+PERV1 0.395 0.311 0.474 0.902 0.488 0.287 0.429
+PERV2 0.530 0.351 0.595 0.940 0.620 0.360 0.536
+CUSA1 0.577 0.492 0.642 0.411 0.792 0.334 0.504
+CUSA2 0.523 0.398 0.670 0.492 0.847 0.416 0.497
+CUSA3 0.625 0.391 0.674 0.599 0.857 0.547 0.626
+CUSCO 0.475 0.258 0.532 0.355 0.528 1.000 0.416
+CUSL1 0.434 0.295 0.394 0.413 0.456 0.237 0.820
+CUSL2 0.100 0.093 0.063 0.138 0.108 0.122 0.202
+CUSL3 0.539 0.357 0.534 0.494 0.664 0.448 0.915</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Setiap indikator harus memiliki loading tertinggi pada konstruk miliknya sendiri dibanding konstruk lain.</p>
+</div>
+</section>
+<section id="bootstrap" class="slide level2 smaller">
+<h2>Bootstrap</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb41-2"><a></a>boot <span class="ot">&lt;-</span> <span class="fu">bootstrap_model</span>(pls_model, <span class="at">nboot =</span> <span class="dv">5000</span>)</span>
+<span id="cb41-3"><a></a>boot_sum <span class="ot">&lt;-</span> <span class="fu">summary</span>(boot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1560,274 +1580,59 @@ $ firm_age  &lt;dbl&gt; 12, 12, 16, 17, 2, 17, 12, 2, 3, 5, 14, 17, 7, 24, 11, 1
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>Bootstrap menghasilkan standard error dan p-value untuk koefisien path. Gunakan minimal <strong>nboot = 1000</strong> (ideal: 5000).</p>
-</div>
+<p>Gunakan minimal <strong>nboot = 5000</strong> untuk hasil yang stabil (Hair et al., 2019). Selalu set seed untuk reprodusibilitas.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="ringkasan-model" class="slide level2">
-<h2>Ringkasan Model</h2>
+<section id="path-coefficients-bootstrap" class="slide level2 smaller">
+<h2>Path Coefficients (Bootstrap)</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">summary</span>(pls_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>boot_sum<span class="sc">$</span>bootstrapped_paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Results from  package seminr (2.3.7)
-
-Path Coefficients:
-          CA    FP
-R^2    0.191 0.126
-AdjR^2 0.178 0.117
-IC     0.120 0.175
-MO     0.364     .
-EO     0.129     .
-CA         . 0.282
-
-Reliability:
-    alpha  rhoC   AVE  rhoA
-IC -0.108 0.524 0.234 1.000
-MO  0.180 0.631 0.380 1.000
-EO  0.090 0.479 0.342 1.000
-CA  0.547 0.742 0.423 0.578
-FP  0.493 0.724 0.397 0.498
-
-Alpha, rhoC, and rhoA should exceed 0.7 while AVE should exceed 0.5</code></pre>
+<pre><code>                Original Est. Bootstrap Mean Bootstrap SD T Stat. 2.5% CI
+IMAG  -&gt;  CUEX          0.505          0.516        0.057   8.867   0.401
+IMAG  -&gt;  CUSA          0.179          0.185        0.054   3.284   0.080
+IMAG  -&gt;  CUSL          0.196          0.204        0.078   2.501   0.046
+CUEX  -&gt;  PERQ          0.557          0.564        0.053  10.551   0.456
+CUEX  -&gt;  PERV          0.050          0.056        0.081   0.619  -0.099
+CUEX  -&gt;  CUSA          0.063          0.058        0.051   1.237  -0.037
+PERQ  -&gt;  PERV          0.558          0.555        0.082   6.799   0.382
+PERQ  -&gt;  CUSA          0.512          0.507        0.066   7.738   0.376
+PERV  -&gt;  CUSA          0.195          0.196        0.060   3.229   0.077
+CUSA  -&gt;  CUSCO         0.528          0.529        0.054   9.790   0.417
+CUSA  -&gt;  CUSL          0.485          0.480        0.084   5.769   0.309
+CUSCO  -&gt;  CUSL         0.067          0.067        0.061   1.102  -0.054
+                97.5% CI
+IMAG  -&gt;  CUEX     0.621
+IMAG  -&gt;  CUSA     0.297
+IMAG  -&gt;  CUSL     0.354
+CUEX  -&gt;  PERQ     0.663
+CUEX  -&gt;  PERV     0.221
+CUEX  -&gt;  CUSA     0.156
+PERQ  -&gt;  PERV     0.706
+PERQ  -&gt;  CUSA     0.635
+PERV  -&gt;  CUSA     0.312
+CUSA  -&gt;  CUSCO    0.627
+CUSA  -&gt;  CUSL     0.638
+CUSCO  -&gt;  CUSL    0.185</code></pre>
 </div>
 </div>
 </section>
-<section id="evaluasi-measurement-model-outer-model" class="slide level2">
-<h2>Evaluasi Measurement Model (Outer Model)</h2>
-<h3 id="reliability">Reliability</h3>
+<section id="evaluasi-inner-model-r2" class="slide level2">
+<h2>Evaluasi Inner Model: <span class="math inline">\(R^2\)</span></h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>pls_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(pls_model)</span>
-<span id="cb32-2"><a></a>pls_summary<span class="sc">$</span>reliability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-</section>
-<section id="evaluasi-measurement-model-outer-model-output" class="slide level2 output-location-slide"><h2>Evaluasi Measurement Model (Outer Model)</h2><div class="cell output-location-slide">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>pls_summary<span class="sc">$</span>paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    alpha  rhoC   AVE  rhoA
-IC -0.108 0.524 0.234 1.000
-MO  0.180 0.631 0.380 1.000
-EO  0.090 0.479 0.342 1.000
-CA  0.547 0.742 0.423 0.578
-FP  0.493 0.724 0.397 0.498
-
-Alpha, rhoC, and rhoA should exceed 0.7 while AVE should exceed 0.5</code></pre>
-</div>
-</div></section><section id="kriteria-outer-model" class="slide level2">
-<h2>Kriteria Outer Model</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Kriteria</th>
-<th>Ambang Batas</th>
-<th>Apa yang Diuji</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Outer Loading</td>
-<td><span class="math inline">\(\geq\)</span> 0.70</td>
-<td>Reliabilitas indikator</td>
-</tr>
-<tr class="even">
-<td>Cronbach’s Alpha</td>
-<td><span class="math inline">\(\geq\)</span> 0.70</td>
-<td>Internal consistency</td>
-</tr>
-<tr class="odd">
-<td>Composite Reliability (rhoC)</td>
-<td><span class="math inline">\(\geq\)</span> 0.70</td>
-<td>Internal consistency</td>
-</tr>
-<tr class="even">
-<td>AVE</td>
-<td><span class="math inline">\(\geq\)</span> 0.50</td>
-<td>Convergent validity</td>
-</tr>
-<tr class="odd">
-<td>HTMT</td>
-<td>&lt; 0.90</td>
-<td>Discriminant validity</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="outer-loadings" class="slide level2">
-<h2>Outer Loadings</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>pls_summary<span class="sc">$</span>loadings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>        IC     MO     EO     CA     FP
-IC1  0.208 -0.000 -0.000  0.000  0.000
-IC2  0.595  0.000 -0.000  0.000  0.000
-IC3  0.463  0.000 -0.000  0.000  0.000
-IC4  0.571  0.000  0.000  0.000  0.000
-MO1  0.000  0.661  0.000  0.000  0.000
-MO2 -0.000  0.371  0.000  0.000 -0.000
-MO3 -0.000  0.751  0.000  0.000  0.000
-EO1 -0.000  0.000  0.914  0.000  0.000
-EO2 -0.000  0.000  0.436  0.000  0.000
-EO3  0.000 -0.000 -0.001 -0.000  0.000
-CA1  0.000  0.000  0.000  0.644  0.000
-CA2  0.000  0.000  0.000  0.784  0.000
-CA3  0.000  0.000  0.000  0.609  0.000
-CA4 -0.000  0.000  0.000  0.539  0.000
-FP1  0.000  0.000  0.000  0.000  0.623
-FP2  0.000  0.000  0.000  0.000  0.655
-FP3  0.000  0.000  0.000  0.000  0.677
-FP4  0.000  0.000  0.000  0.000  0.560</code></pre>
-</div>
-</div>
-</section>
-<section id="discriminant-validity-htmt" class="slide level2">
-<h2>Discriminant Validity: HTMT</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>pls_summary<span class="sc">$</span>validity<span class="sc">$</span>htmt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      IC    MO    EO    CA FP
-IC     .     .     .     .  .
-MO 1.300     .     .     .  .
-EO 1.395 1.750     .     .  .
-CA 0.581 1.231 0.977     .  .
-FP 0.720 0.706 0.832 0.566  .</code></pre>
-</div>
-</div>
-<div class="fragment">
-<ul>
-<li class="fragment"><strong>HTMT</strong> (Heterotrait-Monotrait Ratio) &lt; 0.90: konstruk cukup berbeda</li>
-<li class="fragment">HTMT &lt; 0.85: lebih konservatif dan direkomendasikan</li>
-<li class="fragment">Alternatif dari Fornell-Larcker criterion</li>
-</ul>
-</div>
-</section>
-<section id="evaluasi-structural-model-inner-model" class="slide level2">
-<h2>Evaluasi Structural Model (Inner Model)</h2>
-<h3 id="path-coefficients">Path Coefficients</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>pls_summary<span class="sc">$</span>paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          CA    FP
-R^2    0.191 0.126
-AdjR^2 0.178 0.117
-IC     0.120 0.175
-MO     0.364     .
-EO     0.129     .
-CA         . 0.282</code></pre>
-</div>
-</div>
-</section>
-<section id="bootstrap-signifikansi" class="slide level2">
-<h2>Bootstrap: Signifikansi</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>boot_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(boot)</span>
-<span id="cb40-2"><a></a>boot_summary<span class="sc">$</span>bootstrapped_paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           Original Est. Bootstrap Mean Bootstrap SD T Stat. 2.5% CI 97.5% CI
-IC  -&gt;  CA         0.120          0.136        0.077   1.547  -0.028    0.266
-IC  -&gt;  FP         0.175          0.192        0.097   1.802  -0.034    0.351
-MO  -&gt;  CA         0.364          0.370        0.061   5.941   0.241    0.489
-EO  -&gt;  CA         0.129          0.152        0.069   1.878   0.015    0.279
-CA  -&gt;  FP         0.282          0.300        0.078   3.606   0.148    0.438</code></pre>
-</div>
-</div>
-</section>
-<section id="interpretasi-hipotesis-pls-sem" class="slide level2">
-<h2>Interpretasi Hipotesis PLS-SEM</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>boot_paths <span class="ot">&lt;-</span> boot_summary<span class="sc">$</span>bootstrapped_paths</span>
-<span id="cb42-2"><a></a><span class="fu">as.data.frame</span>(boot_paths) <span class="sc">|&gt;</span></span>
-<span id="cb42-3"><a></a>  <span class="fu">rownames_to_column</span>(<span class="st">"Path"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb42-4"><a></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-</section>
-<section id="interpretasi-hipotesis-pls-sem-output" class="slide level2 output-location-slide"><h2>Interpretasi Hipotesis PLS-SEM</h2><div class="cell output-location-slide">
-<div class="cell-output-display">
-<table class="caption-top" style="width:100%;">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 17%">
-<col style="width: 19%">
-<col style="width: 16%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 11%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Path</th>
-<th style="text-align: right;">Original Est.</th>
-<th style="text-align: right;">Bootstrap Mean</th>
-<th style="text-align: right;">Bootstrap SD</th>
-<th style="text-align: right;">T Stat.</th>
-<th style="text-align: right;">2.5% CI</th>
-<th style="text-align: right;">97.5% CI</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">IC -&gt; CA</td>
-<td style="text-align: right;">0.120</td>
-<td style="text-align: right;">0.136</td>
-<td style="text-align: right;">0.077</td>
-<td style="text-align: right;">1.547</td>
-<td style="text-align: right;">-0.028</td>
-<td style="text-align: right;">0.266</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">IC -&gt; FP</td>
-<td style="text-align: right;">0.175</td>
-<td style="text-align: right;">0.192</td>
-<td style="text-align: right;">0.097</td>
-<td style="text-align: right;">1.802</td>
-<td style="text-align: right;">-0.034</td>
-<td style="text-align: right;">0.351</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">MO -&gt; CA</td>
-<td style="text-align: right;">0.364</td>
-<td style="text-align: right;">0.370</td>
-<td style="text-align: right;">0.061</td>
-<td style="text-align: right;">5.941</td>
-<td style="text-align: right;">0.241</td>
-<td style="text-align: right;">0.489</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">EO -&gt; CA</td>
-<td style="text-align: right;">0.129</td>
-<td style="text-align: right;">0.152</td>
-<td style="text-align: right;">0.069</td>
-<td style="text-align: right;">1.878</td>
-<td style="text-align: right;">0.015</td>
-<td style="text-align: right;">0.279</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CA -&gt; FP</td>
-<td style="text-align: right;">0.282</td>
-<td style="text-align: right;">0.300</td>
-<td style="text-align: right;">0.078</td>
-<td style="text-align: right;">3.606</td>
-<td style="text-align: right;">0.148</td>
-<td style="text-align: right;">0.438</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div></section><section id="r2-dan-f2" class="slide level2">
-<h2><span class="math inline">\(R^2\)</span> dan <span class="math inline">\(f^2\)</span></h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># R-squared</span></span>
-<span id="cb43-2"><a></a>pls_summary<span class="sc">$</span>paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          CA    FP
-R^2    0.191 0.126
-AdjR^2 0.178 0.117
-IC     0.120 0.175
-MO     0.364     .
-EO     0.129     .
-CA         . 0.282</code></pre>
+<pre><code>        CUEX  CUSA  CUSL  PERQ  PERV CUSCO
+R^2    0.255 0.681 0.457 0.310 0.345 0.279
+AdjR^2 0.252 0.676 0.450 0.307 0.340 0.276
+IMAG   0.505 0.179 0.196     .     .     .
+CUEX       . 0.063     . 0.557 0.050     .
+PERQ       . 0.512     .     . 0.558     .
+PERV       . 0.195     .     .     .     .
+CUSA       .     . 0.485     .     . 0.528
+CUSCO      .     . 0.067     .     .     .</code></pre>
 </div>
 </div>
 <div class="fragment">
@@ -1855,50 +1660,208 @@ CA         . 0.282</code></pre>
 </table>
 </div>
 </section>
-<section id="latihan-pls-sem" class="slide level2 smaller">
-<h2>Latihan PLS-SEM</h2>
+<section id="effect-size-f2" class="slide level2 smaller">
+<h2>Effect Size: <span class="math inline">\(f^2\)</span></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>pls_summary<span class="sc">$</span>fSquare</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       IMAG  CUEX  PERQ  PERV  CUSA CUSCO  CUSL
+IMAG  0.000 0.342 0.000 0.000 0.043 0.000 0.031
+CUEX  0.000 0.000 0.449 0.003 0.008 0.000 0.000
+PERQ  0.000 0.000 0.000 0.329 0.285 0.000 0.000
+PERV  0.000 0.000 0.000 0.000 0.076 0.000 0.000
+CUSA  0.000 0.000 0.000 0.000 0.000 0.387 0.206
+CUSCO 0.000 0.000 0.000 0.000 0.000 0.000 0.007
+CUSL  0.000 0.000 0.000 0.000 0.000 0.000 0.000</code></pre>
+</div>
+</div>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(f^2\)</span></th>
+<th>Interpretasi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\geq\)</span> 0.35</td>
+<td>Besar</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\geq\)</span> 0.15</td>
+<td>Sedang</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\geq\)</span> 0.02</td>
+<td>Kecil</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="analisis-mediasi-pls-sem" class="slide level2 smaller">
+<h2>Analisis Mediasi PLS-SEM</h2>
+<p>Menguji mediasi IMAG → CUSA → CUSL:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>med <span class="ot">&lt;-</span> <span class="fu">specific_effect_significance</span>(boot,</span>
+<span id="cb48-2"><a></a>  <span class="at">from =</span> <span class="st">"IMAG"</span>, <span class="at">through =</span> <span class="st">"CUSA"</span>, <span class="at">to =</span> <span class="st">"CUSL"</span>)</span>
+<span id="cb48-3"><a></a>med</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Original Est. Bootstrap Mean   Bootstrap SD        T Stat.        2.5% CI 
+    0.08677403     0.08816845     0.02875155     3.01806447     0.03695913 
+      97.5% CI 
+    0.15048248 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Jika bootstrap CI tidak melewati nol, efek mediasi signifikan.</p>
+</div>
+</section>
+<section id="pls-predict" class="slide level2 smaller">
+<h2>PLS-Predict</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb50-2"><a></a>pred <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb50-3"><a></a>  <span class="fu">predict_pls</span>(</span>
+<span id="cb50-4"><a></a>    <span class="at">model =</span> pls_model,</span>
+<span id="cb50-5"><a></a>    <span class="at">technique =</span> predict_DA,</span>
+<span id="cb50-6"><a></a>    <span class="at">noFolds =</span> <span class="dv">10</span>,</span>
+<span id="cb50-7"><a></a>    <span class="at">reps =</span> <span class="dv">10</span></span>
+<span id="cb50-8"><a></a>  ),</span>
+<span id="cb50-9"><a></a>  <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb50-10"><a></a>    <span class="fu">message</span>(<span class="st">"PLS-Predict error (sering terjadi pada model dengan single-item construct): "</span>, e<span class="sc">$</span>message)</span>
+<span id="cb50-11"><a></a>    <span class="cn">NULL</span></span>
+<span id="cb50-12"><a></a>  }</span>
+<span id="cb50-13"><a></a>)</span>
+<span id="cb50-14"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(pred)) <span class="fu">summary</span>(pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Interpretasi</strong>: Jika RMSE PLS &lt; RMSE LM untuk <strong>mayoritas indikator</strong>, model memiliki predictive power yang baik (Shmueli et al., 2019).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="path-diagram-pls" class="slide level2">
+<h2>Path Diagram PLS</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">plot</span>(pls_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-27f881017f0be4f5b502" style="width:1344px;height:672px;"></div>
+<script type="application/json" data-for="htmlwidget-27f881017f0be4f5b502">{"x":{"diagram":"digraph G {\n\n// ----------------------\n// General graph settings\n// ----------------------\ngraph [\ncharset = \"UTF-8\",\nlayout = dot,\nlabel = \"\",\nfontsize = 24,\nfontcolor = black,\nfontname = helvetica,\nrankdir = LR,\nlabelloc = t,\nsplines = TRUE\nbgcolor = transparent\n]\n\n// --------------------\n// The structural model\n// --------------------\nsubgraph sm {\nrankdir = LR;\nnode [\nshape = ellipse,\ncolor = black,\nfillcolor = white,\nstyle = filled,\nfontsize = 12,\nfontcolor = black,\nheight = 1.00833333333333,\nwidth = 0.894791666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"IMAG\" [label=<<B>IMAG <\/B>>, shape = hexagon]\n\"CUEX\" [label=<<B>CUEX <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.255<\/FONT>>, shape = hexagon]\n\"PERQ\" [label=<<B>PERQ <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.31<\/FONT>>, shape = hexagon]\n\"PERV\" [label=<<B>PERV <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.345<\/FONT>>, shape = hexagon]\n\"CUSA\" [label=<<B>CUSA <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.681<\/FONT>>, shape = hexagon]\n\"CUSCO\" [label=<<B>CUSCO <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.279<\/FONT>>, shape = hexagon]\n\"CUSL\" [label=<<B>CUSL <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.457<\/FONT>>, shape = hexagon]\nedge [\ncolor = black,\nfontsize = 9,\nfontcolor = black,\nfontname = helvetica,\ndir = both,\narrowhead = normal,\narrowtail = none\n]\n\"IMAG\" -> {\"CUEX\"}[weight = 1, label = < 𝛽 = 0.505<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 3.025, style = solid, color = black]\n\"IMAG\" -> {\"CUSA\"}[weight = 1, label = < 𝛽 = 0.179<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 1.395, style = solid, color = black]\n\"IMAG\" -> {\"CUSL\"}[weight = 1, label = < 𝛽 = 0.196<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 1.48, style = solid, color = black]\n\"CUEX\" -> {\"PERQ\"}[weight = 1, label = < 𝛽 = 0.557<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 3.285, style = solid, color = black]\n\"CUEX\" -> {\"PERV\"}[weight = 1, label = < 𝛽 = 0.05<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 0.75, style = solid, color = black]\n\"CUEX\" -> {\"CUSA\"}[weight = 1, label = < 𝛽 = 0.063<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 0.815, style = solid, color = black]\n\"PERQ\" -> {\"PERV\"}[weight = 1, label = < 𝛽 = 0.558<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 3.29, style = solid, color = black]\n\"PERQ\" -> {\"CUSA\"}[weight = 1, label = < 𝛽 = 0.512<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 3.06, style = solid, color = black]\n\"PERV\" -> {\"CUSA\"}[weight = 1, label = < 𝛽 = 0.195<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 1.475, style = solid, color = black]\n\"CUSA\" -> {\"CUSCO\"}[weight = 1, label = < 𝛽 = 0.528<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 3.14, style = solid, color = black]\n\"CUSA\" -> {\"CUSL\"}[weight = 1, label = < 𝛽 = 0.485<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 2.925, style = solid, color = black]\n\"CUSCO\" -> {\"CUSL\"}[weight = 1, label = < 𝛽 = 0.067<BR /><FONT POINT-SIZE=\"7\">   <\/FONT> >, penwidth = 0.835, style = solid, color = black]\n}\n// ---------------------\n// The measurement model\n// ---------------------\n\nsubgraph construct_1 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"IMAG1\" [label = \"IMAG1\", shape = box]\n\"IMAG2\" [label = \"IMAG2\", shape = box]\n\"IMAG3\" [label = \"IMAG3\", shape = box]\n\"IMAG4\" [label = \"IMAG4\", shape = box]\n\"IMAG5\" [label = \"IMAG5\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"IMAG1\" -> {\"IMAG\"}[weight = 1000, label = < 𝜆 = 0.745 >, penwidth = 2.735, style = solid, color = dimgrey]\n\"IMAG2\" -> {\"IMAG\"}[weight = 1000, label = < 𝜆 = 0.599 >, penwidth = 2.297, style = solid, color = dimgrey]\n\"IMAG3\" -> {\"IMAG\"}[weight = 1000, label = < 𝜆 = 0.576 >, penwidth = 2.228, style = solid, color = dimgrey]\n\"IMAG4\" -> {\"IMAG\"}[weight = 1000, label = < 𝜆 = 0.769 >, penwidth = 2.807, style = solid, color = dimgrey]\n\"IMAG5\" -> {\"IMAG\"}[weight = 1000, label = < 𝜆 = 0.744 >, penwidth = 2.732, style = solid, color = dimgrey]\n\n}\nsubgraph construct_2 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"CUEX1\" [label = \"CUEX1\", shape = box]\n\"CUEX2\" [label = \"CUEX2\", shape = box]\n\"CUEX3\" [label = \"CUEX3\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"CUEX1\" -> {\"CUEX\"}[weight = 1000, label = < 𝜆 = 0.771 >, penwidth = 2.813, style = solid, color = dimgrey]\n\"CUEX2\" -> {\"CUEX\"}[weight = 1000, label = < 𝜆 = 0.691 >, penwidth = 2.573, style = solid, color = dimgrey]\n\"CUEX3\" -> {\"CUEX\"}[weight = 1000, label = < 𝜆 = 0.608 >, penwidth = 2.324, style = solid, color = dimgrey]\n\n}\nsubgraph construct_3 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"PERQ1\" [label = \"PERQ1\", shape = box]\n\"PERQ2\" [label = \"PERQ2\", shape = box]\n\"PERQ3\" [label = \"PERQ3\", shape = box]\n\"PERQ4\" [label = \"PERQ4\", shape = box]\n\"PERQ5\" [label = \"PERQ5\", shape = box]\n\"PERQ6\" [label = \"PERQ6\", shape = box]\n\"PERQ7\" [label = \"PERQ7\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"PERQ1\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.803 >, penwidth = 2.909, style = solid, color = dimgrey]\n\"PERQ2\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.638 >, penwidth = 2.414, style = solid, color = dimgrey]\n\"PERQ3\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.784 >, penwidth = 2.852, style = solid, color = dimgrey]\n\"PERQ4\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.769 >, penwidth = 2.807, style = solid, color = dimgrey]\n\"PERQ5\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.755 >, penwidth = 2.765, style = solid, color = dimgrey]\n\"PERQ6\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.775 >, penwidth = 2.825, style = solid, color = dimgrey]\n\"PERQ7\" -> {\"PERQ\"}[weight = 1000, label = < 𝜆 = 0.78 >, penwidth = 2.84, style = solid, color = dimgrey]\n\n}\nsubgraph construct_4 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"PERV1\" [label = \"PERV1\", shape = box]\n\"PERV2\" [label = \"PERV2\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"PERV1\" -> {\"PERV\"}[weight = 1000, label = < 𝜆 = 0.902 >, penwidth = 3.206, style = solid, color = dimgrey]\n\"PERV2\" -> {\"PERV\"}[weight = 1000, label = < 𝜆 = 0.94 >, penwidth = 3.32, style = solid, color = dimgrey]\n\n}\nsubgraph construct_5 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"CUSA1\" [label = \"CUSA1\", shape = box]\n\"CUSA2\" [label = \"CUSA2\", shape = box]\n\"CUSA3\" [label = \"CUSA3\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"CUSA1\" -> {\"CUSA\"}[weight = 1000, label = < 𝜆 = 0.792 >, penwidth = 2.876, style = solid, color = dimgrey]\n\"CUSA2\" -> {\"CUSA\"}[weight = 1000, label = < 𝜆 = 0.847 >, penwidth = 3.041, style = solid, color = dimgrey]\n\"CUSA3\" -> {\"CUSA\"}[weight = 1000, label = < 𝜆 = 0.857 >, penwidth = 3.071, style = solid, color = dimgrey]\n\n}\nsubgraph construct_6 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"CUSCO\" [label = \"CUSCO\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = none\narrowtail = normal\n]\n\"CUSCO\" -> {\"CUSCO\"}[weight = 1000, label = < 𝜆 = 1 >, penwidth = 3.5, style = solid, color = dimgrey]\n\n}\nsubgraph construct_7 {\nnode [\nshape = box,\ncolor = dimgrey,\nfillcolor = white,\nstyle = filled,\nfontsize = 8,\nfontcolor = black,\nheight = 0.164583333333333,\nwidth = 0.541666666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"CUSL1\" [label = \"CUSL1\", shape = box]\n\"CUSL2\" [label = \"CUSL2\", shape = box]\n\"CUSL3\" [label = \"CUSL3\", shape = box]\nedge [\ncolor = dimgrey,\nfontsize = 7,\nfontcolor = black,\nfontname = helvetica,\nminlen = 1,\ndir = both\narrowhead = normal\narrowtail = none\n]\n\"CUSL\" -> {\"CUSL1\"}[weight = 1000, label = < 𝜆 = 0.82 >, penwidth = 2.96, style = solid, color = dimgrey]\n\"CUSL\" -> {\"CUSL2\"}[weight = 1000, label = < 𝜆 = 0.202 >, penwidth = 1.106, style = solid, color = dimgrey]\n\"CUSL\" -> {\"CUSL3\"}[weight = 1000, label = < 𝜆 = 0.915 >, penwidth = 3.245, style = solid, color = dimgrey]\n\n}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="pelaporan-pls-sem-template-apa" class="slide level2 smaller">
+<h2>Pelaporan PLS-SEM (Template APA)</h2>
 <blockquote>
-<p>Jalankan kembali model PLS-SEM tanpa path IC -&gt; FP (hapus path langsung IC ke FP). Bandingkan hasilnya.</p>
+<p>Model PLS-SEM diestimasi menggunakan paket seminr di R. Evaluasi outer model menunjukkan bahwa seluruh konstruk memiliki reliabilitas yang memadai (rhoC &gt; 0.70, AVE &gt; 0.50). Discriminant validity terpenuhi berdasarkan kriteria HTMT (&lt; 0.90) dan Fornell-Larcker.</p>
+<p>Hasil bootstrap (5000 resamples) menunjukkan bahwa … dari 12 hipotesis didukung oleh data. IMAG berpengaruh signifikan terhadap CUEX (<span class="math inline">\(\beta\)</span> = …, p &lt; …). CUSA berpengaruh signifikan terhadap CUSL (<span class="math inline">\(\beta\)</span> = …, p &lt; …). Nilai <span class="math inline">\(R^2\)</span> untuk CUSL sebesar …, mengindikasikan bahwa model menjelaskan …% varians customer loyalty. Analisis mediasi menunjukkan efek tidak langsung IMAG → CUSA → CUSL yang signifikan (indirect = …, 95% CI […, …]).</p>
+</blockquote>
+</section>
+<section id="referensi-pls-sem" class="slide level2">
+<h2>Referensi PLS-SEM</h2>
+<ul>
+<li>Hair, J.F., Risher, J.J., Sarstedt, M. &amp; Ringle, C.M. (2019). When to use and how to report PLS-SEM. <em>European Business Review</em>, 31(1), 2–24.</li>
+<li>Henseler, J., Ringle, C.M. &amp; Sarstedt, M. (2015). A new criterion for assessing discriminant validity. <em>Journal of the Academy of Marketing Science</em>, 43(1), 115–135.</li>
+<li>Shmueli, G., Sarstedt, M., Hair, J.F., et al.&nbsp;(2019). Predictive model assessment in PLS-SEM. <em>European Journal of Marketing</em>, 53(11), 2322–2347.</li>
+</ul>
+</section></section>
+<section>
+<section id="latihan" class="title-slide slide level1 center">
+<h1>Latihan</h1>
+
+</section>
+<section id="latihan-1-cb-sem" class="slide level2 smaller">
+<h2>Latihan 1: CB-SEM</h2>
+<blockquote>
+<p>Hapus satu path dari model struktural CB-SEM (misalnya hapus path <code>ELOY ~ HV</code>) dan estimasi ulang. Bandingkan fit indices dan path coefficients dengan model asli.</p>
 </blockquote>
 <div class="cell">
 <details class="code-fold">
 <summary>Jawaban</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>sm2 <span class="ot">&lt;-</span> <span class="fu">relationships</span>(</span>
-<span id="cb45-2"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="fu">c</span>(<span class="st">"IC"</span>, <span class="st">"MO"</span>, <span class="st">"EO"</span>), <span class="at">to =</span> <span class="st">"CA"</span>),</span>
-<span id="cb45-3"><a></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="st">"CA"</span>, <span class="at">to =</span> <span class="st">"FP"</span>)</span>
-<span id="cb45-4"><a></a>)</span>
-<span id="cb45-5"><a></a></span>
-<span id="cb45-6"><a></a>pls_model2 <span class="ot">&lt;-</span> <span class="fu">estimate_pls</span>(</span>
-<span id="cb45-7"><a></a>  <span class="at">data =</span> inov,</span>
-<span id="cb45-8"><a></a>  <span class="at">measurement_model =</span> mm,</span>
-<span id="cb45-9"><a></a>  <span class="at">structural_model =</span> sm2</span>
-<span id="cb45-10"><a></a>)</span>
-<span id="cb45-11"><a></a><span class="fu">summary</span>(pls_model2)<span class="sc">$</span>paths</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>sem_model2 <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb52-2"><a></a><span class="st">  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4</span></span>
+<span id="cb52-3"><a></a><span class="st">  HV   =~ HV1 + HV2 + HV3 + HV4</span></span>
+<span id="cb52-4"><a></a><span class="st">  ELOY =~ ELOY1 + ELOY2 + ELOY3</span></span>
+<span id="cb52-5"><a></a><span class="st">  HV   ~ PMB</span></span>
+<span id="cb52-6"><a></a><span class="st">  ELOY ~ PMB</span></span>
+<span id="cb52-7"><a></a><span class="st">'</span></span>
+<span id="cb52-8"><a></a>sem_fit2 <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model2, <span class="at">data =</span> dat)</span>
+<span id="cb52-9"><a></a><span class="fu">fitMeasures</span>(sem_fit2, <span class="fu">c</span>(<span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>          CA    FP
-R^2    0.195 0.098
-AdjR^2 0.182 0.094
-IC     0.135     .
-MO     0.362     .
-EO     0.129     .
-CA         . 0.313</code></pre>
+<pre><code>  cfi   tli rmsea  srmr 
+0.742 0.654 0.216 0.124 </code></pre>
 </div>
 </div>
 </section>
-<section id="perbandingan-cb-sem-vs-pls-sem-ringkasan-praktis" class="slide level2">
-<h2>Perbandingan CB-SEM vs PLS-SEM: Ringkasan Praktis</h2>
-<table class="caption-top">
+<section id="latihan-2-pls-sem" class="slide level2 smaller">
+<h2>Latihan 2: PLS-SEM</h2>
+<blockquote>
+<p>Uji jalur mediasi lain dalam model ECSI, misalnya CUEX → PERQ → CUSA. Gunakan <code>specific_effect_significance()</code>.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>med2 <span class="ot">&lt;-</span> <span class="fu">specific_effect_significance</span>(boot,</span>
+<span id="cb54-2"><a></a>  <span class="at">from =</span> <span class="st">"CUEX"</span>, <span class="at">through =</span> <span class="st">"PERQ"</span>, <span class="at">to =</span> <span class="st">"CUSA"</span>)</span>
+<span id="cb54-3"><a></a>med2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Original Est. Bootstrap Mean   Bootstrap SD        T Stat.        2.5% CI 
+    0.28506880     0.28607320     0.04474553     6.37088878     0.20091029 
+      97.5% CI 
+    0.37748801 </code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="ringkasan" class="title-slide slide level1 center">
+<h1>Ringkasan</h1>
+
+</section>
+<section id="apa-yang-sudah-kita-pelajari" class="slide level2">
+<h2>Apa yang Sudah Kita Pelajari</h2>
+<ul>
+<li><strong>Konsep SEM</strong>: variabel laten, measurement vs structural model</li>
+<li><strong>CB-SEM</strong> dengan <code>lavaan</code>:
+<ul>
+<li>Two-step approach (CFA → Full SEM)</li>
+<li>Fit indices, CR, AVE, Fornell-Larcker</li>
+<li>Analisis mediasi dengan bootstrap</li>
+</ul></li>
+<li><strong>PLS-SEM</strong> dengan <code>seminr</code>:
+<ul>
+<li>Outer model: loadings, reliabilitas, HTMT, Fornell-Larcker, cross-loadings</li>
+<li>Inner model: path coefficients, bootstrap, <span class="math inline">\(R^2\)</span>, <span class="math inline">\(f^2\)</span></li>
+<li>Mediasi dan PLS-Predict</li>
+</ul></li>
+</ul>
+</section>
+<section id="perbandingan-praktis" class="slide level2">
+<h2>Perbandingan Praktis</h2>
+<table class="caption-top" style="width:100%;">
 <colgroup>
-<col style="width: 16%">
+<col style="width: 14%">
 <col style="width: 40%">
-<col style="width: 42%">
+<col style="width: 44%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Aspek</th>
-<th>CB-SEM (lavaan)</th>
-<th>PLS-SEM (seminr)</th>
+<th>CB-SEM (<code>lavaan</code>)</th>
+<th>PLS-SEM (<code>seminr</code>)</th>
 </tr>
 </thead>
 <tbody>
@@ -1915,95 +1878,28 @@ CA         . 0.313</code></pre>
 <tr class="odd">
 <td>Signifikansi</td>
 <td>Langsung dari output</td>
-<td>Perlu <code>bootstrap_model()</code></td>
+<td><code>bootstrap_model()</code></td>
 </tr>
 <tr class="even">
 <td>Fit indices</td>
 <td>CFI, TLI, RMSEA, SRMR</td>
-<td>Tidak ada (gunakan <span class="math inline">\(R^2\)</span>, HTMT)</td>
+<td><span class="math inline">\(R^2\)</span>, <span class="math inline">\(f^2\)</span>, HTMT</td>
 </tr>
 <tr class="odd">
 <td>Visualisasi</td>
 <td><code>semPaths()</code></td>
 <td><code>plot()</code></td>
 </tr>
-</tbody>
-</table>
-</section></section>
-<section>
-<section id="ringkasan-sesi-3" class="title-slide slide level1 center">
-<h1>Ringkasan Sesi 3</h1>
-
-</section>
-<section id="apa-yang-sudah-kita-pelajari" class="slide level2">
-<h2>Apa yang Sudah Kita Pelajari</h2>
-<ul>
-<li class="fragment"><strong>Konsep SEM</strong>: variabel laten, measurement vs structural model</li>
-<li class="fragment"><strong>CB-SEM</strong> dengan <code>lavaan</code>:
-<ul>
-<li class="fragment">CFA: validitas dan reliabilitas konstruk</li>
-<li class="fragment">Full SEM: pengujian hipotesis antar konstruk</li>
-<li class="fragment">Fit indices: CFI, TLI, RMSEA, SRMR</li>
-</ul></li>
-<li class="fragment"><strong>PLS-SEM</strong> dengan <code>seminr</code>:
-<ul>
-<li class="fragment">Measurement model: outer loadings, CR, AVE, HTMT</li>
-<li class="fragment">Structural model: path coefficients, bootstrap, <span class="math inline">\(R^2\)</span></li>
-</ul></li>
-</ul>
-</section>
-<section id="paket-yang-digunakan" class="slide level2">
-<h2>Paket yang Digunakan</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 66%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Paket</th>
-<th>Fungsi Utama</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>lavaan</code></td>
-<td><code>cfa()</code>, <code>sem()</code>, <code>fitMeasures()</code>, <code>parameterEstimates()</code></td>
-</tr>
 <tr class="even">
-<td><code>semPlot</code></td>
-<td><code>semPaths()</code></td>
-</tr>
-<tr class="odd">
-<td><code>seminr</code></td>
-<td><code>constructs()</code>, <code>relationships()</code>, <code>estimate_pls()</code>, <code>bootstrap_model()</code></td>
+<td>Mediasi</td>
+<td>Label + <code>:=</code></td>
+<td><code>specific_effect_significance()</code></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="referensi" class="slide level2">
-<h2>Referensi</h2>
-<ul>
-<li>Hair, J.F., et al.&nbsp;(2019). <em>Multivariate Data Analysis</em> (8th ed.)</li>
-<li>Hair, J.F., et al.&nbsp;(2017). <em>A Primer on Partial Least Squares SEM</em> (2nd ed.)</li>
-<li>Kline, R.B. (2015). <em>Principles and Practice of SEM</em> (4th ed.)</li>
-<li>Rosseel, Y. (2012). lavaan: An R Package for SEM. <em>Journal of Statistical Software</em>.</li>
-</ul>
-</section>
-<section id="tips-akhir" class="slide level2">
-<h2>Tips Akhir</h2>
-<ul>
-<li class="fragment">Selalu mulai dengan <strong>CFA</strong> sebelum full SEM (CB-SEM)</li>
-<li class="fragment">Periksa <strong>asumsi</strong> sebelum menjalankan model</li>
-<li class="fragment">Laporkan <strong>semua</strong> fit indices yang relevan</li>
-<li class="fragment">Gunakan <strong>bootstrap</strong> untuk PLS-SEM (minimal 1000 resamples)</li>
-<li class="fragment">Jangan hanya mengandalkan p-value; perhatikan <strong>effect size</strong> (<span class="math inline">\(\beta\)</span>, <span class="math inline">\(f^2\)</span>, <span class="math inline">\(R^2\)</span>)</li>
-<li class="fragment"><strong>Teori</strong> harus mendahului analisis — jangan fishing for significance!</li>
-</ul>
 </section></section>
-<section id="akhir-workshop" class="title-slide slide level1 center">
-<h1>Akhir Workshop!</h1>
-<p>Terima kasih atas partisipasinya! Semoga ilmu yang didapat bermanfaat.</p>
+<section id="terima-kasih" class="title-slide slide level1 center">
+<h1>Terima Kasih!</h1>
 <p>Materi tersedia di website workshop.</p>
 
 
