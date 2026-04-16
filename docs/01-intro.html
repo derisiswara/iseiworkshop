@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="ISEI Workshop">
-  <title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio – Pengantar R dan RStudio</title>
+  <title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio – Pengantar R, Pengolahan Data, dan Visualisasi</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -196,7 +196,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Pengantar R dan RStudio</h1>
+  <h1 class="title">Pengantar R, Pengolahan Data, dan Visualisasi</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -251,16 +251,23 @@ ISEI Workshop
 </section>
 <section id="rencana-hari-ini" class="slide level2">
 <h2>Rencana Hari Ini</h2>
+<p><strong>Bagian 1: Dasar-Dasar R</strong></p>
 <ul>
-<li>R dan RStudio</li>
-<li>Sebelum coding</li>
-<li>Objek dan Nilai di R</li>
-<li><strong>Tipe</strong> data</li>
+<li>R dan RStudio, Objek, Nilai, dan Tipe data</li>
 <li>Fungsi dan paket</li>
-<li><strong>Struktur</strong> data</li>
-<li>Mengeksplorasi dataset</li>
-<li>Tips troubleshooting</li>
-<li>Rekap &amp; umpan balik</li>
+<li>Struktur data (vektor, faktor, dataframe)</li>
+</ul>
+<p><strong>Bagian 2: Pengolahan Data dengan Tidyverse</strong></p>
+<ul>
+<li>Import data CSV</li>
+<li>Data wrangling: filter, select, mutate, group_by, summarize</li>
+<li>Operator pipe (<code>|&gt;</code>)</li>
+</ul>
+<p><strong>Bagian 3: Visualisasi dan Statistik Deskriptif</strong></p>
+<ul>
+<li>Statistik deskriptif univariat dan bivariat</li>
+<li>Visualisasi dengan ggplot2</li>
+<li>Faceting dan korelasi</li>
 </ul>
 </section>
 <section id="apa-itu-r-apa-itu-rstudio" class="slide level2">
@@ -709,7 +716,7 @@ ISEI Workshop
 <section id="mengunduh-dataset-world-values-survey-wvs" class="slide level2">
 <h2>Mengunduh Dataset World Values Survey (WVS)</h2>
 <p>Untuk workshop ini, kita akan mencoba memuat dataset dari file ke dalam dataframe!</p>
-<p>Buka situs web workshop dan kunjungi tab <a href="https://bellaratmelia.github.io/introductory-r-socsci/dataset.html">‘Dataset’</a> untuk mengunduh file data dan informasi tentang data WVS ini</p>
+<p>Buka situs web workshop dan kunjungi tab ‘Dataset’ untuk mengunduh file data dan informasi tentang data WVS ini</p>
 <p>Unduh CSV ini dan simpan di folder <code>data</code> di proyek R Anda!</p>
 </section>
 <section id="paket-di-r-untuk-fungsionalitas-tambahan" class="slide level2">
@@ -734,32 +741,23 @@ ISEI Workshop
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb47-2"><a></a></span>
-<span id="cb47-3"><a></a>wvs_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs-wave7-sg-ca-nz.csv"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 7087 Columns: 16
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr  (5): country, religiousity, sex, marital_status, employment
-dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">head</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb47-3"><a></a>wvs_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs1.csv"</span>)  </span>
+<span id="cb47-4"><a></a><span class="fu">head</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 16
-  country        ID family_importance friends_importance leisure_importance
-  &lt;chr&gt;       &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;              &lt;dbl&gt;
-1 CAN     124070003                 1                  1                  1
-2 CAN     124070004                 1                  1                  2
-3 CAN     124070005                 2                  2                  2
-4 CAN     124070006                 1                  2                  2
-5 CAN     124070008                 1                  2                  2
-6 CAN     124070009                 1                  2                  2
-# ℹ 11 more variables: work_importance &lt;dbl&gt;, freedom &lt;dbl&gt;,
-#   life_satisfaction &lt;dbl&gt;, financial_satisfaction &lt;dbl&gt;, religiousity &lt;chr&gt;,
-#   political_scale &lt;dbl&gt;, sex &lt;chr&gt;, birthyear &lt;dbl&gt;, age &lt;dbl&gt;,
-#   marital_status &lt;chr&gt;, employment &lt;chr&gt;</code></pre>
+  negara id_responden pentingnya_keluarga pentingnya_teman
+  &lt;chr&gt;         &lt;dbl&gt;               &lt;dbl&gt;            &lt;dbl&gt;
+1 Kanada    124070003                   1                1
+2 Kanada    124070004                   1                1
+3 Kanada    124070005                   2                2
+4 Kanada    124070006                   1                2
+5 Kanada    124070008                   1                2
+6 Kanada    124070009                   1                2
+# ℹ 12 more variables: pentingnya_waktu_luang &lt;dbl&gt;,
+#   pentingnya_pekerjaan &lt;dbl&gt;, kebebasan_memilih &lt;dbl&gt;, kepuasan_hidup &lt;dbl&gt;,
+#   kepuasan_finansial &lt;dbl&gt;, religiusitas &lt;dbl&gt;, skala_politik &lt;dbl&gt;,
+#   jenis_kelamin &lt;chr&gt;, tahun_lahir &lt;dbl&gt;, usia &lt;dbl&gt;,
+#   status_pernikahan &lt;chr&gt;, status_pekerjaan &lt;chr&gt;</code></pre>
 </div>
 </div>
 <p>Pastikan file CSV tersimpan di folder data Anda! (Tidak ada auto save)</p>
@@ -767,37 +765,37 @@ dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
 <section id="mengeksplorasi-dataset-wvs" class="slide level2">
 <h2>Mengeksplorasi Dataset WVS</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-28"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-28-1" class="code-annotation-target"><a href="#annotated-cell-28-1"></a><span class="fu">dim</span>(wvs_data)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-28-2" class="code-annotation-target"><a href="#annotated-cell-28-2"></a><span class="fu">names</span>(wvs_data)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-28-3" class="code-annotation-target"><a href="#annotated-cell-28-3"></a><span class="fu">str</span>(wvs_data)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-28-4" class="code-annotation-target"><a href="#annotated-cell-28-4"></a><span class="fu">summary</span>(wvs_data)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-28-5" class="code-annotation-target"><a href="#annotated-cell-28-5"></a><span class="fu">head</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-28-6" class="code-annotation-target"><a href="#annotated-cell-28-6"></a><span class="fu">tail</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-27"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-27-1" class="code-annotation-target"><a href="#annotated-cell-27-1"></a><span class="fu">dim</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-27-2" class="code-annotation-target"><a href="#annotated-cell-27-2"></a><span class="fu">names</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-27-3" class="code-annotation-target"><a href="#annotated-cell-27-3"></a><span class="fu">str</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-27-4" class="code-annotation-target"><a href="#annotated-cell-27-4"></a><span class="fu">summary</span>(wvs_data)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-27-5" class="code-annotation-target"><a href="#annotated-cell-27-5"></a><span class="fu">head</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-27-6" class="code-annotation-target"><a href="#annotated-cell-27-6"></a><span class="fu">tail</span>(wvs_data, <span class="at">n=</span><span class="dv">5</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-28" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="1" data-code-annotation="1">mengembalikan vektor jumlah baris dan kolom</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="1" data-code-annotation="1">mengembalikan vektor jumlah baris dan kolom</span>
 </dd>
-<dt data-target-cell="annotated-cell-28" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="2" data-code-annotation="2">memeriksa kolom</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="2" data-code-annotation="2">memeriksa kolom</span>
 </dd>
-<dt data-target-cell="annotated-cell-28" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="3" data-code-annotation="3">memeriksa struktur</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="3" data-code-annotation="3">memeriksa struktur</span>
 </dd>
-<dt data-target-cell="annotated-cell-28" data-target-annotation="4">4</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="4" data-code-annotation="4">menampilkan statistik ringkasan seluruh dataframe</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="4" data-code-annotation="4">menampilkan statistik ringkasan seluruh dataframe</span>
 </dd>
-<dt data-target-cell="annotated-cell-28" data-target-annotation="5">5</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="5" data-code-annotation="5">melihat 5 baris pertama</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="5" data-code-annotation="5">melihat 5 baris pertama</span>
 </dd>
-<dt data-target-cell="annotated-cell-28" data-target-annotation="6">6</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="6">6</dt>
 <dd>
-<span data-code-cell="annotated-cell-28" data-code-lines="6" data-code-annotation="6">melihat 5 baris terakhir</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="6" data-code-annotation="6">melihat 5 baris terakhir</span>
 </dd>
 </dl>
 </div>
@@ -807,32 +805,32 @@ dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
 <h2>Manipulasi Dasar Dataframe: Mengambil Nilai</h2>
 <p>Beberapa fungsi dasar dataframe sebelum kita lanjut ke data wrangling:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-29"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-29-1" class="code-annotation-target"><a href="#annotated-cell-29-1"></a>wvs_data[<span class="st">"country"</span>]</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-29-2" class="code-annotation-target"><a href="#annotated-cell-29-2"></a>wvs_data<span class="sc">$</span>country</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-29-3" class="code-annotation-target"><a href="#annotated-cell-29-3"></a>wvs_data[<span class="dv">3</span>]</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-29-4" class="code-annotation-target"><a href="#annotated-cell-29-4"></a>wvs_data[<span class="dv">1</span>, <span class="dv">4</span>]</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-29-5" class="code-annotation-target"><a href="#annotated-cell-29-5"></a>wvs_data[<span class="dv">3</span>, ]</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-28"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-28-1" class="code-annotation-target"><a href="#annotated-cell-28-1"></a>wvs_data[<span class="st">"negara"</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-28-2" class="code-annotation-target"><a href="#annotated-cell-28-2"></a>wvs_data<span class="sc">$</span>negara</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-28-3" class="code-annotation-target"><a href="#annotated-cell-28-3"></a>wvs_data[<span class="dv">3</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-28-4" class="code-annotation-target"><a href="#annotated-cell-28-4"></a>wvs_data[<span class="dv">1</span>, <span class="dv">4</span>]</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-28-5" class="code-annotation-target"><a href="#annotated-cell-28-5"></a>wvs_data[<span class="dv">3</span>, ]</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-29" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-29" data-code-lines="1" data-code-annotation="1">mengambil kolom berdasarkan nama kolom (dikembalikan sebagai tibble/dataframe)</span>
+<span data-code-cell="annotated-cell-28" data-code-lines="1" data-code-annotation="1">mengambil kolom berdasarkan nama kolom (dikembalikan sebagai tibble/dataframe)</span>
 </dd>
-<dt data-target-cell="annotated-cell-29" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-29" data-code-lines="2" data-code-annotation="2">cara lain mengambil kolom berdasarkan nama (dikembalikan sebagai vektor)</span>
+<span data-code-cell="annotated-cell-28" data-code-lines="2" data-code-annotation="2">cara lain mengambil kolom berdasarkan nama (dikembalikan sebagai vektor)</span>
 </dd>
-<dt data-target-cell="annotated-cell-29" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-29" data-code-lines="3" data-code-annotation="3">mengambil kolom berdasarkan indeks</span>
+<span data-code-cell="annotated-cell-28" data-code-lines="3" data-code-annotation="3">mengambil kolom berdasarkan indeks</span>
 </dd>
-<dt data-target-cell="annotated-cell-29" data-target-annotation="4">4</dt>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-29" data-code-lines="4" data-code-annotation="4">mendapatkan sel di koordinat baris, kolom ini</span>
+<span data-code-cell="annotated-cell-28" data-code-lines="4" data-code-annotation="4">mendapatkan sel di koordinat baris, kolom ini</span>
 </dd>
-<dt data-target-cell="annotated-cell-29" data-target-annotation="5">5</dt>
+<dt data-target-cell="annotated-cell-28" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-29" data-code-lines="5" data-code-annotation="5">mendapatkan seluruh baris</span>
+<span data-code-cell="annotated-cell-28" data-code-lines="5" data-code-annotation="5">mendapatkan seluruh baris</span>
 </dd>
 </dl>
 </div>
@@ -853,46 +851,50 @@ dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
 <h2>Mengonversi Kolom Dataframe ke Faktor - Tidak Berurutan</h2>
 <p>Dalam contoh kita, <code>country</code> seharusnya menjadi faktor!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> chr [1:7087] "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" "CAN" ...</code></pre>
+<pre><code> chr [1:7087] "Kanada" "Kanada" "Kanada" "Kanada" "Kanada" "Kanada" ...</code></pre>
 </div>
 </div>
 <p>Karena tidak ada urutan bawaan dalam nama negara, kategori kita akan tidak berurutan:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>wvs_data<span class="sc">$</span>country <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>country)</span>
-<span id="cb53-2"><a></a></span>
-<span id="cb53-3"><a></a><span class="co"># periksa level kategori</span></span>
-<span id="cb53-4"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>wvs_data<span class="sc">$</span>negara <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>negara)</span>
+<span id="cb51-2"><a></a></span>
+<span id="cb51-3"><a></a><span class="co"># periksa level kategori</span></span>
+<span id="cb51-4"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "CAN" "NZL" "SGP"</code></pre>
+<pre><code>[1] "Kanada"        "Selandia Baru" "Singapura"    </code></pre>
 </div>
 </div>
 <p>Jika kita periksa strukturnya, kolom <code>country</code> seharusnya menjadi faktor bukan karakter sekarang:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> Factor w/ 3 levels "CAN","NZL","SGP": 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<pre><code> Factor w/ 3 levels "Kanada","Selandia Baru",..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 </div>
 </div>
 </section>
 <section id="mengonversi-kolom-dataframe-ke-faktor---berurutan" class="slide level2">
 <h2>Mengonversi Kolom Dataframe ke Faktor - Berurutan</h2>
-<p>Secara teknis, di dataset kita tidak ada variabel yang harus berurutan. Tapi sebagai contoh, misalkan kita ingin mengurutkan nilai kategorikal di <code>religiousity</code> dari non-believer ke believer.</p>
+<p>Sebagai contoh faktor berurutan, misalkan kita ingin mengurutkan <code>status_pekerjaan</code> dari yang paling tidak aktif ke paling aktif secara ekonomi.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>wvs_data<span class="sc">$</span>religiousity <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>religiousity,</span>
-<span id="cb57-2"><a></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"An atheist"</span>, <span class="st">"Not a religious person"</span>, <span class="st">"A religious person"</span>, <span class="st">"Don't know"</span>),</span>
-<span id="cb57-3"><a></a>                                <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb57-4"><a></a></span>
-<span id="cb57-5"><a></a><span class="co"># periksa level kategori dan struktur</span></span>
-<span id="cb57-6"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>religiousity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>wvs_data<span class="sc">$</span>status_pekerjaan <span class="ot">&lt;-</span> <span class="fu">factor</span>(wvs_data<span class="sc">$</span>status_pekerjaan,</span>
+<span id="cb55-2"><a></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Tidak bekerja"</span>, <span class="st">"Pelajar/Mahasiswa"</span>, </span>
+<span id="cb55-3"><a></a>                                           <span class="st">"Ibu rumah tangga"</span>, <span class="st">"Pensiunan"</span>,</span>
+<span id="cb55-4"><a></a>                                           <span class="st">"Paruh waktu"</span>, <span class="st">"Penuh waktu"</span>, </span>
+<span id="cb55-5"><a></a>                                           <span class="st">"Wiraswasta"</span>, <span class="st">"Lainnya"</span>),</span>
+<span id="cb55-6"><a></a>                                <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb55-7"><a></a></span>
+<span id="cb55-8"><a></a><span class="co"># periksa level kategori dan struktur</span></span>
+<span id="cb55-9"><a></a><span class="fu">levels</span>(wvs_data<span class="sc">$</span>status_pekerjaan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "An atheist"             "Not a religious person" "A religious person"    
-[4] "Don't know"            </code></pre>
+<pre><code>[1] "Tidak bekerja"     "Pelajar/Mahasiswa" "Ibu rumah tangga" 
+[4] "Pensiunan"         "Paruh waktu"       "Penuh waktu"      
+[7] "Wiraswasta"        "Lainnya"          </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>religiousity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">str</span>(wvs_data<span class="sc">$</span>status_pekerjaan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> Ord.factor w/ 4 levels "An atheist"&lt;"Not a religious person"&lt;..: 3 3 1 3 2 1 1 3 2 3 ...</code></pre>
+<pre><code> Ord.factor w/ 8 levels "Tidak bekerja"&lt;..: 4 4 5 6 6 6 7 1 7 6 ...</code></pre>
 </div>
 </div>
 </section>
@@ -932,73 +934,746 @@ dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
 </ul>
 </section></section>
 <section>
-<section id="akhir-sesi-1" class="title-slide slide level1 center">
-<h1>Akhir Sesi 1!</h1>
-<p>Sesi Berikutnya: Pengolahan data dengan paket <code>dplyr</code> dan <code>tidyr</code> - kita akan belajar cara:</p>
+<section id="bagian-2-pengolahan-data-dengan-tidyverse" class="title-slide slide level1 center">
+<h1>Bagian 2: Pengolahan Data dengan Tidyverse</h1>
+
+</section>
+<section id="garis-besar" class="slide level2">
+<h2>Garis Besar</h2>
+<ol type="1">
+<li>Memuat data ke dalam lingkungan RStudio</li>
+<li>Data wrangling dengan <code>dplyr</code> dan <code>tidyr</code> (bagian dari paket <code>tidyverse</code>)</li>
+</ol>
+</section>
+<section id="alat-yang-akan-kita-gunakan-dplyr-dan-tidyr" class="slide level2">
+<h2>Alat yang Akan Kita Gunakan: dplyr dan tidyr</h2>
 <ul>
-<li><p>Memfilter respons survei berdasarkan negara</p></li>
-<li><p>Menghitung rata-rata skor kepuasan berdasarkan kelompok demografi</p></li>
-<li><p>Membuat variabel baru dari yang sudah ada</p></li>
-<li><p>Menangani nilai yang hilang dalam data survei</p></li>
-<li><p>Dan banyak lagi!</p></li>
+<li><p>Paket dari <code>tidyverse</code>. (<a href="https://www.tidyverse.org/">klik di sini untuk ke halaman utama tidyverse</a>)</p></li>
+<li><p>Posit telah membuat cheatsheet:</p>
+<ul>
+<li><p><a href="https://rstudio.github.io/cheatsheets/html/data-transformation.html">dplyr cheatsheet</a> | <a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf">versi pdf</a></p></li>
+<li><p><a href="https://rstudio.github.io/cheatsheets/html/tidyr.html">tidyr cheatsheet</a> | <a href="https://rstudio.github.io/cheatsheets/tidyr.pdf">versi pdf</a></p></li>
+</ul></li>
+<li><p>Fungsi yang akan sering digunakan:</p>
+<ul>
+<li><code>drop_na()</code> - menghapus baris dengan nilai kosong (null)</li>
+<li><code>select()</code> - untuk memilih kolom dari dataframe</li>
+<li><code>filter()</code> - untuk menyaring baris berdasarkan kriteria</li>
+<li><code>mutate()</code> - untuk membuat kolom baru atau mengedit yang sudah ada</li>
+<li><code>if_else()</code> dan <code>case_when()</code> - membuat/mengedit kolom berdasarkan beberapa kriteria</li>
+<li><code>group_by()</code> dan <code>summarize()</code> - mengelompokkan data dan merangkum setiap kelompok</li>
+</ul></li>
 </ul>
 </section>
-<section id="lampiran-manipulasi-vektor-menambah-item" class="slide level2">
-<h2>Lampiran Manipulasi Vektor: Menambah Item</h2>
-<p>Beberapa cara menambahkan item ke vektor</p>
+<section id="mengapa-menggunakan-tidyverse" class="slide level2">
+<h2>Mengapa Menggunakan Tidyverse?</h2>
+<ul>
+<li class="fragment">Kode terlihat lebih mirip bahasa Inggris sehingga lebih intuitif bagi pemula</li>
+<li class="fragment">Tidyverse mengikuti pola sintaks yang konsisten</li>
+<li class="fragment">Pesan error yang lebih jelas dan membantu</li>
+</ul>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="co"># Base R</span></span>
+<span id="cb59-2"><a></a>subset_data <span class="ot">&lt;-</span> data[data<span class="sc">$</span>usia <span class="sc">&gt;</span> <span class="dv">18</span> <span class="sc">&amp;</span> data<span class="sc">$</span>kepuasan_hidup <span class="sc">&gt;</span> <span class="dv">5</span>, <span class="fu">c</span>(<span class="st">"negara"</span>, <span class="st">"usia"</span>)]</span>
+<span id="cb59-3"><a></a></span>
+<span id="cb59-4"><a></a><span class="co"># Tidyverse  </span></span>
+<span id="cb59-5"><a></a>subset_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb59-6"><a></a>  <span class="fu">filter</span>(usia <span class="sc">&gt;</span> <span class="dv">18</span>, kepuasan_hidup <span class="sc">&gt;</span> <span class="dv">5</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb59-7"><a></a>  <span class="fu">select</span>(negara, usia)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="penyegaran-memuat-dari-csv-ke-dataframe" class="slide level2">
+<h2>Penyegaran: Memuat dari CSV ke Dataframe</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-35"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-35-1" class="code-annotation-target"><a href="#annotated-cell-35-1"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(satisfaction_scores, <span class="dv">7</span>)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-35-2" class="code-annotation-target"><a href="#annotated-cell-35-2"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(satisfaction_scores, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-35-3" class="code-annotation-target"><a href="#annotated-cell-35-3"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, satisfaction_scores)</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-35-4" class="code-annotation-target"><a href="#annotated-cell-35-4"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">append</span>(satisfaction_scores, <span class="dv">9</span>, <span class="at">after =</span> <span class="dv">2</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-annotation">
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-35" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-35" data-code-lines="1" data-code-annotation="1">Tambah satu skor ke akhir vektor menggunakan c()</span>
-</dd>
-<dt data-target-cell="annotated-cell-35" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-35" data-code-lines="2" data-code-annotation="2">Tambah beberapa skor ke akhir</span>
-</dd>
-<dt data-target-cell="annotated-cell-35" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-35" data-code-lines="3" data-code-annotation="3">Tambah skor ke awal</span>
-</dd>
-<dt data-target-cell="annotated-cell-35" data-target-annotation="4">4</dt>
-<dd>
-<span data-code-cell="annotated-cell-35" data-code-lines="4" data-code-annotation="4">Sisipkan skor di posisi tertentu menggunakan append(nama_vektor, elemen_yang_ditambahkan, dari_posisi)</span>
-</dd>
-</dl>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb60-2"><a></a></span>
+<span id="cb60-3"><a></a><span class="co"># Baca file CSV data WVS (sudah diterjemahkan ke Bahasa Indonesia)</span></span>
+<span id="cb60-4"><a></a>wvs_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs1.csv"</span>)</span>
+<span id="cb60-5"><a></a><span class="fu">glimpse</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 7,087
+Columns: 16
+$ negara                 &lt;chr&gt; "Kanada", "Kanada", "Kanada", "Kanada", "Kanada…
+$ id_responden           &lt;dbl&gt; 124070003, 124070004, 124070005, 124070006, 124…
+$ pentingnya_keluarga    &lt;dbl&gt; 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,…
+$ pentingnya_teman       &lt;dbl&gt; 1, 1, 2, 2, 2, 2, 1, 2, 1, 3, 1, 2, 1, 1, 1, 3,…
+$ pentingnya_waktu_luang &lt;dbl&gt; 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2,…
+$ pentingnya_pekerjaan   &lt;dbl&gt; 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 2, 4, 1, 3, 3,…
+$ kebebasan_memilih      &lt;dbl&gt; 7, 5, 8, 4, 7, 6, 9, 7, 8, 6, 8, 10, 8, 9, 7, 6…
+$ kepuasan_hidup         &lt;dbl&gt; 5, 8, 9, 7, 1, 7, 9, 6, 7, 6, 7, 10, 8, 10, 6, …
+$ kepuasan_finansial     &lt;dbl&gt; 8, 2, 8, 8, 9, 8, 9, 5, 6, 9, 5, 7, 9, 9, 7, 8,…
+$ religiusitas           &lt;dbl&gt; 9, 10, 3, 8, 3, 1, 3, 7, 5, 8, 5, 3, 3, 4, 3, 7…
+$ skala_politik          &lt;dbl&gt; 10, 5, 2, 8, 6, 6, 7, 5, 6, 4, 5, 4, 1, 7, 2, 8…
+$ jenis_kelamin          &lt;chr&gt; "Perempuan", "Laki-laki", "Perempuan", "Laki-la…
+$ tahun_lahir            &lt;dbl&gt; 1944, 1951, 1984, 1975, 1988, 1982, 1981, 1985,…
+$ usia                   &lt;dbl&gt; 76, 69, 35, 45, 32, 38, 38, 34, 65, 31, 27, 33,…
+$ status_pernikahan      &lt;chr&gt; "Pisah", "Menikah", "Kohabitasi", "Menikah", "B…
+$ status_pekerjaan       &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "Penuh…</code></pre>
 </div>
 </div>
 </section>
-<section id="lampiran-manipulasi-vektor-menghapus-item" class="slide level2">
-<h2>Lampiran Manipulasi Vektor: Menghapus Item</h2>
+<section id="operator-pipe" class="slide level2">
+<h2>Operator Pipe ( |&gt; )</h2>
+<ul>
+<li>Operator pipe (|&gt;) memungkinkan kita merangkai beberapa operasi tanpa membuat dataframe perantara.</li>
+<li>Pintasan keyboard: <code>Ctrl</code>+<code>Shift</code>+<code>M</code> di Windows, <code>Cmd</code>+<code>Shift</code>+<code>M</code> di Mac</li>
+</ul>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Tanpa operator pipe</a></li><li><a href="#tabset-1-2">Dengan operator pipe</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>wvs_data <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(wvs_data)</span>
+<span id="cb62-2"><a></a>wvs_sorted <span class="ot">&lt;-</span> <span class="fu">arrange</span>(wvs_data, <span class="fu">desc</span>(usia))</span>
+<span id="cb62-3"><a></a><span class="fu">write_csv</span>(wvs_sorted, <span class="st">"data-output/wvs-clean.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>wvs_data <span class="sc">|&gt;</span> </span>
+<span id="cb63-2"><a></a>    <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb63-3"><a></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(usia)) <span class="sc">|&gt;</span> </span>
+<span id="cb63-4"><a></a>    <span class="fu">write_csv</span>(<span class="st">"data-output/wvs-clean.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="skenario-data-wrangling-dengan-data-wvs" class="slide level2 smaller">
+<h2>Skenario: Data Wrangling dengan Data WVS</h2>
+<p><strong>Skenario</strong>: Kita adalah asisten peneliti yang menganalisis pola nilai dan kepuasan di berbagai negara.</p>
+<p>Langkah-langkah:</p>
+<ol type="1">
+<li class="fragment">Hapus semua baris dengan nilai kosong (NA) menggunakan <code>drop_na()</code></li>
+<li class="fragment">Periksa duplikasi data dengan <code>distinct()</code></li>
+<li class="fragment">Pilih kolom yang relevan dengan <code>select()</code></li>
+<li class="fragment">Saring responden berusia 18+ dengan <code>filter()</code></li>
+<li class="fragment">Buat kelompok usia dengan <code>mutate()</code> dan <code>case_when()</code></li>
+<li class="fragment">Simpan hasil ke CSV baru</li>
+</ol>
+</section>
+<section id="langkah-1-hapus-nilai-kosong" class="slide level2">
+<h2>Langkah #1: Hapus Nilai Kosong</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-36"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-36-1" class="code-annotation-target"><a href="#annotated-cell-36-1"></a>satisfaction_scores <span class="ot">&lt;-</span> satisfaction_scores[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)]</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-36-2" class="code-annotation-target"><a href="#annotated-cell-36-2"></a>satisfaction_scores <span class="ot">&lt;-</span> satisfaction_scores[satisfaction_scores <span class="sc">&lt;=</span> <span class="dv">7</span>]</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-36-3" class="code-annotation-target"><a href="#annotated-cell-36-3"></a>satisfaction_scores <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(satisfaction_scores)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-annotation">
-<dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
-<dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="1" data-code-annotation="1">Hapus elemen berdasarkan indeks menggunakan “negative indexing”</span>
-</dd>
-<dt data-target-cell="annotated-cell-36" data-target-annotation="2">2</dt>
-<dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="2" data-code-annotation="2">Hapus elemen berdasarkan kondisi menggunakan logical indexing. Hapus item yang bernilai FALSE.</span>
-</dd>
-<dt data-target-cell="annotated-cell-36" data-target-annotation="3">3</dt>
-<dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="3" data-code-annotation="3">Hapus nilai NA dari vektor</span>
-</dd>
-</dl>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>wvs_data <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span> </span>
+<span id="cb64-2"><a></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb64-3"><a></a></span>
+<span id="cb64-4"><a></a><span class="fu">dim</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6403   16</code></pre>
 </div>
 </div>
-
-
+</section>
+<section id="langkah-2-periksa-duplikasi" class="slide level2">
+<h2>Langkah #2: Periksa Duplikasi</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>wvs_data <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span> </span>
+<span id="cb66-2"><a></a>  <span class="fu">distinct</span>(id_responden, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="langkah-3-pilih-kolom-yang-relevan" class="slide level2">
+<h2>Langkah #3: Pilih Kolom yang Relevan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>wvs_data <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a></a>    <span class="fu">select</span>(id_responden, negara, jenis_kelamin, tahun_lahir, usia,</span>
+<span id="cb67-3"><a></a>           kepuasan_hidup, pentingnya_pekerjaan, kepuasan_finansial,</span>
+<span id="cb67-4"><a></a>           kebebasan_memilih, religiusitas, skala_politik,</span>
+<span id="cb67-5"><a></a>           status_pernikahan, status_pekerjaan) </span>
+<span id="cb67-6"><a></a></span>
+<span id="cb67-7"><a></a><span class="fu">glimpse</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 6,403
+Columns: 13
+$ id_responden         &lt;dbl&gt; 124070003, 124070004, 124070005, 124070006, 12407…
+$ negara               &lt;chr&gt; "Kanada", "Kanada", "Kanada", "Kanada", "Kanada",…
+$ jenis_kelamin        &lt;chr&gt; "Perempuan", "Laki-laki", "Perempuan", "Laki-laki…
+$ tahun_lahir          &lt;dbl&gt; 1944, 1951, 1984, 1975, 1988, 1982, 1981, 1985, 1…
+$ usia                 &lt;dbl&gt; 76, 69, 35, 45, 32, 38, 38, 34, 65, 31, 27, 33, 6…
+$ kepuasan_hidup       &lt;dbl&gt; 5, 8, 9, 7, 1, 7, 9, 6, 7, 6, 7, 10, 8, 10, 6, 7,…
+$ pentingnya_pekerjaan &lt;dbl&gt; 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 2, 4, 1, 3, 3, 4…
+$ kepuasan_finansial   &lt;dbl&gt; 8, 2, 8, 8, 9, 8, 9, 5, 6, 9, 5, 7, 9, 9, 7, 8, 9…
+$ kebebasan_memilih    &lt;dbl&gt; 7, 5, 8, 4, 7, 6, 9, 7, 8, 6, 8, 10, 8, 9, 7, 6, …
+$ religiusitas         &lt;dbl&gt; 9, 10, 3, 8, 3, 1, 3, 7, 5, 8, 5, 3, 3, 4, 3, 7, …
+$ skala_politik        &lt;dbl&gt; 10, 5, 2, 8, 6, 6, 7, 5, 6, 4, 5, 4, 1, 7, 2, 8, …
+$ status_pernikahan    &lt;chr&gt; "Pisah", "Menikah", "Kohabitasi", "Menikah", "Ber…
+$ status_pekerjaan     &lt;chr&gt; "Pensiunan", "Pensiunan", "Paruh waktu", "Penuh w…</code></pre>
+</div>
+</div>
+</section>
+<section id="langkah-4-filter-dan-urutkan" class="slide level2">
+<h2>Langkah #4: Filter dan Urutkan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>wvs_data <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span> </span>
+<span id="cb69-2"><a></a>    <span class="fu">filter</span>(usia <span class="sc">&gt;=</span> <span class="dv">18</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb69-3"><a></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(usia))</span>
+<span id="cb69-4"><a></a></span>
+<span id="cb69-5"><a></a><span class="fu">head</span>(wvs_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  id_responden negara        jenis_kelamin tahun_lahir  usia kepuasan_hidup
+         &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;
+1    124071434 Kanada        Laki-laki            1927    93              7
+2    554070524 Selandia Baru Perempuan            1928    91              5
+3    702070265 Singapura     Laki-laki            1930    90              8
+4    124071321 Kanada        Perempuan            1931    89              6
+5    124073566 Kanada        Perempuan            1930    89              6
+6    124074356 Kanada        Laki-laki            1931    89              8
+# ℹ 7 more variables: pentingnya_pekerjaan &lt;dbl&gt;, kepuasan_finansial &lt;dbl&gt;,
+#   kebebasan_memilih &lt;dbl&gt;, religiusitas &lt;dbl&gt;, skala_politik &lt;dbl&gt;,
+#   status_pernikahan &lt;chr&gt;, status_pekerjaan &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="langkah-5-buat-variabel-baru-dengan-mutate" class="slide level2">
+<h2>Langkah #5: Buat Variabel Baru dengan mutate()</h2>
+<p>Buat kelompok usia untuk setiap generasi:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>wvs_data <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span></span>
+<span id="cb71-2"><a></a>    <span class="fu">mutate</span>(<span class="at">kelompok_usia =</span> <span class="fu">case_when</span>(</span>
+<span id="cb71-3"><a></a>        usia <span class="sc">&lt;=</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">"18-28"</span>,</span>
+<span id="cb71-4"><a></a>        usia <span class="sc">&lt;=</span> <span class="dv">44</span> <span class="sc">~</span> <span class="st">"29-44"</span>,</span>
+<span id="cb71-5"><a></a>        usia <span class="sc">&lt;=</span> <span class="dv">60</span> <span class="sc">~</span> <span class="st">"45-60"</span>,</span>
+<span id="cb71-6"><a></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"61+"</span></span>
+<span id="cb71-7"><a></a>    ))</span>
+<span id="cb71-8"><a></a></span>
+<span id="cb71-9"><a></a>wvs_data <span class="sc">|&gt;</span></span>
+<span id="cb71-10"><a></a>    <span class="fu">select</span>(usia, kelompok_usia) <span class="sc">|&gt;</span></span>
+<span id="cb71-11"><a></a>    <span class="fu">head</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+   usia kelompok_usia
+  &lt;dbl&gt; &lt;chr&gt;        
+1    93 61+          
+2    91 61+          
+3    90 61+          
+4    89 61+          </code></pre>
+</div>
+</div>
+</section>
+<section id="checkpoint-menyimpan-hasil-ke-csv" class="slide level2">
+<h2>Checkpoint: Menyimpan Hasil ke CSV</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>wvs_data <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="st">"data-output/wvs_cleaned_v1.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Periksa folder <code>data-output</code> untuk memastikan file CSV sudah dibuat!</p>
+</section>
+<section id="konversi-ke-factor" class="slide level2">
+<h2>Konversi ke Factor</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a>kolom_faktor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"negara"</span>, <span class="st">"jenis_kelamin"</span>, <span class="st">"status_pernikahan"</span>, <span class="st">"status_pekerjaan"</span>)</span>
+<span id="cb74-2"><a></a></span>
+<span id="cb74-3"><a></a>wvs_cleaned <span class="ot">&lt;-</span> wvs_data <span class="sc">|&gt;</span> </span>
+<span id="cb74-4"><a></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(kolom_faktor), as_factor))</span>
+<span id="cb74-5"><a></a></span>
+<span id="cb74-6"><a></a><span class="fu">str</span>(wvs_cleaned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [6,403 × 14] (S3: tbl_df/tbl/data.frame)
+ $ id_responden        : num [1:6403] 1.24e+08 5.54e+08 7.02e+08 1.24e+08 1.24e+08 ...
+ $ negara              : Factor w/ 3 levels "Kanada","Selandia Baru",..: 1 2 3 1 1 1 2 1 1 2 ...
+ $ jenis_kelamin       : Factor w/ 2 levels "Laki-laki","Perempuan": 1 2 1 2 2 1 2 1 2 1 ...
+ $ tahun_lahir         : num [1:6403] 1927 1928 1930 1931 1930 ...
+ $ usia                : num [1:6403] 93 91 90 89 89 89 89 88 88 88 ...
+ $ kepuasan_hidup      : num [1:6403] 7 5 8 6 6 8 9 8 8 10 ...
+ $ pentingnya_pekerjaan: num [1:6403] 1 4 1 3 4 4 2 1 4 2 ...
+ $ kepuasan_finansial  : num [1:6403] 7 5 9 9 8 8 10 10 5 10 ...
+ $ kebebasan_memilih   : num [1:6403] 6 6 10 8 4 7 7 8 8 10 ...
+ $ religiusitas        : num [1:6403] 3 6 9 5 4 8 6 9 6 10 ...
+ $ skala_politik       : num [1:6403] 5 3 3 2 5 5 8 10 5 5 ...
+ $ status_pernikahan   : Factor w/ 6 levels "Janda/Duda","Lajang",..: 1 1 1 1 2 3 1 1 1 1 ...
+ $ status_pekerjaan    : Factor w/ 8 levels "Paruh waktu",..: 1 2 2 2 2 2 2 2 2 2 ...
+ $ kelompok_usia       : chr [1:6403] "61+" "61+" "61+" "61+" ...</code></pre>
+</div>
+</div>
+</section>
+<section id="analisis-deskriptif-group_by-summarize" class="slide level2">
+<h2>Analisis Deskriptif: group_by + summarize</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb76-2"><a></a>    <span class="fu">summarize</span>(</span>
+<span id="cb76-3"><a></a>        <span class="at">rata_rata =</span> <span class="fu">mean</span>(kepuasan_hidup),</span>
+<span id="cb76-4"><a></a>        <span class="at">sd =</span> <span class="fu">sd</span>(kepuasan_hidup),</span>
+<span id="cb76-5"><a></a>        <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb76-6"><a></a>        <span class="at">.by =</span> negara</span>
+<span id="cb76-7"><a></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  negara        rata_rata    sd     n
+  &lt;fct&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+1 Kanada             7.04  1.81  4018
+2 Selandia Baru      7.60  1.79   660
+3 Singapura          7.06  1.78  1725</code></pre>
+</div>
+</div>
+</section>
+<section id="analisis-deskriptif-grup-kepuasan" class="slide level2">
+<h2>Analisis Deskriptif: Grup Kepuasan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>wvs_cleaned <span class="ot">&lt;-</span> wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb78-2"><a></a>    <span class="fu">mutate</span>(</span>
+<span id="cb78-3"><a></a>        <span class="at">grup_kepuasan =</span> <span class="fu">if_else</span>(</span>
+<span id="cb78-4"><a></a>            kepuasan_hidup <span class="sc">&gt;</span> <span class="fu">mean</span>(kepuasan_hidup),</span>
+<span id="cb78-5"><a></a>            <span class="st">"Di Atas Rata-rata"</span>,</span>
+<span id="cb78-6"><a></a>            <span class="st">"Di Bawah Rata-rata"</span></span>
+<span id="cb78-7"><a></a>        )</span>
+<span id="cb78-8"><a></a>    )</span>
+<span id="cb78-9"><a></a></span>
+<span id="cb78-10"><a></a><span class="fu">table</span>(wvs_cleaned<span class="sc">$</span>negara, wvs_cleaned<span class="sc">$</span>grup_kepuasan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               
+                Di Atas Rata-rata Di Bawah Rata-rata
+  Kanada                     1878               2140
+  Selandia Baru               423                237
+  Singapura                   742                983</code></pre>
+</div>
+</div>
+</section>
+<section id="pivot-reshape-data" class="slide level2">
+<h2>Pivot: Reshape Data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb80-2"><a></a>    <span class="fu">summarize</span>(</span>
+<span id="cb80-3"><a></a>        <span class="at">rata_kepuasan =</span> <span class="fu">mean</span>(kepuasan_hidup),</span>
+<span id="cb80-4"><a></a>        <span class="at">.by =</span> <span class="fu">c</span>(negara, kelompok_usia)</span>
+<span id="cb80-5"><a></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb80-6"><a></a>    <span class="fu">pivot_wider</span>(</span>
+<span id="cb80-7"><a></a>        <span class="at">names_from =</span> kelompok_usia,</span>
+<span id="cb80-8"><a></a>        <span class="at">values_from =</span> rata_kepuasan</span>
+<span id="cb80-9"><a></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  negara        `61+` `45-60` `29-44` `18-28`
+  &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 Kanada         7.55    6.92    6.99    6.60
+2 Selandia Baru  7.96    7.38    7.32    6.70
+3 Singapura      7.17    7.05    7.09    6.85</code></pre>
+</div>
+</div>
+</section>
+<section id="latihan-tidyverse" class="slide level2 smaller">
+<h2>Latihan Tidyverse</h2>
+<blockquote>
+<p>Muat file <code>data/wvs2.csv</code>, gabungkan dengan <code>wvs_data</code> menggunakan <code>bind_rows()</code>. Saring hanya responden dari Indonesia, hitung rata-rata <code>kepuasan_hidup</code> per <code>jenis_kelamin</code>.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a>wvs2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/wvs2.csv"</span>)</span>
+<span id="cb82-2"><a></a>wvs_gabungan <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(wvs_data, wvs2)</span>
+<span id="cb82-3"><a></a></span>
+<span id="cb82-4"><a></a>wvs_gabungan <span class="sc">|&gt;</span> </span>
+<span id="cb82-5"><a></a>    <span class="fu">filter</span>(negara <span class="sc">==</span> <span class="st">"Indonesia"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb82-6"><a></a>    <span class="fu">summarize</span>(</span>
+<span id="cb82-7"><a></a>        <span class="at">rata_kepuasan =</span> <span class="fu">mean</span>(kepuasan_hidup, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb82-8"><a></a>        <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb82-9"><a></a>        <span class="at">.by =</span> jenis_kelamin</span>
+<span id="cb82-10"><a></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  jenis_kelamin rata_kepuasan     n
+  &lt;chr&gt;                 &lt;dbl&gt; &lt;int&gt;
+1 Laki-laki              7.38  1446
+2 Perempuan              7.69  1754</code></pre>
+</div>
+</div>
 </section></section>
+<section>
+<section id="bagian-3-visualisasi-dan-statistik-deskriptif" class="title-slide slide level1 center">
+<h1>Bagian 3: Visualisasi dan Statistik Deskriptif</h1>
+
+</section>
+<section id="statistik-deskriptif-ukuran-pemusatan" class="slide level2">
+<h2>Statistik Deskriptif: Ukuran Pemusatan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a><span class="fu">mean</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 47.96408</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">median</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 48</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>DescTools<span class="sc">::</span><span class="fu">Mode</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 54
+attr(,"freq")
+[1] 142</code></pre>
+</div>
+</div>
+</section>
+<section id="statistik-deskriptif-ukuran-penyebaran" class="slide level2">
+<h2>Statistik Deskriptif: Ukuran Penyebaran</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a><span class="fu">var</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 279.6066</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a><span class="fu">sd</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.72144</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">range</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18 93</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="fu">IQR</span>(wvs_cleaned<span class="sc">$</span>usia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 28</code></pre>
+</div>
+</div>
+</section>
+<section id="pengantar-ggplot2" class="slide level2">
+<h2>Pengantar ggplot2</h2>
+<ul>
+<li><code>ggplot2</code> adalah sistem visualisasi data berbasis “Grammar of Graphics”</li>
+<li>Setiap plot terdiri dari <strong>layers</strong>: data, aesthetic mapping, geom, dsb.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> variabel_x, <span class="at">y =</span> variabel_y)) <span class="sc">+</span></span>
+<span id="cb98-2"><a></a>  <span class="fu">geom_tipe_plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
+<p>Komponen utama:</p>
+<ul>
+<li class="fragment"><code>ggplot()</code>: inisialisasi plot dengan data</li>
+<li class="fragment"><code>aes()</code>: pemetaan variabel ke estetika visual (x, y, warna, dll.)</li>
+<li class="fragment"><code>geom_*()</code>: tipe geometri plot (titik, garis, bar, dll.)</li>
+<li class="fragment"><code>labs()</code>: label dan judul</li>
+</ul>
+</div>
+</section>
+<section id="histogram-distribusi-satu-variabel" class="slide level2">
+<h2>Histogram: Distribusi Satu Variabel</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> usia)) <span class="sc">+</span></span>
+<span id="cb99-2"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb99-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribusi Usia Responden"</span>,</span>
+<span id="cb99-4"><a></a>       <span class="at">x =</span> <span class="st">"Usia"</span>, <span class="at">y =</span> <span class="st">"Frekuensi"</span>) <span class="sc">+</span></span>
+<span id="cb99-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="histogram-distribusi-satu-variabel-output" class="slide level2 output-location-slide"><h2>Histogram: Distribusi Satu Variabel</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-48-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="boxplot-distribusi-per-grup" class="slide level2">
+<h2>Boxplot: Distribusi per Grup</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> negara, <span class="at">y =</span> kepuasan_hidup, <span class="at">fill =</span> negara)) <span class="sc">+</span></span>
+<span id="cb100-2"><a></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb100-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Kepuasan Hidup per Negara"</span>,</span>
+<span id="cb100-4"><a></a>       <span class="at">x =</span> <span class="st">"Negara"</span>, <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>) <span class="sc">+</span></span>
+<span id="cb100-5"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb100-6"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="boxplot-distribusi-per-grup-output" class="slide level2 output-location-slide"><h2>Boxplot: Distribusi per Grup</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-49-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="bar-chart-frekuensi-kategori" class="slide level2">
+<h2>Bar Chart: Frekuensi Kategori</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> negara, <span class="at">fill =</span> negara)) <span class="sc">+</span></span>
+<span id="cb101-2"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb101-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Jumlah Responden per Negara"</span>,</span>
+<span id="cb101-4"><a></a>       <span class="at">x =</span> <span class="st">"Negara"</span>, <span class="at">y =</span> <span class="st">"Jumlah"</span>) <span class="sc">+</span></span>
+<span id="cb101-5"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb101-6"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="bar-chart-frekuensi-kategori-output" class="slide level2 output-location-slide"><h2>Bar Chart: Frekuensi Kategori</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-50-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="pie-chart" class="slide level2">
+<h2>Pie Chart</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>proporsi_negara <span class="ot">&lt;-</span> wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb102-2"><a></a>  <span class="fu">count</span>(negara) <span class="sc">|&gt;</span> </span>
+<span id="cb102-3"><a></a>  <span class="fu">mutate</span>(<span class="at">persen =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb102-4"><a></a></span>
+<span id="cb102-5"><a></a><span class="fu">ggplot</span>(proporsi_negara, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> persen, <span class="at">fill =</span> negara)) <span class="sc">+</span></span>
+<span id="cb102-6"><a></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb102-7"><a></a>  <span class="fu">coord_polar</span>(<span class="at">theta =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb102-8"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proporsi Responden per Negara"</span>) <span class="sc">+</span></span>
+<span id="cb102-9"><a></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="pie-chart-output" class="slide level2 output-location-slide"><h2>Pie Chart</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-51-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="scatter-plot-hubungan-dua-variabel" class="slide level2">
+<h2>Scatter Plot: Hubungan Dua Variabel</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup)) <span class="sc">+</span></span>
+<span id="cb103-2"><a></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> <span class="fl">0.3</span>, <span class="at">height =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb103-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Kepuasan Finansial vs Kepuasan Hidup"</span>,</span>
+<span id="cb103-4"><a></a>       <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>, <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>) <span class="sc">+</span></span>
+<span id="cb103-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="scatter-plot-hubungan-dua-variabel-output" class="slide level2 output-location-slide"><h2>Scatter Plot: Hubungan Dua Variabel</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-52-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="scatter-plot-regresi-line" class="slide level2">
+<h2>Scatter Plot + Regresi Line</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup)) <span class="sc">+</span></span>
+<span id="cb104-2"><a></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">width =</span> <span class="fl">0.3</span>, <span class="at">height =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb104-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb104-4"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Kepuasan Finansial vs Kepuasan Hidup (dengan garis regresi)"</span>,</span>
+<span id="cb104-5"><a></a>       <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>, <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>) <span class="sc">+</span></span>
+<span id="cb104-6"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="scatter-plot-regresi-line-output" class="slide level2 output-location-slide"><h2>Scatter Plot + Regresi Line</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-53-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="latihan-visualisasi-1" class="slide level2 smaller">
+<h2>Latihan Visualisasi 1</h2>
+<blockquote>
+<p>Buat histogram <code>kepuasan_finansial</code> dengan <code>binwidth = 1</code>.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial)) <span class="sc">+</span></span>
+<span id="cb105-2"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb105-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribusi Kepuasan Finansial"</span>,</span>
+<span id="cb105-4"><a></a>       <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>, <span class="at">y =</span> <span class="st">"Frekuensi"</span>) <span class="sc">+</span></span>
+<span id="cb105-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="01-intro_files/figure-revealjs/unnamed-chunk-54-1.png" width="1344" class="r-stretch"></section>
+<section id="tabulasi-silang-cross-tabulation" class="slide level2">
+<h2>Tabulasi Silang (Cross Tabulation)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a></a><span class="fu">table</span>(wvs_cleaned<span class="sc">$</span>kelompok_usia, wvs_cleaned<span class="sc">$</span>negara)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+        Kanada Selandia Baru Singapura
+  18-28    712            27       246
+  29-44   1232           119       511
+  45-60   1061           222       550
+  61+     1013           292       418</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb108-2"><a></a>  <span class="fu">count</span>(negara, kelompok_usia) <span class="sc">|&gt;</span> </span>
+<span id="cb108-3"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> negara, <span class="at">values_from =</span> n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  kelompok_usia Kanada `Selandia Baru` Singapura
+  &lt;chr&gt;          &lt;int&gt;           &lt;int&gt;     &lt;int&gt;
+1 18-28            712              27       246
+2 29-44           1232             119       511
+3 45-60           1061             222       550
+4 61+             1013             292       418</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="stacked-bar-chart" class="slide level2">
+<h2>Stacked Bar Chart</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> negara, <span class="at">fill =</span> kelompok_usia)) <span class="sc">+</span></span>
+<span id="cb110-2"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb110-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribusi Kelompok Usia per Negara"</span>,</span>
+<span id="cb110-4"><a></a>       <span class="at">x =</span> <span class="st">"Negara"</span>, <span class="at">y =</span> <span class="st">"Jumlah"</span>, <span class="at">fill =</span> <span class="st">"Kelompok Usia"</span>) <span class="sc">+</span></span>
+<span id="cb110-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="stacked-bar-chart-output" class="slide level2 output-location-slide"><h2>Stacked Bar Chart</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-57-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="grouped-bar-chart" class="slide level2">
+<h2>Grouped Bar Chart</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> negara, <span class="at">fill =</span> kelompok_usia)) <span class="sc">+</span></span>
+<span id="cb111-2"><a></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb111-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribusi Kelompok Usia per Negara (Grouped)"</span>,</span>
+<span id="cb111-4"><a></a>       <span class="at">x =</span> <span class="st">"Negara"</span>, <span class="at">y =</span> <span class="st">"Jumlah"</span>, <span class="at">fill =</span> <span class="st">"Kelompok Usia"</span>) <span class="sc">+</span></span>
+<span id="cb111-5"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="grouped-bar-chart-output" class="slide level2 output-location-slide"><h2>Grouped Bar Chart</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-58-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="proportional-bar-chart" class="slide level2">
+<h2>Proportional Bar Chart</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> negara, <span class="at">fill =</span> kelompok_usia)) <span class="sc">+</span></span>
+<span id="cb112-2"><a></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb112-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proporsi Kelompok Usia per Negara"</span>,</span>
+<span id="cb112-4"><a></a>       <span class="at">x =</span> <span class="st">"Negara"</span>, <span class="at">y =</span> <span class="st">"Proporsi"</span>, <span class="at">fill =</span> <span class="st">"Kelompok Usia"</span>) <span class="sc">+</span></span>
+<span id="cb112-5"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb112-6"><a></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="proportional-bar-chart-output" class="slide level2 output-location-slide"><h2>Proportional Bar Chart</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-59-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="korelasi" class="slide level2">
+<h2>Korelasi</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">cor</span>(wvs_cleaned<span class="sc">$</span>kepuasan_finansial, wvs_cleaned<span class="sc">$</span>kepuasan_hidup)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6420311</code></pre>
+</div>
+</div>
+</section>
+<section id="faceting-plot-per-grup" class="slide level2">
+<h2>Faceting: Plot per Grup</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup)) <span class="sc">+</span></span>
+<span id="cb115-2"><a></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">width =</span> <span class="fl">0.3</span>, <span class="at">height =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb115-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb115-4"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> negara) <span class="sc">+</span></span>
+<span id="cb115-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Kepuasan Finansial vs Kepuasan Hidup per Negara"</span>,</span>
+<span id="cb115-6"><a></a>       <span class="at">x =</span> <span class="st">"Kepuasan Finansial"</span>, <span class="at">y =</span> <span class="st">"Kepuasan Hidup"</span>) <span class="sc">+</span></span>
+<span id="cb115-7"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="faceting-plot-per-grup-output" class="slide level2 output-location-slide"><h2>Faceting: Plot per Grup</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-61-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="matriks-korelasi" class="slide level2">
+<h2>Matriks Korelasi</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb116-2"><a></a></span>
+<span id="cb116-3"><a></a>wvs_cleaned <span class="sc">|&gt;</span> </span>
+<span id="cb116-4"><a></a>  <span class="fu">select</span>(kepuasan_hidup, kepuasan_finansial, religiusitas,</span>
+<span id="cb116-5"><a></a>         kebebasan_memilih, usia) <span class="sc">|&gt;</span> </span>
+<span id="cb116-6"><a></a>  <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb116-7"><a></a>  <span class="fu">corrplot</span>(<span class="at">method =</span> <span class="st">"color"</span>, <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb116-8"><a></a>           <span class="at">addCoef.col =</span> <span class="st">"black"</span>, <span class="at">number.cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb116-9"><a></a>           <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">tl.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="matriks-korelasi-output" class="slide level2 output-location-slide"><h2>Matriks Korelasi</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-62-1.png" width="1344"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="menyimpan-plot-ggsave" class="slide level2">
+<h2>Menyimpan Plot: ggsave()</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> kepuasan_finansial, <span class="at">y =</span> kepuasan_hidup)) <span class="sc">+</span></span>
+<span id="cb117-2"><a></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb117-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb117-4"><a></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb117-5"><a></a></span>
+<span id="cb117-6"><a></a><span class="fu">ggsave</span>(<span class="st">"output/scatter_kepuasan.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="latihan-visualisasi-2" class="slide level2 smaller">
+<h2>Latihan Visualisasi 2</h2>
+<blockquote>
+<p>Buat boxplot <code>kepuasan_finansial</code> per <code>jenis_kelamin</code>, dengan facet per <code>negara</code>.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Jawaban</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a><span class="fu">ggplot</span>(wvs_cleaned, <span class="fu">aes</span>(<span class="at">x =</span> jenis_kelamin, <span class="at">y =</span> kepuasan_finansial,</span>
+<span id="cb118-2"><a></a>                        <span class="at">fill =</span> jenis_kelamin)) <span class="sc">+</span></span>
+<span id="cb118-3"><a></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb118-4"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> negara) <span class="sc">+</span></span>
+<span id="cb118-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Kepuasan Finansial per Jenis Kelamin dan Negara"</span>,</span>
+<span id="cb118-6"><a></a>       <span class="at">x =</span> <span class="st">"Jenis Kelamin"</span>, <span class="at">y =</span> <span class="st">"Kepuasan Finansial"</span>) <span class="sc">+</span></span>
+<span id="cb118-7"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb118-8"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="01-intro_files/figure-revealjs/unnamed-chunk-64-1.png" width="1344" class="r-stretch"></section></section>
+<section>
+<section id="ringkasan-sesi-1" class="title-slide slide level1 center">
+<h1>Ringkasan Sesi 1</h1>
+
+</section>
+<section id="apa-yang-sudah-kita-pelajari" class="slide level2">
+<h2>Apa yang Sudah Kita Pelajari</h2>
+<ul>
+<li class="fragment"><strong>Dasar R</strong>: objek, tipe data, vektor, faktor, dataframe</li>
+<li class="fragment"><strong>Tidyverse</strong>: <code>select()</code>, <code>filter()</code>, <code>mutate()</code>, <code>case_when()</code>, <code>group_by()</code>, <code>summarize()</code>, <code>pivot_wider()</code></li>
+<li class="fragment"><strong>Visualisasi</strong>: histogram, boxplot, bar chart, pie chart, scatter plot, faceting, korelasi</li>
+</ul>
+</section>
+<section id="sesi-berikutnya" class="slide level2">
+<h2>Sesi Berikutnya</h2>
+<p><strong>Sesi 2: Analisis Regresi</strong></p>
+<ul>
+<li>Regresi linear sederhana dan berganda</li>
+<li>Diagnostik dan asumsi</li>
+<li>Variabel kategorikal dan interaksi</li>
+</ul>
+</section></section>
+<section id="akhir-sesi-1" class="title-slide slide level1 center">
+<h1>Akhir Sesi 1!</h1>
+<p>Terima kasih! Sampai jumpa di sesi berikutnya.</p>
+
+
+</section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -1214,6 +1889,82 @@ dbl (11): ID, family_importance, friends_importance, leisure_importance, wor...
         ]
       });
     </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")

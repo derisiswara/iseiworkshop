@@ -1,5 +1,5 @@
 ---
-title: "Pengantar R dan RStudio"
+title: "Pengantar R, Pengolahan Data, dan Visualisasi"
 author: "ISEI Workshop"
 format: revealjs
 ---
@@ -48,15 +48,23 @@ Gambar diambil dari [R for Data Science (2e)](https://r4ds.hadley.nz/intro) oleh
 
 ## Rencana Hari Ini
 
--   R dan RStudio
--   Sebelum coding
--   Objek dan Nilai di R
--   **Tipe** data
+**Bagian 1: Dasar-Dasar R**
+
+-   R dan RStudio, Objek, Nilai, dan Tipe data
 -   Fungsi dan paket
--   **Struktur** data
--   Mengeksplorasi dataset
--   Tips troubleshooting
--   Rekap & umpan balik
+-   Struktur data (vektor, faktor, dataframe)
+
+**Bagian 2: Pengolahan Data dengan Tidyverse**
+
+-   Import data CSV
+-   Data wrangling: filter, select, mutate, group_by, summarize
+-   Operator pipe (`|>`)
+
+**Bagian 3: Visualisasi dan Statistik Deskriptif**
+
+-   Statistik deskriptif univariat dan bivariat
+-   Visualisasi dengan ggplot2
+-   Faceting dan korelasi
 
 ## Apa itu R? Apa itu RStudio?
 
@@ -520,7 +528,7 @@ print(survey_data)
 
 Untuk workshop ini, kita akan mencoba memuat dataset dari file ke dalam dataframe!
 
-Buka situs web workshop dan kunjungi tab ['Dataset'](https://bellaratmelia.github.io/introductory-r-socsci/dataset.html) untuk mengunduh file data dan informasi tentang data WVS ini
+Buka situs web workshop dan kunjungi tab 'Dataset' untuk mengunduh file data dan informasi tentang data WVS ini
 
 Unduh CSV ini dan simpan di folder `data` di proyek R Anda!
 
@@ -549,7 +557,7 @@ Sebelum menggunakan read_csv, instal dan muat paket tidyverse. Instal paket hany
 #| output: true
 library(tidyverse)
 
-wvs_data <- read_csv("data/wvs-wave7-sg-ca-nz.csv")  
+wvs_data <- read_csv("data/wvs1.csv")  
 head(wvs_data)
 ```
 
@@ -587,8 +595,8 @@ Beberapa fungsi dasar dataframe sebelum kita lanjut ke data wrangling:
 #| output: false
 #| eval: false
 
-wvs_data["country"] # <1>
-wvs_data$country # <2>
+wvs_data["negara"] # <1>
+wvs_data$negara # <2>
 wvs_data[3]  # <3>
 wvs_data[1, 4] # <4> 
 wvs_data[3, ] # <5>
@@ -622,7 +630,7 @@ Dalam contoh kita, `country` seharusnya menjadi faktor!
 #| echo: true 
 #| output: true
 
-str(wvs_data$country)
+str(wvs_data$negara)
 ```
 
 Karena tidak ada urutan bawaan dalam nama negara, kategori kita akan tidak berurutan:
@@ -630,10 +638,10 @@ Karena tidak ada urutan bawaan dalam nama negara, kategori kita akan tidak berur
 ```{r}
 #| echo: true 
 #| output: true
-wvs_data$country <- factor(wvs_data$country)
+wvs_data$negara <- factor(wvs_data$negara)
 
 # periksa level kategori
-levels(wvs_data$country)
+levels(wvs_data$negara)
 ```
 
 Jika kita periksa strukturnya, kolom `country` seharusnya menjadi faktor bukan karakter sekarang:
@@ -641,22 +649,25 @@ Jika kita periksa strukturnya, kolom `country` seharusnya menjadi faktor bukan k
 #| echo: true 
 #| output: true
 
-str(wvs_data$country)
+str(wvs_data$negara)
 ```
 ## Mengonversi Kolom Dataframe ke Faktor - Berurutan
 
-Secara teknis, di dataset kita tidak ada variabel yang harus berurutan. Tapi sebagai contoh, misalkan kita ingin mengurutkan nilai kategorikal di `religiousity` dari non-believer ke believer. 
+Sebagai contoh faktor berurutan, misalkan kita ingin mengurutkan `status_pekerjaan` dari yang paling tidak aktif ke paling aktif secara ekonomi.
 
 ```{r}
 #| echo: true 
 #| output: true
-wvs_data$religiousity <- factor(wvs_data$religiousity,
-                                levels = c("An atheist", "Not a religious person", "A religious person", "Don't know"),
+wvs_data$status_pekerjaan <- factor(wvs_data$status_pekerjaan,
+                                levels = c("Tidak bekerja", "Pelajar/Mahasiswa", 
+                                           "Ibu rumah tangga", "Pensiunan",
+                                           "Paruh waktu", "Penuh waktu", 
+                                           "Wiraswasta", "Lainnya"),
                                 ordered = TRUE)
 
 # periksa level kategori dan struktur
-levels(wvs_data$religiousity)
-str(wvs_data$religiousity)
+levels(wvs_data$status_pekerjaan)
+str(wvs_data$status_pekerjaan)
 ```
 
 ## Trouble Shooting
@@ -701,53 +712,532 @@ Check. Did you...
 
 -   Paket: Kumpulan fungsi dan data untuk melakukan tugas. Perlu menginstal dan memuat paket.
 
+# Bagian 2: Pengolahan Data dengan Tidyverse
+
+## Garis Besar
+
+1.  Memuat data ke dalam lingkungan RStudio
+2.  Data wrangling dengan `dplyr` dan `tidyr` (bagian dari paket `tidyverse`)
+
+## Alat yang Akan Kita Gunakan: dplyr dan tidyr
+
+-   Paket dari `tidyverse`. ([klik di sini untuk ke halaman utama tidyverse](https://www.tidyverse.org/))
+
+-   Posit telah membuat cheatsheet:
+
+    -   [dplyr cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html) \| [versi pdf](https://rstudio.github.io/cheatsheets/data-transformation.pdf)
+
+    -   [tidyr cheatsheet](https://rstudio.github.io/cheatsheets/html/tidyr.html) \| [versi pdf](https://rstudio.github.io/cheatsheets/tidyr.pdf)
+
+-   Fungsi yang akan sering digunakan:
+
+    -   `drop_na()` - menghapus baris dengan nilai kosong (null)
+    -   `select()` - untuk memilih kolom dari dataframe
+    -   `filter()` - untuk menyaring baris berdasarkan kriteria
+    -   `mutate()` - untuk membuat kolom baru atau mengedit yang sudah ada
+    -   `if_else()` dan `case_when()` - membuat/mengedit kolom berdasarkan beberapa kriteria
+    -   `group_by()` dan `summarize()` - mengelompokkan data dan merangkum setiap kelompok
+
+## Mengapa Menggunakan Tidyverse?
+
+::: incremental
+-   Kode terlihat lebih mirip bahasa Inggris sehingga lebih intuitif bagi pemula
+-   Tidyverse mengikuti pola sintaks yang konsisten
+-   Pesan error yang lebih jelas dan membantu
+:::
+
+. . .
+
+```r
+# Base R
+subset_data <- data[data$usia > 18 & data$kepuasan_hidup > 5, c("negara", "usia")]
+
+# Tidyverse  
+subset_data <- data |> 
+  filter(usia > 18, kepuasan_hidup > 5)  |> 
+  select(negara, usia)
+```
+
+## Penyegaran: Memuat dari CSV ke Dataframe
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+# Baca file CSV data WVS (sudah diterjemahkan ke Bahasa Indonesia)
+wvs_data <- read_csv("data/wvs1.csv")
+glimpse(wvs_data)
+```
+
+## Operator Pipe ( \|\> )
+
+-   Operator pipe (\|\>) memungkinkan kita merangkai beberapa operasi tanpa membuat dataframe perantara.
+-   Pintasan keyboard: `Ctrl`+`Shift`+`M` di Windows, `Cmd`+`Shift`+`M` di Mac
+
+::: panel-tabset
+### Tanpa operator pipe
+
+```r
+wvs_data <- drop_na(wvs_data)
+wvs_sorted <- arrange(wvs_data, desc(usia))
+write_csv(wvs_sorted, "data-output/wvs-clean.csv")
+```
+
+### Dengan operator pipe
+
+```r
+wvs_data |> 
+    drop_na() |> 
+    arrange(desc(usia)) |> 
+    write_csv("data-output/wvs-clean.csv")
+```
+:::
+
+## Skenario: Data Wrangling dengan Data WVS {.smaller}
+
+**Skenario**: Kita adalah asisten peneliti yang menganalisis pola nilai dan kepuasan di berbagai negara.
+
+Langkah-langkah:
+
+::: incremental
+1.  Hapus semua baris dengan nilai kosong (NA) menggunakan `drop_na()`
+2.  Periksa duplikasi data dengan `distinct()`
+3.  Pilih kolom yang relevan dengan `select()`
+4.  Saring responden berusia 18+ dengan `filter()`
+5.  Buat kelompok usia dengan `mutate()` dan `case_when()`
+6.  Simpan hasil ke CSV baru
+:::
+
+## Langkah #1: Hapus Nilai Kosong
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |> 
+  drop_na()
+
+dim(wvs_data)
+```
+
+## Langkah #2: Periksa Duplikasi
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |> 
+  distinct(id_responden, .keep_all = TRUE)
+```
+
+## Langkah #3: Pilih Kolom yang Relevan
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |>
+    select(id_responden, negara, jenis_kelamin, tahun_lahir, usia,
+           kepuasan_hidup, pentingnya_pekerjaan, kepuasan_finansial,
+           kebebasan_memilih, religiusitas, skala_politik,
+           status_pernikahan, status_pekerjaan) 
+
+glimpse(wvs_data)
+```
+
+## Langkah #4: Filter dan Urutkan
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |> 
+    filter(usia >= 18) |> 
+    arrange(desc(usia))
+
+head(wvs_data)
+```
+
+## Langkah #5: Buat Variabel Baru dengan mutate()
+
+Buat kelompok usia untuk setiap generasi:
+
+```{r}
+#| echo: true
+wvs_data <- wvs_data |>
+    mutate(kelompok_usia = case_when(
+        usia <= 28 ~ "18-28",
+        usia <= 44 ~ "29-44",
+        usia <= 60 ~ "45-60",
+        TRUE ~ "61+"
+    ))
+
+wvs_data |>
+    select(usia, kelompok_usia) |>
+    head(4)
+```
+
+## Checkpoint: Menyimpan Hasil ke CSV
+
+```{r}
+#| echo: true
+wvs_data |> write_csv("data-output/wvs_cleaned_v1.csv")
+```
+
+Periksa folder `data-output` untuk memastikan file CSV sudah dibuat!
+
+## Konversi ke Factor
+
+```{r}
+#| echo: true
+kolom_faktor <- c("negara", "jenis_kelamin", "status_pernikahan", "status_pekerjaan")
+
+wvs_cleaned <- wvs_data |> 
+    mutate(across(all_of(kolom_faktor), as_factor))
+
+str(wvs_cleaned)
+```
+
+## Analisis Deskriptif: group_by + summarize
+
+```{r}
+#| echo: true
+wvs_cleaned |> 
+    summarize(
+        rata_rata = mean(kepuasan_hidup),
+        sd = sd(kepuasan_hidup),
+        n = n(),
+        .by = negara
+    )
+```
+
+## Analisis Deskriptif: Grup Kepuasan
+
+```{r}
+#| echo: true
+wvs_cleaned <- wvs_cleaned |> 
+    mutate(
+        grup_kepuasan = if_else(
+            kepuasan_hidup > mean(kepuasan_hidup),
+            "Di Atas Rata-rata",
+            "Di Bawah Rata-rata"
+        )
+    )
+
+table(wvs_cleaned$negara, wvs_cleaned$grup_kepuasan)
+```
+
+## Pivot: Reshape Data
+
+```{r}
+#| echo: true
+wvs_cleaned |> 
+    summarize(
+        rata_kepuasan = mean(kepuasan_hidup),
+        .by = c(negara, kelompok_usia)
+    ) |> 
+    pivot_wider(
+        names_from = kelompok_usia,
+        values_from = rata_kepuasan
+    )
+```
+
+## Latihan Tidyverse {.smaller}
+
+> Muat file `data/wvs2.csv`, gabungkan dengan `wvs_data` menggunakan `bind_rows()`. Saring hanya responden dari Indonesia, hitung rata-rata `kepuasan_hidup` per `jenis_kelamin`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+wvs2 <- read_csv("data/wvs2.csv")
+wvs_gabungan <- bind_rows(wvs_data, wvs2)
+
+wvs_gabungan |> 
+    filter(negara == "Indonesia") |> 
+    summarize(
+        rata_kepuasan = mean(kepuasan_hidup, na.rm = TRUE),
+        n = n(),
+        .by = jenis_kelamin
+    )
+```
+
+# Bagian 3: Visualisasi dan Statistik Deskriptif
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(DescTools)
+```
+
+## Statistik Deskriptif: Ukuran Pemusatan
+
+```{r}
+#| echo: true
+mean(wvs_cleaned$usia, na.rm = TRUE)
+median(wvs_cleaned$usia, na.rm = TRUE)
+DescTools::Mode(wvs_cleaned$usia, na.rm = TRUE)
+```
+
+## Statistik Deskriptif: Ukuran Penyebaran
+
+```{r}
+#| echo: true
+var(wvs_cleaned$usia, na.rm = TRUE)
+sd(wvs_cleaned$usia, na.rm = TRUE)
+range(wvs_cleaned$usia, na.rm = TRUE)
+IQR(wvs_cleaned$usia, na.rm = TRUE)
+```
+
+## Pengantar ggplot2
+
+-   `ggplot2` adalah sistem visualisasi data berbasis "Grammar of Graphics"
+-   Setiap plot terdiri dari **layers**: data, aesthetic mapping, geom, dsb.
+
+```r
+ggplot(data, aes(x = variabel_x, y = variabel_y)) +
+  geom_tipe_plot()
+```
+
+. . .
+
+Komponen utama:
+
+::: incremental
+-   `ggplot()`: inisialisasi plot dengan data
+-   `aes()`: pemetaan variabel ke estetika visual (x, y, warna, dll.)
+-   `geom_*()`: tipe geometri plot (titik, garis, bar, dll.)
+-   `labs()`: label dan judul
+:::
+
+## Histogram: Distribusi Satu Variabel
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = usia)) +
+  geom_histogram(binwidth = 5, fill = "steelblue", color = "white") +
+  labs(title = "Distribusi Usia Responden",
+       x = "Usia", y = "Frekuensi") +
+  theme_minimal()
+```
+
+## Boxplot: Distribusi per Grup
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = negara, y = kepuasan_hidup, fill = negara)) +
+  geom_boxplot() +
+  labs(title = "Kepuasan Hidup per Negara",
+       x = "Negara", y = "Kepuasan Hidup") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## Bar Chart: Frekuensi Kategori
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = negara, fill = negara)) +
+  geom_bar() +
+  labs(title = "Jumlah Responden per Negara",
+       x = "Negara", y = "Jumlah") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## Pie Chart
+
+```{r}
+#| echo: true
+#| output-location: slide
+proporsi_negara <- wvs_cleaned |> 
+  count(negara) |> 
+  mutate(persen = n / sum(n) * 100)
+
+ggplot(proporsi_negara, aes(x = "", y = persen, fill = negara)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Proporsi Responden per Negara") +
+  theme_void()
+```
+
+## Scatter Plot: Hubungan Dua Variabel
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.3, width = 0.3, height = 0.3) +
+  labs(title = "Kepuasan Finansial vs Kepuasan Hidup",
+       x = "Kepuasan Finansial", y = "Kepuasan Hidup") +
+  theme_minimal()
+```
+
+## Scatter Plot + Regresi Line
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.2, width = 0.3, height = 0.3) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Kepuasan Finansial vs Kepuasan Hidup (dengan garis regresi)",
+       x = "Kepuasan Finansial", y = "Kepuasan Hidup") +
+  theme_minimal()
+```
+
+## Latihan Visualisasi 1 {.smaller}
+
+> Buat histogram `kepuasan_finansial` dengan `binwidth = 1`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+ggplot(wvs_cleaned, aes(x = kepuasan_finansial)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
+  labs(title = "Distribusi Kepuasan Finansial",
+       x = "Kepuasan Finansial", y = "Frekuensi") +
+  theme_minimal()
+```
+
+## Tabulasi Silang (Cross Tabulation)
+
+```{r}
+#| echo: true
+table(wvs_cleaned$kelompok_usia, wvs_cleaned$negara)
+```
+
+. . .
+
+```{r}
+#| echo: true
+wvs_cleaned |> 
+  count(negara, kelompok_usia) |> 
+  pivot_wider(names_from = negara, values_from = n)
+```
+
+## Stacked Bar Chart
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = negara, fill = kelompok_usia)) +
+  geom_bar() +
+  labs(title = "Distribusi Kelompok Usia per Negara",
+       x = "Negara", y = "Jumlah", fill = "Kelompok Usia") +
+  theme_minimal()
+```
+
+## Grouped Bar Chart
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = negara, fill = kelompok_usia)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Distribusi Kelompok Usia per Negara (Grouped)",
+       x = "Negara", y = "Jumlah", fill = "Kelompok Usia") +
+  theme_minimal()
+```
+
+## Proportional Bar Chart
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = negara, fill = kelompok_usia)) +
+  geom_bar(position = "fill") +
+  labs(title = "Proporsi Kelompok Usia per Negara",
+       x = "Negara", y = "Proporsi", fill = "Kelompok Usia") +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent)
+```
+
+## Korelasi
+
+```{r}
+#| echo: true
+cor(wvs_cleaned$kepuasan_finansial, wvs_cleaned$kepuasan_hidup)
+```
+
+## Faceting: Plot per Grup
+
+```{r}
+#| echo: true
+#| output-location: slide
+ggplot(wvs_cleaned, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.2, width = 0.3, height = 0.3) +
+  geom_smooth(method = "lm", color = "red") +
+  facet_wrap(~ negara) +
+  labs(title = "Kepuasan Finansial vs Kepuasan Hidup per Negara",
+       x = "Kepuasan Finansial", y = "Kepuasan Hidup") +
+  theme_minimal()
+```
+
+## Matriks Korelasi
+
+```{r}
+#| echo: true
+#| output-location: slide
+library(corrplot)
+
+wvs_cleaned |> 
+  select(kepuasan_hidup, kepuasan_finansial, religiusitas,
+         kebebasan_memilih, usia) |> 
+  cor(use = "complete.obs") |> 
+  corrplot(method = "color", type = "upper",
+           addCoef.col = "black", number.cex = 0.8,
+           tl.col = "black", tl.cex = 0.8)
+```
+
+## Menyimpan Plot: ggsave()
+
+```{r}
+#| echo: true
+#| eval: false
+p <- ggplot(wvs_cleaned, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.2) +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+
+ggsave("output/scatter_kepuasan.png", plot = p, width = 8, height = 6, dpi = 300)
+```
+
+## Latihan Visualisasi 2 {.smaller}
+
+> Buat boxplot `kepuasan_finansial` per `jenis_kelamin`, dengan facet per `negara`.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+ggplot(wvs_cleaned, aes(x = jenis_kelamin, y = kepuasan_finansial,
+                        fill = jenis_kelamin)) +
+  geom_boxplot() +
+  facet_wrap(~ negara) +
+  labs(title = "Kepuasan Finansial per Jenis Kelamin dan Negara",
+       x = "Jenis Kelamin", y = "Kepuasan Finansial") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+# Ringkasan Sesi 1
+
+## Apa yang Sudah Kita Pelajari
+
+::: incremental
+-   **Dasar R**: objek, tipe data, vektor, faktor, dataframe
+-   **Tidyverse**: `select()`, `filter()`, `mutate()`, `case_when()`, `group_by()`, `summarize()`, `pivot_wider()`
+-   **Visualisasi**: histogram, boxplot, bar chart, pie chart, scatter plot, faceting, korelasi
+:::
+
+## Sesi Berikutnya
+
+**Sesi 2: Analisis Regresi**
+
+-   Regresi linear sederhana dan berganda
+-   Diagnostik dan asumsi
+-   Variabel kategorikal dan interaksi
+
 # Akhir Sesi 1!
 
-Sesi Berikutnya: Pengolahan data dengan paket `dplyr` dan `tidyr` - kita akan belajar cara:
-
--   Memfilter respons survei berdasarkan negara
-
--   Menghitung rata-rata skor kepuasan berdasarkan kelompok demografi
-
--   Membuat variabel baru dari yang sudah ada
-
--   Menangani nilai yang hilang dalam data survei
-
--   Dan banyak lagi!
-
-## Lampiran Manipulasi Vektor: Menambah Item
-
-Beberapa cara menambahkan item ke vektor
-
-```{r}
-#| echo: true
-#| eval: false
-#| 
-
-satisfaction_scores <- c(satisfaction_scores, 7) # <1>
-satisfaction_scores <- c(satisfaction_scores, 8, 9, 10) # <2>
-satisfaction_scores <- c(8, satisfaction_scores) # <3>
-satisfaction_scores <- append(satisfaction_scores, 9, after = 2) # <4>
-
-```
-
-1.  Tambah satu skor ke akhir vektor menggunakan c()
-2.  Tambah beberapa skor ke akhir
-3.  Tambah skor ke awal
-4.  Sisipkan skor di posisi tertentu menggunakan append(nama_vektor, elemen_yang_ditambahkan, dari_posisi)
-
-## Lampiran Manipulasi Vektor: Menghapus Item
-
-```{r}
-#| echo: true
-#| eval: false
-
-satisfaction_scores <- satisfaction_scores[-c(2, 4)] # <1>
-satisfaction_scores <- satisfaction_scores[satisfaction_scores <= 7] # <2>
-satisfaction_scores <- na.omit(satisfaction_scores) # <3>
-
-```
-
-1.  Hapus elemen berdasarkan indeks menggunakan "negative indexing"
-2.  Hapus elemen berdasarkan kondisi menggunakan logical indexing. Hapus item yang bernilai FALSE.
-3.  Hapus nilai NA dari vektor
+Terima kasih! Sampai jumpa di sesi berikutnya.

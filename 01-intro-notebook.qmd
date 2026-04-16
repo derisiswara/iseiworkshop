@@ -1,0 +1,151 @@
+---
+title: "Sesi 1: Pengantar R, Pengolahan Data, dan Visualisasi"
+subtitle: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+format: html
+execute:
+  warning: false
+  message: false
+---
+
+## 1. Pengantar R
+
+### Tipe Data Dasar
+
+```{r}
+x <- 42            # numeric
+nama <- "ISEI"     # character
+aktif <- TRUE       # logical
+
+class(x)
+class(nama)
+```
+
+### Vektor dan Operasi Dasar
+
+```{r}
+angka <- c(1, 2, 3, 4, 5)
+mean(angka)
+sd(angka)
+length(angka)
+```
+
+## 2. Muat Paket
+
+```{r}
+library(tidyverse)
+```
+
+## 3. Import Data
+
+```{r}
+wvs1 <- read.csv("data/wvs1.csv")
+wvs2 <- read.csv("data/wvs2.csv")
+
+# Gabungkan kedua dataset
+wvs <- bind_rows(wvs1, wvs2)
+glimpse(wvs)
+```
+
+## 4. Pengolahan Data dengan Tidyverse
+
+### Filter
+
+```{r}
+wvs |>
+  filter(usia >= 18, usia <= 65) |>
+  nrow()
+```
+
+### Select & Mutate
+
+```{r}
+wvs <- wvs |>
+  mutate(kelompok_usia = case_when(
+    usia < 30  ~ "Muda",
+    usia < 50  ~ "Dewasa",
+    TRUE       ~ "Senior"
+  ))
+
+wvs |>
+  select(negara, kelompok_usia, kepuasan_hidup) |>
+  head()
+```
+
+### Group By + Summarize
+
+```{r}
+wvs |>
+  summarize(
+    rata_rata = mean(kepuasan_hidup, na.rm = TRUE),
+    sd = sd(kepuasan_hidup, na.rm = TRUE),
+    n = n(),
+    .by = negara
+  )
+```
+
+## 5. Pembersihan Data
+
+```{r}
+wvs_clean <- wvs |>
+  filter(
+    kepuasan_hidup > 0,
+    kebebasan_memilih > 0,
+    kepuasan_finansial > 0,
+    usia > 0
+  ) |>
+  filter(jenis_kelamin %in% c("Laki-laki", "Perempuan"))
+
+nrow(wvs_clean)
+```
+
+## 6. Statistik Deskriptif
+
+```{r}
+wvs_clean |>
+  select(kepuasan_hidup, kebebasan_memilih, kepuasan_finansial, usia) |>
+  pivot_longer(everything(), names_to = "variabel", values_to = "nilai") |>
+  summarize(
+    M = mean(nilai), SD = sd(nilai),
+    Min = min(nilai), Max = max(nilai),
+    .by = variabel
+  )
+```
+
+```{r}
+table(wvs_clean$negara)
+```
+
+## 7. Visualisasi dengan ggplot2
+
+### Histogram
+
+```{r}
+ggplot(wvs_clean, aes(x = kepuasan_hidup)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
+  labs(title = "Distribusi Kepuasan Hidup", x = "Kepuasan Hidup", y = "Frekuensi")
+```
+
+### Boxplot per Negara
+
+```{r}
+ggplot(wvs_clean, aes(x = negara, y = kepuasan_hidup, fill = negara)) +
+  geom_boxplot() +
+  labs(title = "Kepuasan Hidup per Negara", x = "Negara", y = "Kepuasan Hidup") +
+  theme(legend.position = "none")
+```
+
+### Scatter Plot
+
+```{r}
+ggplot(wvs_clean, aes(x = kebebasan_memilih, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.1, width = 0.3, height = 0.3) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Kebebasan Memilih vs Kepuasan Hidup",
+       x = "Kebebasan Memilih", y = "Kepuasan Hidup")
+```
+
+## Latihan
+
+1. Buat boxplot `kepuasan_finansial` per `jenis_kelamin`
+2. Hitung rata-rata `kebebasan_memilih` per `negara` dan `jenis_kelamin`
+3. Filter hanya responden dari Indonesia, lalu buat histogram `usia`

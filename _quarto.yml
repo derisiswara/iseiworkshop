@@ -1,6 +1,18 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - index.qmd
+    - dataset.qmd
+    - coc.qmd
+    - resources.qmd
+    - exercises.qmd
+    - 01-intro.qmd
+    - 01-intro-notebook.qmd
+    - 02-regresi.qmd
+    - 02-regresi-notebook.qmd
+    - 03-sem.qmd
+    - 03-sem-notebook.qmd
 
 website:
   title: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"

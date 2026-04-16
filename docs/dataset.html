@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Dataset WVS – ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</title>
+<title>Dataset – ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -127,9 +127,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Di halaman ini</h2>
    
   <ul>
-  <li><a href="#data-untuk-sesi-3-dan-seterusnya" id="toc-data-untuk-sesi-3-dan-seterusnya" class="nav-link active" data-scroll-target="#data-untuk-sesi-3-dan-seterusnya">Data untuk sesi 3 dan seterusnya</a></li>
-  <li><a href="#kamus-data-data-dictionary-untuk-dataset-wvs" id="toc-kamus-data-data-dictionary-untuk-dataset-wvs" class="nav-link" data-scroll-target="#kamus-data-data-dictionary-untuk-dataset-wvs">Kamus Data (Data Dictionary) untuk Dataset WVS</a></li>
-  <li><a href="#referensi" id="toc-referensi" class="nav-link" data-scroll-target="#referensi">Referensi</a></li>
+  <li><a href="#dataset-untuk-sesi-1-2-world-values-survey-wvs" id="toc-dataset-untuk-sesi-1-2-world-values-survey-wvs" class="nav-link active" data-scroll-target="#dataset-untuk-sesi-1-2-world-values-survey-wvs">Dataset untuk Sesi 1 &amp; 2: World Values Survey (WVS)</a>
+  <ul class="collapse">
+  <li><a href="#file-data" id="toc-file-data" class="nav-link" data-scroll-target="#file-data">File Data</a></li>
+  <li><a href="#kamus-data-data-dictionary" id="toc-kamus-data-data-dictionary" class="nav-link" data-scroll-target="#kamus-data-data-dictionary">Kamus Data (Data Dictionary)</a></li>
+  </ul></li>
+  <li><a href="#dataset-untuk-sesi-3-sem" id="toc-dataset-untuk-sesi-3-sem" class="nav-link" data-scroll-target="#dataset-untuk-sesi-3-sem">Dataset untuk Sesi 3: SEM</a>
+  <ul class="collapse">
+  <li><a href="#cb-sem-sem_ecommerce.csv" id="toc-cb-sem-sem_ecommerce.csv" class="nav-link" data-scroll-target="#cb-sem-sem_ecommerce.csv">CB-SEM: <code>sem_ecommerce.csv</code></a></li>
+  <li><a href="#pls-sem-sem_innovation.csv" id="toc-pls-sem-sem_innovation.csv" class="nav-link" data-scroll-target="#pls-sem-sem_innovation.csv">PLS-SEM: <code>sem_innovation.csv</code></a></li>
+  <li><a href="#referensi-wvs" id="toc-referensi-wvs" class="nav-link" data-scroll-target="#referensi-wvs">Referensi WVS</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -138,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Dataset WVS</h1>
+<h1 class="title">Dataset</h1>
 </div>
 
 
@@ -155,11 +163,215 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Untuk workshop ini, kita akan menggunakan dataset yang disimpan dalam file CSV bernama <code>wvs-wave7-sg-ca-nz.csv</code>.</p>
-<a href="https://raw.githubusercontent.com/bellaratmelia/introductory-r-socsci/refs/heads/main/data/wvs-wave7-sg-ca-nz.csv" type="button" class="btn btn-success">Klik di sini untuk membuka wvs-wave7-sg-ca-nz.csv, lalu tekan Ctrl + S / Cmd + S untuk menyimpannya ke folder data Anda</a>
-<section id="data-untuk-sesi-3-dan-seterusnya" class="level3">
-<h3 class="anchored" data-anchor-id="data-untuk-sesi-3-dan-seterusnya">Data untuk sesi 3 dan seterusnya</h3>
-<p>Jika Anda melewatkan Sesi 2 di mana kita membersihkan dan merapikan data, Anda dapat mengunduh data yang sudah dibersihkan di sini: <a href="https://raw.githubusercontent.com/bellaratmelia/introductory-r-socsci/refs/heads/main/data-output/wvs_cleaned_v1.csv">wvs_cleaned_v1.csv</a></p>
+<p>Workshop ini menggunakan <strong>4 dataset</strong> untuk 3 sesi yang berbeda.</p>
+<section id="dataset-untuk-sesi-1-2-world-values-survey-wvs" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-untuk-sesi-1-2-world-values-survey-wvs">Dataset untuk Sesi 1 &amp; 2: World Values Survey (WVS)</h2>
+<p>Untuk sesi Pengantar R dan Analisis Regresi, kita menggunakan data dari <strong>World Values Survey Wave 7</strong> yang telah diterjemahkan ke Bahasa Indonesia.</p>
+<section id="file-data" class="level3">
+<h3 class="anchored" data-anchor-id="file-data">File Data</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Negara</th>
+<th>Keterangan</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wvs1.csv</code></td>
+<td>Singapura, Kanada, Selandia Baru</td>
+<td>Digunakan untuk latihan sesi 1 &amp; 2</td>
+</tr>
+<tr class="even">
+<td><code>wvs2.csv</code></td>
+<td>Singapura, Thailand, Indonesia</td>
+<td>Digunakan untuk latihan sesi 2 (regresi)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kedua file sudah tersedia di folder <code>data/</code> dalam repositori workshop. Jika Anda mengunduh secara terpisah, simpan di dalam folder <code>data/</code> pada project RStudio Anda.</p>
+</div>
+</div>
+</section>
+<section id="kamus-data-data-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="kamus-data-data-dictionary">Kamus Data (Data Dictionary)</h3>
+<p>Semua variabel sudah diterjemahkan ke Bahasa Indonesia. Berikut adalah 16 variabel yang tersedia:</p>
+<section id="variabel-identitas" class="level4">
+<h4 class="anchored" data-anchor-id="variabel-identitas">Variabel Identitas</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variabel</th>
+<th>Tipe</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>negara</code></td>
+<td>Karakter</td>
+<td>Kode negara: <code>Singapura</code>, <code>Kanada</code>, <code>Selandia Baru</code>, <code>Thailand</code>, <code>Indonesia</code></td>
+</tr>
+<tr class="even">
+<td><code>id_responden</code></td>
+<td>Numerik</td>
+<td>Identifikasi unik setiap responden</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variabel-pentingnya-aspek-kehidupan-skala-14-1-sangat-penting" class="level4">
+<h4 class="anchored" data-anchor-id="variabel-pentingnya-aspek-kehidupan-skala-14-1-sangat-penting">Variabel Pentingnya Aspek Kehidupan (Skala 1–4, 1 = sangat penting)</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variabel</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pentingnya_keluarga</code></td>
+<td>Seberapa penting keluarga dalam hidup responden</td>
+</tr>
+<tr class="even">
+<td><code>pentingnya_teman</code></td>
+<td>Seberapa penting teman dalam hidup responden</td>
+</tr>
+<tr class="odd">
+<td><code>pentingnya_waktu_luang</code></td>
+<td>Seberapa penting waktu luang</td>
+</tr>
+<tr class="even">
+<td><code>pentingnya_pekerjaan</code></td>
+<td>Seberapa penting pekerjaan</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variabel-persepsi-dan-kepuasan-skala-110" class="level4">
+<h4 class="anchored" data-anchor-id="variabel-persepsi-dan-kepuasan-skala-110">Variabel Persepsi dan Kepuasan (Skala 1–10)</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variabel</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>kebebasan_memilih</code></td>
+<td>Persepsi kebebasan memilih dan mengontrol hidup (10 = paling bebas)</td>
+</tr>
+<tr class="even">
+<td><code>kepuasan_hidup</code></td>
+<td>Kepuasan hidup secara keseluruhan (10 = paling puas)</td>
+</tr>
+<tr class="odd">
+<td><code>kepuasan_finansial</code></td>
+<td>Kepuasan terhadap kondisi keuangan (10 = paling puas)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variabel-politik-dan-agama" class="level4">
+<h4 class="anchored" data-anchor-id="variabel-politik-dan-agama">Variabel Politik dan Agama</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variabel</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>skala_politik</code></td>
+<td>Orientasi politik kiri–kanan (1 = kiri, 10 = kanan)</td>
+</tr>
+<tr class="even">
+<td><code>religiusitas</code></td>
+<td>Identifikasi keagamaan: <code>Religius</code>, <code>Tidak religius</code>, <code>Ateis</code>, <code>Tidak tahu</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variabel-demografi" class="level4">
+<h4 class="anchored" data-anchor-id="variabel-demografi">Variabel Demografi</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variabel</th>
+<th>Tipe</th>
+<th>Deskripsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>jenis_kelamin</code></td>
+<td>Karakter</td>
+<td><code>Laki-laki</code> atau <code>Perempuan</code></td>
+</tr>
+<tr class="even">
+<td><code>tahun_lahir</code></td>
+<td>Numerik</td>
+<td>Tahun lahir responden</td>
+</tr>
+<tr class="odd">
+<td><code>usia</code></td>
+<td>Numerik</td>
+<td>Usia responden</td>
+</tr>
+<tr class="even">
+<td><code>status_pernikahan</code></td>
+<td>Karakter</td>
+<td><code>Menikah</code>, <code>Tinggal bersama</code>, <code>Cerai</code>, <code>Berpisah</code>, <code>Janda/Duda</code>, <code>Lajang</code></td>
+</tr>
+<tr class="odd">
+<td><code>status_pekerjaan</code></td>
+<td>Karakter</td>
+<td><code>Penuh waktu</code>, <code>Paruh waktu</code>, <code>Wiraswasta</code>, <code>Pensiun</code>, <code>Ibu rumah tangga</code>, <code>Pelajar/Mahasiswa</code>, <code>Pengangguran</code></td>
+</tr>
+</tbody>
+</table>
+<p>Dokumentasi lengkap variabel tersedia di file <a href="data/wvs_variabel.md">wvs_variabel.md</a>.</p>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -170,92 +382,136 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>CSV (Comma-Separated Values) adalah jenis file yang menyimpan data dalam format teks biasa. Setiap baris dalam file mewakili satu baris data, dan di dalam setiap baris, potongan data individual (seperti angka atau kata) dipisahkan oleh koma.</p>
-<p>Format ini umumnya digunakan untuk menyimpan dan mentransfer data, terutama dalam spreadsheet dan database. Karena hanya berupa teks biasa, format ini ideal jika Anda memiliki data dalam jumlah besar.</p>
-<p>Anda dapat membuka file CSV di Excel, Google Sheets, atau bahkan Notepad!</p>
+<p>CSV (Comma-Separated Values) adalah jenis file yang menyimpan data dalam format teks biasa. Setiap baris mewakili satu baris data, dan setiap kolom dipisahkan oleh koma. Format ini umumnya digunakan untuk menyimpan dan mentransfer data. Anda dapat membuka file CSV di Excel, Google Sheets, atau bahkan Notepad.</p>
 </div>
 </div>
+<hr>
 </section>
-<section id="kamus-data-data-dictionary-untuk-dataset-wvs" class="level3">
-<h3 class="anchored" data-anchor-id="kamus-data-data-dictionary-untuk-dataset-wvs">Kamus Data (Data Dictionary) untuk Dataset WVS</h3>
-<p>World Values Survey (&lt;www.worldvaluessurvey.org&gt;) adalah jaringan global ilmuwan sosial yang mempelajari perubahan nilai dan dampaknya terhadap kehidupan sosial dan politik, dipimpin oleh tim peneliti internasional, dengan asosiasi dan sekretariat WVS yang berkantor pusat di Stockholm, Swedia.</p>
-<p>Kuesioner sebenarnya terdiri dari lebih dari 200 pertanyaan dengan responden dari berbagai negara. Untuk keperluan workshop ini, kita hanya menggunakan 16 variabel/pertanyaan dengan responden dari Kanada, Selandia Baru, dan Singapura. Ke-16 variabel tersebut adalah:</p>
-<dl>
-<dt><code>country</code></dt>
-<dd>
-<p>Character variable containing three-letter country codes: <code>CAN</code>, <code>NZL</code>, and <code>SGP</code></p>
-</dd>
-<dt><code>ID</code></dt>
-<dd>
-<p>Numeric identifier unique to each survey respondent</p>
-</dd>
-<dt><code>family_importance</code></dt>
-<dd>
-<p>Numeric scale from 1 to 4 measuring importance of family, where 1 indicates highest importance</p>
-</dd>
-<dt><code>friends_importance</code></dt>
-<dd>
-<p>Numeric scale from 1 to 4 measuring importance of friends, where 1 indicates highest importance</p>
-</dd>
-<dt><code>leisure_importance</code></dt>
-<dd>
-<p>Numeric scale from 1 to 4 measuring importance of leisure time, where 1 indicates highest importance</p>
-</dd>
-<dt><code>work_importance</code></dt>
-<dd>
-<p>Numeric scale from 1 to 4 measuring importance of work, where 1 indicates highest importance</p>
-</dd>
-<dt><code>freedom</code></dt>
-<dd>
-<p>Numeric scale from 1-10 measuring perceived freedom of choice and control, where 10 indicates most freedom</p>
-</dd>
-<dt><code>life_satisfaction</code></dt>
-<dd>
-<p>Numeric scale from 1-10 measuring overall life satisfaction, where 10 indicates highest satisfaction</p>
-</dd>
-<dt><code>financial_satisfaction</code></dt>
-<dd>
-<p>Numeric scale from 1-10 measuring satisfaction with financial situation, where 10 indicates highest satisfaction</p>
-</dd>
-<dt><code>religiousity</code></dt>
-<dd>
-<p>indicates religious self-identification: <code>A religious person</code>, <code>Not a religious person</code>, <code>An atheist</code></p>
-</dd>
-<dt><code>political_scale</code></dt>
-<dd>
-<p>Numeric scale from 1-10 measuring left-right political orientation, where 1 is left and 10 is right</p>
-</dd>
-<dt><code>sex</code></dt>
-<dd>
-<p>indicates respondent’s gender: <code>male</code> or <code>female</code></p>
-</dd>
-<dt><code>birthyear</code></dt>
-<dd>
-<p>Numeric variable indicating year of birth</p>
-</dd>
-<dt><code>age</code></dt>
-<dd>
-<p>Numeric variable indicating respondent’s age</p>
-</dd>
-<dt><code>marital_status</code></dt>
-<dd>
-<p>indicates current marital status: <code>Married</code>, <code>Living together as married</code>, <code>Divorced</code>, <code>Separated</code>, <code>Widowed</code>, <code>Single</code></p>
-</dd>
-<dt><code>employment</code></dt>
-<dd>
-<p>indicates current employment status: <code>Full time</code>, <code>Part time</code>, <code>Self employed</code>, <code>Retired/pensioned</code>, <code>Housewife not otherwise employed</code>, <code>Student</code>, <code>Unemployed</code></p>
-</dd>
-</dl>
-<p>Berikut adalah cuplikan pertanyaan-pertanyaan terpilih dan tampilannya dalam kuesioner:</p>
-<p><img src="images/Selected Questions for WVS-images-1.jpg" class="img-fluid"></p>
-<p><img src="images/Selected Questions for WVS-images-2.jpg" class="img-fluid"></p>
-<p>Jika Anda ingin mengetahui lebih lanjut tentang data ini, termasuk codebook dan kuesioner aslinya, kunjungi halaman berikut: <a href="https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp" class="uri">https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp</a></p>
 </section>
-<section id="referensi" class="level3">
-<h3 class="anchored" data-anchor-id="referensi">Referensi</h3>
+</section>
+<section id="dataset-untuk-sesi-3-sem" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-untuk-sesi-3-sem">Dataset untuk Sesi 3: SEM</h2>
+<p>Sesi SEM menggunakan <strong>2 dataset dummy</strong> yang dirancang dengan dasar teori yang kuat.</p>
+<section id="cb-sem-sem_ecommerce.csv" class="level3">
+<h3 class="anchored" data-anchor-id="cb-sem-sem_ecommerce.csv">CB-SEM: <code>sem_ecommerce.csv</code></h3>
+<p>Dataset kepuasan pelanggan e-commerce (n = 300) berdasarkan teori ACSI, SERVQUAL, dan Trust.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Konstruk</th>
+<th>Kode</th>
+<th>Indikator</th>
+<th>Teori</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kualitas Layanan</td>
+<td>SQ</td>
+<td>SQ1–SQ4</td>
+<td>SERVQUAL (Parasuraman et al.)</td>
+</tr>
+<tr class="even">
+<td>Persepsi Nilai</td>
+<td>PV</td>
+<td>PV1–PV3</td>
+<td>Perceived Value</td>
+</tr>
+<tr class="odd">
+<td>Kepercayaan</td>
+<td>TR</td>
+<td>TR1–TR4</td>
+<td>Trust Theory (McKnight et al.)</td>
+</tr>
+<tr class="even">
+<td>Kepuasan Pelanggan</td>
+<td>CS</td>
+<td>CS1–CS4</td>
+<td>ACSI (Fornell et al.)</td>
+</tr>
+<tr class="odd">
+<td>Loyalitas Pelanggan</td>
+<td>CL</td>
+<td>CL1–CL3</td>
+<td>Customer Loyalty</td>
+</tr>
+<tr class="even">
+<td>Niat Beli Ulang</td>
+<td>RI</td>
+<td>RI1–RI3</td>
+<td>Repurchase Intention</td>
+</tr>
+</tbody>
+</table>
+<p>Semua konstruk <strong>reflektif</strong> (Mode A). Skala Likert 1–7.</p>
+</section>
+<section id="pls-sem-sem_innovation.csv" class="level3">
+<h3 class="anchored" data-anchor-id="pls-sem-sem_innovation.csv">PLS-SEM: <code>sem_innovation.csv</code></h3>
+<p>Dataset inovasi dan kinerja UMKM (n = 200) berdasarkan Resource-Based View dan Market Orientation.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Konstruk</th>
+<th>Kode</th>
+<th>Mode</th>
+<th>Indikator</th>
+<th>Teori</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kapabilitas Inovasi</td>
+<td>IC</td>
+<td><strong>Formatif (B)</strong></td>
+<td>IC1–IC4</td>
+<td>RBV (Barney, 1991)</td>
+</tr>
+<tr class="even">
+<td>Orientasi Pasar</td>
+<td>MO</td>
+<td><strong>Formatif (B)</strong></td>
+<td>MO1–MO3</td>
+<td>Narver &amp; Slater (1990)</td>
+</tr>
+<tr class="odd">
+<td>Orientasi Kewirausahaan</td>
+<td>EO</td>
+<td><strong>Formatif (B)</strong></td>
+<td>EO1–EO3</td>
+<td>Lumpkin &amp; Dess (1996)</td>
+</tr>
+<tr class="even">
+<td>Keunggulan Bersaing</td>
+<td>CA</td>
+<td>Reflektif (A)</td>
+<td>CA1–CA4</td>
+<td>Competitive Advantage</td>
+</tr>
+<tr class="odd">
+<td>Kinerja Perusahaan</td>
+<td>FP</td>
+<td>Reflektif (A)</td>
+<td>FP1–FP4</td>
+<td>Firm Performance</td>
+</tr>
+</tbody>
+</table>
+<p>Skala Likert 1–7. Juga mengandung variabel kontrol: <code>firm_age</code>, <code>firm_size</code>, <code>industry</code>.</p>
+<hr>
+</section>
+<section id="referensi-wvs" class="level3">
+<h3 class="anchored" data-anchor-id="referensi-wvs">Referensi WVS</h3>
 <p>Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. &amp; Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: <a href="https://doi.org/10.14281/18241.18">doi.org/10.14281/18241.18</a></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Sesi 3: Structural Equation Modelling (SEM) – ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1e4874d212f1ba6c1811d5c22ac4f8ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Tidak ada hasil",
+    "search-matching-documents-text": "dokumen cocok",
+    "search-copy-link-title": "Salin tautan untuk mencari",
+    "search-hide-matches-text": "Sembunyikan kecocokan lainnya",
+    "search-more-match-text": "kecocokan lainnya di dokumen ini",
+    "search-more-matches-text": "kecocokan lainnya di dokumen ini",
+    "search-clear-button-title": "Hapus",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Batal",
+    "search-submit-button-title": "Kirim",
+    "search-label": "Mencari"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Mencari"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Alihkan navigasi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Beranda</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./dataset.html"> 
+<span class="menu-text">Dataset</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./coc.html"> 
+<span class="menu-text">Tata Tertib</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resources.html"> 
+<span class="menu-text">Sumber Referensi</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./exercises.html"> 
+<span class="menu-text">Latihan</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Di halaman ini</h2>
+   
+  <ul>
+  <li><a href="#bagian-a-cb-sem-dengan-lavaan" id="toc-bagian-a-cb-sem-dengan-lavaan" class="nav-link active" data-scroll-target="#bagian-a-cb-sem-dengan-lavaan">Bagian A: CB-SEM dengan lavaan</a>
+  <ul class="collapse">
+  <li><a href="#persiapan" id="toc-persiapan" class="nav-link" data-scroll-target="#persiapan">1. Persiapan</a></li>
+  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">2. Import Data</a></li>
+  <li><a href="#cfa-confirmatory-factor-analysis" id="toc-cfa-confirmatory-factor-analysis" class="nav-link" data-scroll-target="#cfa-confirmatory-factor-analysis">3. CFA (Confirmatory Factor Analysis)</a>
+  <ul class="collapse">
+  <li><a href="#standardized-loadings" id="toc-standardized-loadings" class="nav-link" data-scroll-target="#standardized-loadings">Standardized Loadings</a></li>
+  <li><a href="#cr-ave" id="toc-cr-ave" class="nav-link" data-scroll-target="#cr-ave">CR &amp; AVE</a></li>
+  </ul></li>
+  <li><a href="#full-sem" id="toc-full-sem" class="nav-link" data-scroll-target="#full-sem">4. Full SEM</a>
+  <ul class="collapse">
+  <li><a href="#path-coefficients" id="toc-path-coefficients" class="nav-link" data-scroll-target="#path-coefficients">Path Coefficients</a></li>
+  <li><a href="#r-squared" id="toc-r-squared" class="nav-link" data-scroll-target="#r-squared">R-squared</a></li>
+  <li><a href="#path-diagram" id="toc-path-diagram" class="nav-link" data-scroll-target="#path-diagram">Path Diagram</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#bagian-b-pls-sem-dengan-seminr" id="toc-bagian-b-pls-sem-dengan-seminr" class="nav-link" data-scroll-target="#bagian-b-pls-sem-dengan-seminr">Bagian B: PLS-SEM dengan seminr</a>
+  <ul class="collapse">
+  <li><a href="#persiapan-1" id="toc-persiapan-1" class="nav-link" data-scroll-target="#persiapan-1">5. Persiapan</a></li>
+  <li><a href="#import-data-1" id="toc-import-data-1" class="nav-link" data-scroll-target="#import-data-1">6. Import Data</a></li>
+  <li><a href="#spesifikasi-estimasi-model" id="toc-spesifikasi-estimasi-model" class="nav-link" data-scroll-target="#spesifikasi-estimasi-model">7. Spesifikasi &amp; Estimasi Model</a></li>
+  <li><a href="#evaluasi-model-pengukuran" id="toc-evaluasi-model-pengukuran" class="nav-link" data-scroll-target="#evaluasi-model-pengukuran">8. Evaluasi Model Pengukuran</a>
+  <ul class="collapse">
+  <li><a href="#reliabilitas" id="toc-reliabilitas" class="nav-link" data-scroll-target="#reliabilitas">Reliabilitas</a></li>
+  <li><a href="#loadings" id="toc-loadings" class="nav-link" data-scroll-target="#loadings">Loadings</a></li>
+  <li><a href="#discriminant-validity-htmt" id="toc-discriminant-validity-htmt" class="nav-link" data-scroll-target="#discriminant-validity-htmt">Discriminant Validity (HTMT)</a></li>
+  </ul></li>
+  <li><a href="#bootstrap" id="toc-bootstrap" class="nav-link" data-scroll-target="#bootstrap">9. Bootstrap</a></li>
+  <li><a href="#r-squared-dan-f-squared" id="toc-r-squared-dan-f-squared" class="nav-link" data-scroll-target="#r-squared-dan-f-squared">10. R-squared dan f-squared</a></li>
+  <li><a href="#latihan" id="toc-latihan" class="nav-link" data-scroll-target="#latihan">Latihan</a>
+  <ul class="collapse">
+  <li><a href="#latihan-1-modifikasi-cb-sem" id="toc-latihan-1-modifikasi-cb-sem" class="nav-link" data-scroll-target="#latihan-1-modifikasi-cb-sem">Latihan 1: Modifikasi CB-SEM</a></li>
+  <li><a href="#latihan-2-modifikasi-pls-sem" id="toc-latihan-2-modifikasi-pls-sem" class="nav-link" data-scroll-target="#latihan-2-modifikasi-pls-sem">Latihan 2: Modifikasi PLS-SEM</a></li>
+  <li><a href="#latihan-3-indirect-effects" id="toc-latihan-3-indirect-effects" class="nav-link" data-scroll-target="#latihan-3-indirect-effects">Latihan 3: Indirect Effects</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Sesi 3: Structural Equation Modelling (SEM)</h1>
+<p class="subtitle lead">ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="bagian-a-cb-sem-dengan-lavaan" class="level1">
+<h1>Bagian A: CB-SEM dengan lavaan</h1>
+<section id="persiapan" class="level2">
+<h2 class="anchored" data-anchor-id="persiapan">1. Persiapan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="import-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-data">2. Import Data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ecom <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/sem_ecommerce.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ecom)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 300
+Columns: 26
+$ id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+$ gender    &lt;chr&gt; "Perempuan", "Laki-laki", "Perempuan", "Perempuan", "Laki-la…
+$ age       &lt;dbl&gt; 50, 25, 48, 21, 43, 25, 39, 30, 54, 55, 46, 22, 46, 20, 32, …
+$ education &lt;chr&gt; "S2", "S1", "S2", "SMA", "D3", "S1", "S2", "SMA", "S2", "S1"…
+$ income    &lt;chr&gt; "6-10 juta", "&gt; 10 juta", "&lt; 3 juta", "3-6 juta", "6-10 juta…
+$ SQ1       &lt;dbl&gt; 5, 2, 4, 4, 3, 1, 3, 3, 4, 4, 3, 3, 4, 4, 1, 5, 5, 4, 3, 4, …
+$ SQ2       &lt;dbl&gt; 4, 3, 4, 5, 3, 2, 3, 3, 4, 4, 4, 4, 5, 4, 2, 4, 5, 4, 4, 6, …
+$ SQ3       &lt;dbl&gt; 5, 4, 4, 3, 4, 2, 3, 4, 3, 3, 4, 4, 5, 4, 2, 3, 5, 4, 3, 5, …
+$ SQ4       &lt;dbl&gt; 5, 3, 5, 5, 4, 2, 3, 3, 4, 4, 5, 3, 5, 4, 3, 5, 3, 3, 3, 4, …
+$ PV1       &lt;dbl&gt; 4, 3, 4, 3, 4, 4, 4, 3, 5, 4, 6, 4, 4, 3, 3, 6, 6, 5, 4, 5, …
+$ PV2       &lt;dbl&gt; 5, 5, 5, 3, 4, 3, 6, 3, 4, 3, 5, 4, 3, 2, 4, 6, 5, 4, 3, 3, …
+$ PV3       &lt;dbl&gt; 5, 3, 4, 4, 5, 2, 4, 2, 3, 3, 5, 3, 3, 2, 3, 7, 5, 5, 4, 5, …
+$ TR1       &lt;dbl&gt; 2, 3, 4, 5, 5, 3, 3, 4, 6, 4, 3, 4, 3, 4, 2, 4, 4, 4, 3, 5, …
+$ TR2       &lt;dbl&gt; 5, 3, 3, 5, 3, 2, 5, 4, 5, 3, 2, 4, 3, 5, 2, 4, 3, 4, 3, 4, …
+$ TR3       &lt;dbl&gt; 4, 3, 3, 4, 3, 3, 4, 4, 5, 4, 4, 4, 4, 5, 3, 5, 4, 4, 4, 5, …
+$ TR4       &lt;dbl&gt; 4, 3, 5, 3, 4, 3, 4, 5, 5, 1, 3, 2, 4, 5, 2, 4, 4, 4, 5, 5, …
+$ CS1       &lt;dbl&gt; 5, 3, 4, 3, 4, 2, 4, 4, 3, 3, 4, 4, 4, 4, 2, 5, 2, 4, 4, 5, …
+$ CS2       &lt;dbl&gt; 4, 3, 4, 4, 4, 3, 4, 4, 3, 4, 4, 3, 5, 5, 2, 3, 3, 3, 4, 5, …
+$ CS3       &lt;dbl&gt; 3, 3, 5, 5, 5, 4, 3, 4, 3, 4, 5, 4, 4, 5, 3, 5, 2, 4, 4, 5, …
+$ CS4       &lt;dbl&gt; 4, 3, 3, 6, 4, 2, 4, 4, 3, 3, 5, 3, 4, 5, 3, 5, 3, 4, 4, 4, …
+$ CL1       &lt;dbl&gt; 5, 5, 4, 4, 5, 3, 5, 4, 3, 3, 6, 3, 5, 5, 2, 4, 2, 4, 4, 4, …
+$ CL2       &lt;dbl&gt; 4, 4, 4, 4, 4, 2, 4, 5, 3, 4, 4, 3, 5, 5, 3, 4, 3, 3, 4, 4, …
+$ CL3       &lt;dbl&gt; 4, 4, 3, 4, 5, 2, 5, 5, 3, 4, 5, 1, 5, 5, 5, 4, 4, 3, 3, 5, …
+$ RI1       &lt;dbl&gt; 4, 4, 3, 3, 4, 4, 4, 5, 3, 3, 5, 3, 5, 6, 3, 5, 2, 4, 4, 4, …
+$ RI2       &lt;dbl&gt; 3, 4, 4, 4, 5, 3, 4, 5, 2, 2, 6, 3, 5, 4, 3, 4, 2, 3, 4, 6, …
+$ RI3       &lt;dbl&gt; 4, 4, 3, 5, 4, 2, 3, 5, 2, 2, 6, 3, 4, 5, 3, 4, 4, 3, 4, 6, …</code></pre>
+</div>
+</div>
+</section>
+<section id="cfa-confirmatory-factor-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="cfa-confirmatory-factor-analysis">3. CFA (Confirmatory Factor Analysis)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cfa_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  PV =~ PV1 + PV2 + PV3</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  TR =~ TR1 + TR2 + TR3 + TR4</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">  CS =~ CS1 + CS2 + CS3 + CS4</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  CL =~ CL1 + CL2 + CL3</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">  RI =~ RI1 + RI2 + RI3</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>cfa_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(cfa_model, <span class="at">data =</span> ecom)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(cfa_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+149.543 174.000   0.910   1.000   1.014   0.000   0.035 </code></pre>
+</div>
+</div>
+<section id="standardized-loadings" class="level3">
+<h3 class="anchored" data-anchor-id="standardized-loadings">Standardized Loadings</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">konstruk =</span> lhs, <span class="at">indikator =</span> rhs, <span class="at">loading =</span> est, <span class="at">std_loading =</span> std.all, <span class="at">p =</span> pvalue)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   konstruk indikator loading std_loading  p
+1        SQ       SQ1   1.000       0.834 NA
+2        SQ       SQ2   0.859       0.779  0
+3        SQ       SQ3   0.783       0.709  0
+4        SQ       SQ4   0.718       0.635  0
+5        PV       PV1   1.000       0.740 NA
+6        PV       PV2   1.041       0.727  0
+7        PV       PV3   1.086       0.744  0
+8        TR       TR1   1.000       0.738 NA
+9        TR       TR2   1.098       0.799  0
+10       TR       TR3   1.053       0.760  0
+11       TR       TR4   0.922       0.652  0
+12       CS       CS1   1.000       0.774 NA
+13       CS       CS2   0.877       0.679  0
+14       CS       CS3   0.877       0.631  0
+15       CS       CS4   0.781       0.604  0
+16       CL       CL1   1.000       0.726 NA
+17       CL       CL2   0.827       0.565  0
+18       CL       CL3   1.114       0.708  0
+19       RI       RI1   1.000       0.688 NA
+20       RI       RI2   1.080       0.682  0
+21       RI       RI3   1.092       0.691  0</code></pre>
+</div>
+</div>
+</section>
+<section id="cr-ave" class="level3">
+<h3 class="anchored" data-anchor-id="cr-ave">CR &amp; AVE</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>std_load <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(cfa_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">konstruk =</span> lhs, <span class="at">loading =</span> std.all)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>std_load <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_items =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">AVE =</span> <span class="fu">mean</span>(loading<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">CR =</span> <span class="fu">sum</span>(loading)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">sum</span>(loading)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">sum</span>(<span class="dv">1</span> <span class="sc">-</span> loading<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> konstruk</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  konstruk n_items       AVE        CR
+1       SQ       4 0.5525085 0.8301907
+2       PV       3 0.5429089 0.7808402
+3       TR       4 0.5465686 0.8274624
+4       CS       4 0.4557069 0.7684247
+5       CL       3 0.4489746 0.7072876
+6       RI       3 0.4720857 0.7284573</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="full-sem" class="level2">
+<h2 class="anchored" data-anchor-id="full-sem">4. Full SEM</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sem_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">  SQ =~ SQ1 + SQ2 + SQ3 + SQ4</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">  PV =~ PV1 + PV2 + PV3</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">  TR =~ TR1 + TR2 + TR3 + TR4</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">  CS =~ CS1 + CS2 + CS3 + CS4</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">  CL =~ CL1 + CL2 + CL3</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">  RI =~ RI1 + RI2 + RI3</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">  CS ~ SQ + PV + TR</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">  CL ~ CS + TR</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="st">  RI ~ CS + CL</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>sem_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model, <span class="at">data =</span> ecom)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(sem_fit, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>))</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+152.229 179.000   0.927   1.000   1.015   0.000   0.036 </code></pre>
+</div>
+</div>
+<section id="path-coefficients" class="level3">
+<h3 class="anchored" data-anchor-id="path-coefficients">Path Coefficients</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(sem_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"~"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">DV =</span> lhs, <span class="at">IV =</span> rhs, <span class="at">B =</span> est, <span class="at">SE =</span> se, <span class="at">Z =</span> z, <span class="at">p =</span> pvalue, <span class="at">Beta =</span> std.all) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sig =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="st">"Ya"</span>, <span class="st">"Tidak"</span>))</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  DV IV     B    SE     Z     p  Beta Sig
+1 CS SQ 0.257 0.057 4.505 0.000 0.320  Ya
+2 CS PV 0.238 0.066 3.595 0.000 0.234  Ya
+3 CS TR 0.337 0.068 4.920 0.000 0.359  Ya
+4 CL CS 0.466 0.084 5.579 0.000 0.522  Ya
+5 CL TR 0.170 0.071 2.411 0.016 0.203  Ya
+6 RI CS 0.319 0.081 3.929 0.000 0.403  Ya
+7 RI CL 0.309 0.094 3.284 0.001 0.349  Ya</code></pre>
+</div>
+</div>
+</section>
+<section id="r-squared" class="level3">
+<h3 class="anchored" data-anchor-id="r-squared">R-squared</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavInspect</span>(sem_fit, <span class="st">"r2"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  SQ1   SQ2   SQ3   SQ4   PV1   PV2   PV3   TR1   TR2   TR3   TR4   CS1   CS2 
+0.696 0.607 0.503 0.404 0.548 0.533 0.547 0.545 0.637 0.579 0.425 0.602 0.463 
+  CS3   CS4   CL1   CL2   CL3   RI1   RI2   RI3    CS    CL    RI 
+0.398 0.368 0.525 0.322 0.503 0.474 0.466 0.477 0.452 0.430 0.463 </code></pre>
+</div>
+</div>
+</section>
+<section id="path-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="path-diagram">Path Diagram</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(sem_fit, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>, <span class="at">sizeMan =</span> <span class="dv">6</span>, <span class="at">sizeLat =</span> <span class="dv">8</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"lisrel"</span>, <span class="at">residuals =</span> <span class="cn">FALSE</span>, <span class="at">rotation =</span> <span class="dv">2</span>, <span class="at">nCharNodes =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-sem-notebook_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="bagian-b-pls-sem-dengan-seminr" class="level1">
+<h1>Bagian B: PLS-SEM dengan seminr</h1>
+<section id="persiapan-1" class="level2">
+<h2 class="anchored" data-anchor-id="persiapan-1">5. Persiapan</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(seminr)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="import-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-1">6. Import Data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>inov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/sem_innovation.csv"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(inov)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 200
+Columns: 22
+$ id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+$ IC1       &lt;dbl&gt; 5, 3, 5, 4, 4, 1, 4, 3, 5, 4, 4, 4, 4, 4, 1, 6, 5, 5, 4, 5, …
+$ IC2       &lt;dbl&gt; 4, 5, 5, 3, 4, 7, 4, 4, 5, 7, 4, 6, 4, 4, 4, 6, 5, 6, 6, 7, …
+$ IC3       &lt;dbl&gt; 6, 6, 4, 5, 4, 3, 7, 7, 5, 4, 6, 4, 6, 6, 5, 5, 6, 6, 5, 5, …
+$ IC4       &lt;dbl&gt; 6, 4, 4, 5, 4, 4, 4, 4, 3, 5, 5, 3, 7, 4, 4, 2, 4, 3, 5, 5, …
+$ MO1       &lt;dbl&gt; 3, 4, 4, 4, 6, 5, 6, 5, 5, 7, 4, 5, 7, 5, 7, 3, 5, 4, 3, 4, …
+$ MO2       &lt;dbl&gt; 7, 6, 6, 4, 6, 4, 5, 5, 4, 5, 6, 5, 3, 3, 4, 3, 5, 4, 4, 2, …
+$ MO3       &lt;dbl&gt; 5, 6, 5, 4, 6, 3, 6, 5, 2, 4, 6, 2, 6, 6, 6, 5, 4, 3, 5, 4, …
+$ EO1       &lt;dbl&gt; 7, 2, 3, 6, 6, 4, 3, 3, 6, 2, 4, 5, 4, 5, 7, 4, 5, 4, 5, 4, …
+$ EO2       &lt;dbl&gt; 3, 6, 4, 6, 4, 6, 4, 4, 5, 3, 4, 4, 6, 3, 6, 4, 4, 6, 5, 6, …
+$ EO3       &lt;dbl&gt; 3, 4, 5, 4, 6, 5, 4, 4, 4, 4, 6, 4, 6, 5, 3, 4, 3, 7, 5, 5, …
+$ CA1       &lt;dbl&gt; 4, 4, 4, 4, 3, 4, 4, 3, 4, 4, 4, 4, 4, 4, 5, 4, 3, 5, 3, 4, …
+$ CA2       &lt;dbl&gt; 4, 4, 2, 4, 4, 5, 5, 4, 3, 4, 4, 4, 4, 4, 5, 4, 5, 4, 4, 5, …
+$ CA3       &lt;dbl&gt; 5, 4, 2, 4, 3, 4, 4, 3, 3, 3, 4, 4, 4, 3, 4, 3, 5, 5, 5, 4, …
+$ CA4       &lt;dbl&gt; 3, 4, 5, 3, 4, 5, 5, 2, 4, 3, 4, 2, 4, 5, 5, 3, 5, 4, 3, 4, …
+$ FP1       &lt;dbl&gt; 4, 5, 4, 4, 3, 4, 3, 5, 4, 4, 3, 4, 4, 4, 4, 3, 6, 4, 4, 3, …
+$ FP2       &lt;dbl&gt; 4, 5, 3, 3, 4, 4, 5, 5, 4, 5, 4, 3, 5, 4, 5, 4, 4, 5, 4, 4, …
+$ FP3       &lt;dbl&gt; 5, 4, 4, 3, 5, 4, 4, 4, 4, 5, 3, 4, 5, 5, 4, 4, 4, 5, 3, 3, …
+$ FP4       &lt;dbl&gt; 4, 5, 4, 5, 3, 4, 4, 5, 5, 4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 4, …
+$ firm_size &lt;chr&gt; "Menengah", "Kecil", "Kecil", "Kecil", "Menengah", "Kecil", …
+$ sector    &lt;chr&gt; "Manufaktur", "Perdagangan", "Teknologi", "Manufaktur", "Man…
+$ firm_age  &lt;dbl&gt; 12, 12, 16, 17, 2, 17, 12, 2, 3, 5, 14, 17, 7, 24, 11, 18, 2…</code></pre>
+</div>
+</div>
+</section>
+<section id="spesifikasi-estimasi-model" class="level2">
+<h2 class="anchored" data-anchor-id="spesifikasi-estimasi-model">7. Spesifikasi &amp; Estimasi Model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">constructs</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite</span>(<span class="st">"IC"</span>, <span class="fu">multi_items</span>(<span class="st">"IC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_B),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite</span>(<span class="st">"MO"</span>, <span class="fu">multi_items</span>(<span class="st">"MO"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">weights =</span> mode_B),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite</span>(<span class="st">"EO"</span>, <span class="fu">multi_items</span>(<span class="st">"EO"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">weights =</span> mode_B),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite</span>(<span class="st">"CA"</span>, <span class="fu">multi_items</span>(<span class="st">"CA"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_A),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">composite</span>(<span class="st">"FP"</span>, <span class="fu">multi_items</span>(<span class="st">"FP"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">weights =</span> mode_A)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>sm <span class="ot">&lt;-</span> <span class="fu">relationships</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="fu">c</span>(<span class="st">"IC"</span>, <span class="st">"MO"</span>, <span class="st">"EO"</span>), <span class="at">to =</span> <span class="st">"CA"</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paths</span>(<span class="at">from =</span> <span class="fu">c</span>(<span class="st">"CA"</span>, <span class="st">"IC"</span>), <span class="at">to =</span> <span class="st">"FP"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>pls_model <span class="ot">&lt;-</span> <span class="fu">estimate_pls</span>(<span class="at">data =</span> inov,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">measurement_model =</span> mm, <span class="at">structural_model =</span> sm)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>pls_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(pls_model)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="evaluasi-model-pengukuran" class="level2">
+<h2 class="anchored" data-anchor-id="evaluasi-model-pengukuran">8. Evaluasi Model Pengukuran</h2>
+<section id="reliabilitas" class="level3">
+<h3 class="anchored" data-anchor-id="reliabilitas">Reliabilitas</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pls_summary<span class="sc">$</span>reliability</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    alpha  rhoC   AVE  rhoA
+IC -0.108 0.524 0.234 1.000
+MO  0.180 0.631 0.380 1.000
+EO  0.090 0.479 0.342 1.000
+CA  0.547 0.742 0.423 0.578
+FP  0.493 0.724 0.397 0.498
+
+Alpha, rhoC, and rhoA should exceed 0.7 while AVE should exceed 0.5</code></pre>
+</div>
+</div>
+</section>
+<section id="loadings" class="level3">
+<h3 class="anchored" data-anchor-id="loadings">Loadings</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pls_summary<span class="sc">$</span>loadings</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        IC     MO     EO     CA     FP
+IC1  0.208 -0.000 -0.000  0.000  0.000
+IC2  0.595  0.000 -0.000  0.000  0.000
+IC3  0.463  0.000 -0.000  0.000  0.000
+IC4  0.571  0.000  0.000  0.000  0.000
+MO1  0.000  0.661  0.000  0.000  0.000
+MO2 -0.000  0.371  0.000  0.000 -0.000
+MO3 -0.000  0.751  0.000  0.000  0.000
+EO1 -0.000  0.000  0.914  0.000  0.000
+EO2 -0.000  0.000  0.436  0.000  0.000
+EO3  0.000 -0.000 -0.001 -0.000  0.000
+CA1  0.000  0.000  0.000  0.644  0.000
+CA2  0.000  0.000  0.000  0.784  0.000
+CA3  0.000  0.000  0.000  0.609  0.000
+CA4 -0.000  0.000  0.000  0.539  0.000
+FP1  0.000  0.000  0.000  0.000  0.623
+FP2  0.000  0.000  0.000  0.000  0.655
+FP3  0.000  0.000  0.000  0.000  0.677
+FP4  0.000  0.000  0.000  0.000  0.560</code></pre>
+</div>
+</div>
+</section>
+<section id="discriminant-validity-htmt" class="level3">
+<h3 class="anchored" data-anchor-id="discriminant-validity-htmt">Discriminant Validity (HTMT)</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pls_summary<span class="sc">$</span>validity<span class="sc">$</span>htmt</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      IC    MO    EO    CA FP
+IC     .     .     .     .  .
+MO 1.300     .     .     .  .
+EO 1.395 1.750     .     .  .
+CA 0.581 1.231 0.977     .  .
+FP 0.720 0.706 0.832 0.566  .</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="bootstrap" class="level2">
+<h2 class="anchored" data-anchor-id="bootstrap">9. Bootstrap</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>boot_model <span class="ot">&lt;-</span> <span class="fu">bootstrap_model</span>(pls_model, <span class="at">nboot =</span> <span class="dv">1000</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>boot_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(boot_model)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>boot_summary<span class="sc">$</span>bootstrapped_paths</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Original Est. Bootstrap Mean Bootstrap SD T Stat. 2.5% CI 97.5% CI
+IC  -&gt;  CA         0.120          0.135        0.081   1.474  -0.040    0.279
+IC  -&gt;  FP         0.175          0.192        0.101   1.726  -0.040    0.370
+MO  -&gt;  CA         0.364          0.373        0.061   5.996   0.251    0.486
+EO  -&gt;  CA         0.129          0.152        0.070   1.859   0.013    0.283
+CA  -&gt;  FP         0.282          0.291        0.079   3.561   0.123    0.427</code></pre>
+</div>
+</div>
+</section>
+<section id="r-squared-dan-f-squared" class="level2">
+<h2 class="anchored" data-anchor-id="r-squared-dan-f-squared">10. R-squared dan f-squared</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pls_summary<span class="sc">$</span>paths</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          CA    FP
+R^2    0.191 0.126
+AdjR^2 0.178 0.117
+IC     0.120 0.175
+MO     0.364     .
+EO     0.129     .
+CA         . 0.282</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pls_summary<span class="sc">$</span>fSquare</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      IC    MO    EO    CA    FP
+IC 0.000 0.000 0.000 0.017 0.032
+MO 0.000 0.000 0.000 0.144 0.000
+EO 0.000 0.000 0.000 0.020 0.000
+CA 0.000 0.000 0.000 0.000 0.080
+FP 0.000 0.000 0.000 0.000 0.000</code></pre>
+</div>
+</div>
+</section>
+<section id="latihan" class="level2">
+<h2 class="anchored" data-anchor-id="latihan">Latihan</h2>
+<section id="latihan-1-modifikasi-cb-sem" class="level3">
+<h3 class="anchored" data-anchor-id="latihan-1-modifikasi-cb-sem">Latihan 1: Modifikasi CB-SEM</h3>
+<p>Hapus path TR -&gt; CL dari model CB-SEM dan bandingkan fit.</p>
+</section>
+<section id="latihan-2-modifikasi-pls-sem" class="level3">
+<h3 class="anchored" data-anchor-id="latihan-2-modifikasi-pls-sem">Latihan 2: Modifikasi PLS-SEM</h3>
+<p>Tambahkan MO -&gt; FP dan bandingkan R-squared FP.</p>
+</section>
+<section id="latihan-3-indirect-effects" class="level3">
+<h3 class="anchored" data-anchor-id="latihan-3-indirect-effects">Latihan 3: Indirect Effects</h3>
+<p>Hitung efek tidak langsung IC -&gt; CA -&gt; FP.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Disalin!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Disalin!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>ISEI Workshop: Analisis Regresi dan Structural Equation Modelling (SEM) dengan RStudio — Dibuat dengan <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,123 +1,115 @@
 ---
-title: "Dataset WVS"
+title: "Dataset"
 format: html
 ---
 
-Untuk workshop ini, kita akan menggunakan dataset yang disimpan dalam file CSV bernama `wvs-wave7-sg-ca-nz.csv`.
+Workshop ini menggunakan **4 dataset** untuk 3 sesi yang berbeda.
 
-```{=html}
-<a href="https://raw.githubusercontent.com/bellaratmelia/introductory-r-socsci/refs/heads/main/data/wvs-wave7-sg-ca-nz.csv" type="button" class="btn btn-success">Klik di sini untuk membuka wvs-wave7-sg-ca-nz.csv, lalu tekan Ctrl + S / Cmd + S untuk menyimpannya ke folder data Anda</a>
-```
+## Dataset untuk Sesi 1 & 2: World Values Survey (WVS)
 
+Untuk sesi Pengantar R dan Analisis Regresi, kita menggunakan data dari **World Values Survey Wave 7** yang telah diterjemahkan ke Bahasa Indonesia.
 
-### Data untuk sesi 3 dan seterusnya
+### File Data
 
-Jika Anda melewatkan Sesi 2 di mana kita membersihkan dan merapikan data, Anda dapat mengunduh data yang sudah dibersihkan di sini: [wvs_cleaned_v1.csv](https://raw.githubusercontent.com/bellaratmelia/introductory-r-socsci/refs/heads/main/data-output/wvs_cleaned_v1.csv)
+| File | Negara | Keterangan |
+|---|---|---|
+| `wvs1.csv` | Singapura, Kanada, Selandia Baru | Digunakan untuk latihan sesi 1 & 2 |
+| `wvs2.csv` | Singapura, Thailand, Indonesia | Digunakan untuk latihan sesi 2 (regresi) |
 
+::: callout-tip
+Kedua file sudah tersedia di folder `data/` dalam repositori workshop. Jika Anda mengunduh secara terpisah, simpan di dalam folder `data/` pada project RStudio Anda.
+:::
+
+### Kamus Data (Data Dictionary)
+
+Semua variabel sudah diterjemahkan ke Bahasa Indonesia. Berikut adalah 16 variabel yang tersedia:
+
+#### Variabel Identitas
+
+| Variabel | Tipe | Deskripsi |
+|---|---|---|
+| `negara` | Karakter | Kode negara: `Singapura`, `Kanada`, `Selandia Baru`, `Thailand`, `Indonesia` |
+| `id_responden` | Numerik | Identifikasi unik setiap responden |
+
+#### Variabel Pentingnya Aspek Kehidupan (Skala 1–4, 1 = sangat penting)
+
+| Variabel | Deskripsi |
+|---|---|
+| `pentingnya_keluarga` | Seberapa penting keluarga dalam hidup responden |
+| `pentingnya_teman` | Seberapa penting teman dalam hidup responden |
+| `pentingnya_waktu_luang` | Seberapa penting waktu luang |
+| `pentingnya_pekerjaan` | Seberapa penting pekerjaan |
+
+#### Variabel Persepsi dan Kepuasan (Skala 1–10)
+
+| Variabel | Deskripsi |
+|---|---|
+| `kebebasan_memilih` | Persepsi kebebasan memilih dan mengontrol hidup (10 = paling bebas) |
+| `kepuasan_hidup` | Kepuasan hidup secara keseluruhan (10 = paling puas) |
+| `kepuasan_finansial` | Kepuasan terhadap kondisi keuangan (10 = paling puas) |
+
+#### Variabel Politik dan Agama
+
+| Variabel | Deskripsi |
+|---|---|
+| `skala_politik` | Orientasi politik kiri–kanan (1 = kiri, 10 = kanan) |
+| `religiusitas` | Identifikasi keagamaan: `Religius`, `Tidak religius`, `Ateis`, `Tidak tahu` |
+
+#### Variabel Demografi
+
+| Variabel | Tipe | Deskripsi |
+|---|---|---|
+| `jenis_kelamin` | Karakter | `Laki-laki` atau `Perempuan` |
+| `tahun_lahir` | Numerik | Tahun lahir responden |
+| `usia` | Numerik | Usia responden |
+| `status_pernikahan` | Karakter | `Menikah`, `Tinggal bersama`, `Cerai`, `Berpisah`, `Janda/Duda`, `Lajang` |
+| `status_pekerjaan` | Karakter | `Penuh waktu`, `Paruh waktu`, `Wiraswasta`, `Pensiun`, `Ibu rumah tangga`, `Pelajar/Mahasiswa`, `Pengangguran` |
+
+Dokumentasi lengkap variabel tersedia di file [wvs_variabel.md](data/wvs_variabel.md).
 
 ::: {.callout-note appearance="simple"}
 ### Apa itu CSV?
 
-CSV (Comma-Separated Values) adalah jenis file yang menyimpan data dalam format teks biasa. Setiap baris dalam file mewakili satu baris data, dan di dalam setiap baris, potongan data individual (seperti angka atau kata) dipisahkan oleh koma.
-
-Format ini umumnya digunakan untuk menyimpan dan mentransfer data, terutama dalam spreadsheet dan database. Karena hanya berupa teks biasa, format ini ideal jika Anda memiliki data dalam jumlah besar.
-
-Anda dapat membuka file CSV di Excel, Google Sheets, atau bahkan Notepad!
+CSV (Comma-Separated Values) adalah jenis file yang menyimpan data dalam format teks biasa. Setiap baris mewakili satu baris data, dan setiap kolom dipisahkan oleh koma. Format ini umumnya digunakan untuk menyimpan dan mentransfer data. Anda dapat membuka file CSV di Excel, Google Sheets, atau bahkan Notepad.
 :::
 
-### Kamus Data (Data Dictionary) untuk Dataset WVS
+---
 
-World Values Survey (<www.worldvaluessurvey.org>) adalah jaringan global ilmuwan sosial yang mempelajari perubahan nilai dan dampaknya terhadap kehidupan sosial dan politik, dipimpin oleh tim peneliti internasional, dengan asosiasi dan sekretariat WVS yang berkantor pusat di Stockholm, Swedia.
+## Dataset untuk Sesi 3: SEM
 
-Kuesioner sebenarnya terdiri dari lebih dari 200 pertanyaan dengan responden dari berbagai negara. Untuk keperluan workshop ini, kita hanya menggunakan 16 variabel/pertanyaan dengan responden dari Kanada, Selandia Baru, dan Singapura. Ke-16 variabel tersebut adalah:
+Sesi SEM menggunakan **2 dataset dummy** yang dirancang dengan dasar teori yang kuat.
 
-`country`
+### CB-SEM: `sem_ecommerce.csv`
 
-:   Character variable containing three-letter country codes: `CAN`,
-    `NZL`, and `SGP`
+Dataset kepuasan pelanggan e-commerce (n = 300) berdasarkan teori ACSI, SERVQUAL, dan Trust.
 
-`ID`
+| Konstruk | Kode | Indikator | Teori |
+|---|---|---|---|
+| Kualitas Layanan | SQ | SQ1–SQ4 | SERVQUAL (Parasuraman et al.) |
+| Persepsi Nilai | PV | PV1–PV3 | Perceived Value |
+| Kepercayaan | TR | TR1–TR4 | Trust Theory (McKnight et al.) |
+| Kepuasan Pelanggan | CS | CS1–CS4 | ACSI (Fornell et al.) |
+| Loyalitas Pelanggan | CL | CL1–CL3 | Customer Loyalty |
+| Niat Beli Ulang | RI | RI1–RI3 | Repurchase Intention |
 
-:   Numeric identifier unique to each survey respondent
+Semua konstruk **reflektif** (Mode A). Skala Likert 1–7.
 
-`family_importance`
+### PLS-SEM: `sem_innovation.csv`
 
-:   Numeric scale from 1 to 4 measuring importance of family, where 1
-    indicates highest importance
+Dataset inovasi dan kinerja UMKM (n = 200) berdasarkan Resource-Based View dan Market Orientation.
 
-`friends_importance`
+| Konstruk | Kode | Mode | Indikator | Teori |
+|---|---|---|---|---|
+| Kapabilitas Inovasi | IC | **Formatif (B)** | IC1–IC4 | RBV (Barney, 1991) |
+| Orientasi Pasar | MO | **Formatif (B)** | MO1–MO3 | Narver & Slater (1990) |
+| Orientasi Kewirausahaan | EO | **Formatif (B)** | EO1–EO3 | Lumpkin & Dess (1996) |
+| Keunggulan Bersaing | CA | Reflektif (A) | CA1–CA4 | Competitive Advantage |
+| Kinerja Perusahaan | FP | Reflektif (A) | FP1–FP4 | Firm Performance |
 
-:   Numeric scale from 1 to 4 measuring importance of friends, where 1
-    indicates highest importance
+Skala Likert 1–7. Juga mengandung variabel kontrol: `firm_age`, `firm_size`, `industry`.
 
-`leisure_importance`
+---
 
-:   Numeric scale from 1 to 4 measuring importance of leisure time,
-    where 1 indicates highest importance
-
-`work_importance`
-
-:   Numeric scale from 1 to 4 measuring importance of work, where 1
-    indicates highest importance
-
-`freedom`
-
-:   Numeric scale from 1-10 measuring perceived freedom of choice and
-    control, where 10 indicates most freedom
-
-`life_satisfaction`
-
-:   Numeric scale from 1-10 measuring overall life satisfaction, where
-    10 indicates highest satisfaction
-
-`financial_satisfaction`
-
-:   Numeric scale from 1-10 measuring satisfaction with financial
-    situation, where 10 indicates highest satisfaction
-
-`religiousity`
-
-:   indicates religious self-identification: `A religious person`,
-    `Not a religious person`, `An atheist`
-
-`political_scale`
-
-:   Numeric scale from 1-10 measuring left-right political orientation,
-    where 1 is left and 10 is right
-
-`sex`
-
-:   indicates respondent's gender: `male` or `female`
-
-`birthyear`
-
-:   Numeric variable indicating year of birth
-
-`age`
-
-:   Numeric variable indicating respondent's age
-
-`marital_status`
-
-:   indicates current marital status: `Married`,
-    `Living together as married`, `Divorced`, `Separated`, `Widowed`,
-    `Single`
-
-`employment`
-
-:   indicates current employment status: `Full time`, `Part time`,
-    `Self employed`, `Retired/pensioned`,
-    `Housewife not otherwise employed`, `Student`, `Unemployed`
-
-Berikut adalah cuplikan pertanyaan-pertanyaan terpilih dan tampilannya dalam kuesioner:
-
-![](images/Selected Questions for WVS-images-1.jpg)
-
-![](images/Selected Questions for WVS-images-2.jpg)
-
-Jika Anda ingin mengetahui lebih lanjut tentang data ini, termasuk codebook dan kuesioner aslinya, kunjungi halaman berikut:
-<https://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp>
-
-### Referensi
+### Referensi WVS
 
 Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano, J., Lagos, M., Norris, P., Ponarin, E. & Puranen B. (2022): World Values Survey Wave 7 (2017-2022) Cross-National Data-Set. Version: 4.0.0. World Values Survey Association. DOI: [doi.org/10.14281/18241.18](https://doi.org/10.14281/18241.18)

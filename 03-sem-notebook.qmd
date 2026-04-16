@@ -1,0 +1,196 @@
+---
+title: "Sesi 3: Structural Equation Modelling (SEM)"
+subtitle: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+format: html
+execute:
+  warning: false
+  message: false
+---
+
+# Bagian A: CB-SEM dengan lavaan
+
+## 1. Persiapan
+
+```{r}
+library(lavaan)
+library(semPlot)
+library(tidyverse)
+```
+
+## 2. Import Data
+
+```{r}
+ecom <- read_csv("data/sem_ecommerce.csv")
+glimpse(ecom)
+```
+
+## 3. CFA (Confirmatory Factor Analysis)
+
+```{r}
+cfa_model <- '
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  PV =~ PV1 + PV2 + PV3
+  TR =~ TR1 + TR2 + TR3 + TR4
+  CS =~ CS1 + CS2 + CS3 + CS4
+  CL =~ CL1 + CL2 + CL3
+  RI =~ RI1 + RI2 + RI3
+'
+
+cfa_fit <- cfa(cfa_model, data = ecom)
+fitMeasures(cfa_fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Standardized Loadings
+
+```{r}
+parameterEstimates(cfa_fit, standardized = TRUE) |>
+  filter(op == "=~") |>
+  select(konstruk = lhs, indikator = rhs, loading = est, std_loading = std.all, p = pvalue)
+```
+
+### CR & AVE
+
+```{r}
+std_load <- parameterEstimates(cfa_fit, standardized = TRUE) |>
+  filter(op == "=~") |>
+  select(konstruk = lhs, loading = std.all)
+
+std_load |>
+  summarize(
+    n_items = n(),
+    AVE = mean(loading^2),
+    CR = sum(loading)^2 / (sum(loading)^2 + sum(1 - loading^2)),
+    .by = konstruk
+  )
+```
+
+## 4. Full SEM
+
+```{r}
+sem_model <- '
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  PV =~ PV1 + PV2 + PV3
+  TR =~ TR1 + TR2 + TR3 + TR4
+  CS =~ CS1 + CS2 + CS3 + CS4
+  CL =~ CL1 + CL2 + CL3
+  RI =~ RI1 + RI2 + RI3
+
+  CS ~ SQ + PV + TR
+  CL ~ CS + TR
+  RI ~ CS + CL
+'
+
+sem_fit <- sem(sem_model, data = ecom)
+fitMeasures(sem_fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Path Coefficients
+
+```{r}
+parameterEstimates(sem_fit, standardized = TRUE) |>
+  filter(op == "~") |>
+  select(DV = lhs, IV = rhs, B = est, SE = se, Z = z, p = pvalue, Beta = std.all) |>
+  mutate(Sig = ifelse(p < 0.05, "Ya", "Tidak"))
+```
+
+### R-squared
+
+```{r}
+lavInspect(sem_fit, "r2")
+```
+
+### Path Diagram
+
+```{r}
+semPaths(sem_fit, whatLabels = "std", layout = "tree2",
+  edge.label.cex = 0.8, sizeMan = 6, sizeLat = 8,
+  style = "lisrel", residuals = FALSE, rotation = 2, nCharNodes = 3)
+```
+
+---
+
+# Bagian B: PLS-SEM dengan seminr
+
+## 5. Persiapan
+
+```{r}
+library(seminr)
+```
+
+## 6. Import Data
+
+```{r}
+inov <- read_csv("data/sem_innovation.csv")
+glimpse(inov)
+```
+
+## 7. Spesifikasi & Estimasi Model
+
+```{r}
+mm <- constructs(
+  composite("IC", multi_items("IC", 1:4), weights = mode_B),
+  composite("MO", multi_items("MO", 1:3), weights = mode_B),
+  composite("EO", multi_items("EO", 1:3), weights = mode_B),
+  composite("CA", multi_items("CA", 1:4), weights = mode_A),
+  composite("FP", multi_items("FP", 1:4), weights = mode_A)
+)
+
+sm <- relationships(
+  paths(from = c("IC", "MO", "EO"), to = "CA"),
+  paths(from = c("CA", "IC"), to = "FP")
+)
+
+pls_model <- estimate_pls(data = inov,
+  measurement_model = mm, structural_model = sm)
+pls_summary <- summary(pls_model)
+```
+
+## 8. Evaluasi Model Pengukuran
+
+### Reliabilitas
+
+```{r}
+pls_summary$reliability
+```
+
+### Loadings
+
+```{r}
+pls_summary$loadings
+```
+
+### Discriminant Validity (HTMT)
+
+```{r}
+pls_summary$validity$htmt
+```
+
+## 9. Bootstrap
+
+```{r}
+set.seed(2026)
+boot_model <- bootstrap_model(pls_model, nboot = 1000)
+boot_summary <- summary(boot_model)
+boot_summary$bootstrapped_paths
+```
+
+## 10. R-squared dan f-squared
+
+```{r}
+pls_summary$paths
+```
+
+```{r}
+pls_summary$fSquare
+```
+
+## Latihan
+
+### Latihan 1: Modifikasi CB-SEM
+Hapus path TR -> CL dari model CB-SEM dan bandingkan fit.
+
+### Latihan 2: Modifikasi PLS-SEM
+Tambahkan MO -> FP dan bandingkan R-squared FP.
+
+### Latihan 3: Indirect Effects
+Hitung efek tidak langsung IC -> CA -> FP.

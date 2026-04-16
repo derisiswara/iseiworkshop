@@ -1,0 +1,711 @@
+---
+title: "Structural Equation Modeling (SEM)"
+author: "ISEI Workshop"
+format: revealjs
+---
+
+# Selamat Datang di Sesi 3!
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(lavaan)
+library(semPlot)
+library(seminr)
+library(knitr)
+```
+
+## Rencana Hari Ini
+
+**Bagian 1: Pengantar SEM**
+
+-   Konsep SEM dan terminologi
+-   Variabel laten vs manifes
+-   CB-SEM vs PLS-SEM
+
+**Bagian 2: CB-SEM dengan lavaan**
+
+-   Confirmatory Factor Analysis (CFA)
+-   Full Structural Model
+-   Fit indices dan interpretasi
+
+**Bagian 3: PLS-SEM dengan seminr**
+
+-   Measurement model (reflective/formative)
+-   Structural model
+-   Bootstrap dan evaluasi
+
+## Apa itu SEM?
+
+::: incremental
+-   **Structural Equation Modeling** = teknik statistik multivariat yang menggabungkan analisis faktor dan regresi
+-   Memungkinkan pengujian hubungan **simultan** antara beberapa variabel
+-   Dapat menguji variabel **laten** (tidak langsung teramati)
+-   Digunakan luas di ilmu sosial, psikologi, manajemen, ekonomi
+:::
+
+## Terminologi Dasar
+
+| Istilah | Penjelasan |
+|---------|------------|
+| **Variabel Laten** | Konstruk yang tidak dapat diukur langsung (diberi simbol oval/lingkaran) |
+| **Variabel Manifes/Indikator** | Variabel yang dapat diukur langsung, misal item kuesioner (simbol kotak) |
+| **Variabel Eksogen** | Variabel independen (tidak diprediksi oleh variabel lain di model) |
+| **Variabel Endogen** | Variabel dependen (diprediksi oleh variabel lain di model) |
+
+## Measurement Model vs Structural Model
+
+::: incremental
+-   **Measurement Model**: hubungan antara variabel laten dan indikator-indikatornya
+    -   "Seberapa baik indikator mengukur konstruk?"
+-   **Structural Model**: hubungan antar variabel laten
+    -   "Bagaimana konstruk saling mempengaruhi?"
+-   SEM menguji **keduanya** secara bersamaan
+:::
+
+## CB-SEM vs PLS-SEM
+
+::::: columns
+::: {.column width="50%"}
+**CB-SEM (Covariance-Based)**
+
+-   Berbasis kovarians
+-   Memerlukan asumsi normalitas
+-   Cocok untuk konfirmatori (teori sudah kuat)
+-   Menggunakan fit indices
+-   Paket R: `lavaan`
+:::
+
+::: {.column width="50%"}
+**PLS-SEM (Partial Least Squares)**
+
+-   Berbasis varians
+-   Tidak memerlukan normalitas
+-   Cocok untuk eksploratori/prediktif
+-   Tidak menggunakan fit indices tradisional
+-   Paket R: `seminr`
+:::
+:::::
+
+## Kapan Menggunakan yang Mana?
+
+| Kriteria | CB-SEM | PLS-SEM |
+|----------|--------|---------|
+| Tujuan | Konfirmasi teori | Prediksi & eksplorasi |
+| Ukuran sampel | Besar (>200) | Kecil-menengah (>50) |
+| Distribusi | Normal | Fleksibel |
+| Model | Reflektif | Reflektif & formatif |
+| Kompleksitas | Sederhana-menengah | Bisa sangat kompleks |
+
+# Bagian 2: CB-SEM dengan lavaan
+
+## Dataset: E-Commerce
+
+Data simulasi tentang perilaku konsumen e-commerce (n = 300).
+
+```{r}
+#| echo: true
+ecom <- read_csv("data/sem_ecommerce.csv")
+glimpse(ecom)
+```
+
+## Konstruk dan Indikator
+
+| Konstruk | Indikator | Deskripsi |
+|----------|-----------|-----------|
+| **Service Quality** (SQ) | SQ1, SQ2, SQ3, SQ4 | Responsif, keandalan, jaminan, empati |
+| **Perceived Value** (PV) | PV1, PV2, PV3 | Nilai fungsional, emosional, sosial |
+| **Trust** (TR) | TR1, TR2, TR3 | Integritas, kompetensi, benevolence |
+| **Customer Satisfaction** (CS) | CS1, CS2, CS3 | Puas keseluruhan, memenuhi harapan, senang |
+| **Customer Loyalty** (CL) | CL1, CL2, CL3 | Niat beli ulang, rekomendasi, pilihan utama |
+
+## Apa itu CFA?
+
+::: incremental
+-   **Confirmatory Factor Analysis** = menguji apakah indikator mengukur konstruk dengan baik
+-   Langkah pertama sebelum full SEM
+-   Mengevaluasi **validitas** dan **reliabilitas** pengukuran
+-   Berbeda dari EFA (Exploratory) yang mencari faktor; CFA **mengkonfirmasi** struktur yang sudah dihipotesiskan
+:::
+
+## Sintaks lavaan
+
+Sintaks `lavaan` menggunakan notasi khusus:
+
+| Operator | Makna | Contoh |
+|----------|-------|--------|
+| `=~` | "diukur oleh" (measurement) | `SQ =~ SQ1 + SQ2 + SQ3` |
+| `~` | "diregresikan terhadap" (structural) | `CS ~ SQ + KI` |
+| `~~` | kovarians/varians | `KL ~~ KI` |
+
+. . .
+
+```r
+# CFA model
+model <- '
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  PV =~ PV1 + PV2 + PV3
+'
+```
+
+## Menspesifikasi Model CFA
+
+```{r}
+#| echo: true
+cfa_model <- '
+  # Measurement model
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  PV =~ PV1 + PV2 + PV3
+  TR =~ TR1 + TR2 + TR3 + TR4
+  CS =~ CS1 + CS2 + CS3 + CS4
+  CL =~ CL1 + CL2 + CL3
+  RI =~ RI1 + RI2 + RI3
+'
+```
+
+## Mengestimasi Model CFA
+
+```{r}
+#| echo: true
+cfa_fit <- cfa(cfa_model, data = ecom)
+```
+
+. . .
+
+Fungsi `cfa()` dari paket `lavaan`:
+
+-   Argumen pertama: spesifikasi model
+-   `data`: dataset
+-   Estimator default: ML (Maximum Likelihood)
+-   Secara otomatis menetapkan loading pertama = 1 (untuk identifikasi)
+
+## Hasil CFA: Ringkasan
+
+```{r}
+#| echo: true
+summary(cfa_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+## Fit Indices: Kriteria
+
+| Indeks | Kriteria Baik | Keterangan |
+|--------|---------------|------------|
+| $\chi^2$ p-value | > 0.05 | Sensitif terhadap sampel besar |
+| CFI | $\geq$ 0.90 | Comparative Fit Index |
+| TLI | $\geq$ 0.90 | Tucker-Lewis Index |
+| RMSEA | $\leq$ 0.08 | Root Mean Square Error of Approximation |
+| SRMR | $\leq$ 0.08 | Standardized Root Mean Square Residual |
+
+. . .
+
+::: {.callout-tip}
+Jangan hanya mengandalkan satu indeks. Laporkan minimal CFI, RMSEA, dan SRMR.
+:::
+
+## Mengekstrak Fit Indices
+
+```{r}
+#| echo: true
+fitMeasures(cfa_fit, c("chisq", "df", "pvalue",
+                        "cfi", "tli", "rmsea", "srmr"))
+```
+
+## Factor Loadings
+
+```{r}
+#| echo: true
+#| output-location: slide
+parameterEstimates(cfa_fit, standardized = TRUE) |>
+  filter(op == "=~") |>
+  select(lhs, rhs, est, std.all, pvalue) |>
+  kable(digits = 3, col.names = c("Laten", "Indikator",
+                                   "Loading", "Std. Loading", "p"))
+```
+
+## Evaluasi Factor Loadings
+
+::: incremental
+-   **Standardized loading** ($\lambda$) $\geq$ 0.50 (ideal $\geq$ 0.70)
+-   Loading < 0.50: indikator mungkin perlu dihapus
+-   Semua loading harus **signifikan** (p < 0.05)
+-   **AVE** (Average Variance Extracted) $\geq$ 0.50 untuk convergent validity
+:::
+
+## Reliabilitas Konstruk
+
+```{r}
+#| echo: true
+# Menghitung Composite Reliability (CR) secara manual
+std_loadings <- parameterEstimates(cfa_fit, standardized = TRUE) |>
+  filter(op == "=~") |>
+  select(lhs, std.all)
+
+std_loadings |>
+  group_by(lhs) |>
+  summarize(
+    n_items = n(),
+    sum_loading = sum(std.all),
+    sum_loading_sq = sum(std.all^2),
+    AVE = sum(std.all^2) / n(),
+    CR = sum_loading^2 / (sum_loading^2 + (n() - sum(std.all^2)))
+  ) |>
+  kable(digits = 3)
+```
+
+## Kriteria Validitas dan Reliabilitas
+
+| Kriteria | Ambang Batas | Apa yang Diuji |
+|----------|-------------|----------------|
+| Standardized Loading | $\geq$ 0.50 | Validitas indikator |
+| AVE | $\geq$ 0.50 | Convergent validity |
+| CR | $\geq$ 0.70 | Reliabilitas konstruk |
+| Discriminant validity | $\sqrt{AVE} > r$ | Konstruk berbeda satu sama lain |
+
+## Path Diagram CFA
+
+```{r}
+#| echo: true
+#| output-location: slide
+semPaths(cfa_fit,
+         whatLabels = "std",
+         layout = "tree",
+         edge.label.cex = 0.8,
+         style = "lisrel",
+         residuals = TRUE,
+         rotation = 2,
+         nCharNodes = 3)
+```
+
+## Latihan CFA {.smaller}
+
+> Jalankan CFA hanya dengan 3 konstruk: SQ, TR, dan CS. Evaluasi fit indices dan factor loadings.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+cfa_3 <- '
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  TR =~ TR1 + TR2 + TR3 + TR4
+  CS =~ CS1 + CS2 + CS3 + CS4
+'
+cfa_3_fit <- cfa(cfa_3, data = ecom)
+fitMeasures(cfa_3_fit, c("cfi", "tli", "rmsea", "srmr"))
+```
+
+## Full Structural Model
+
+Setelah CFA menunjukkan pengukuran yang baik, kita tambahkan **jalur struktural** (regresi antar laten).
+
+```{r}
+#| echo: true
+sem_model <- '
+  # Measurement model
+  SQ =~ SQ1 + SQ2 + SQ3 + SQ4
+  PV =~ PV1 + PV2 + PV3
+  TR =~ TR1 + TR2 + TR3 + TR4
+  CS =~ CS1 + CS2 + CS3 + CS4
+  CL =~ CL1 + CL2 + CL3
+  RI =~ RI1 + RI2 + RI3
+
+  # Structural model (hipotesis)
+  CS ~ SQ + PV + TR
+  CL ~ CS + TR
+  RI ~ CS + CL
+'
+```
+
+## Hipotesis Penelitian
+
+| No | Hipotesis | Path |
+|----|-----------|------|
+| H1 | Service Quality berpengaruh positif terhadap Customer Satisfaction | CS ~ SQ |
+| H2 | Perceived Value berpengaruh positif terhadap Customer Satisfaction | CS ~ PV |
+| H3 | Trust berpengaruh positif terhadap Customer Satisfaction | CS ~ TR |
+| H4 | Customer Satisfaction berpengaruh positif terhadap Customer Loyalty | CL ~ CS |
+| H5 | Trust berpengaruh positif terhadap Customer Loyalty | CL ~ TR |
+| H6 | Customer Satisfaction berpengaruh positif terhadap Repurchase Intention | RI ~ CS |
+| H7 | Customer Loyalty berpengaruh positif terhadap Repurchase Intention | RI ~ CL |
+
+## Mengestimasi Full SEM
+
+```{r}
+#| echo: true
+sem_fit <- sem(sem_model, data = ecom)
+```
+
+## Fit Indices Full SEM
+
+```{r}
+#| echo: true
+fitMeasures(sem_fit, c("chisq", "df", "pvalue",
+                        "cfi", "tli", "rmsea", "srmr"))
+```
+
+## Hasil Path (Hipotesis)
+
+```{r}
+#| echo: true
+parameterEstimates(sem_fit, standardized = TRUE) |>
+  filter(op == "~") |>
+  select(lhs, rhs, est, std.all, pvalue) |>
+  mutate(signifikan = ifelse(pvalue < 0.05, "Ya", "Tidak")) |>
+  kable(digits = 3, col.names = c("DV", "IV", "Estimate",
+                                   "Std. Estimate", "p-value", "Signifikan"))
+```
+
+## Interpretasi Hasil
+
+```{r}
+#| echo: true
+#| output-location: slide
+paths <- parameterEstimates(sem_fit, standardized = TRUE) |>
+  filter(op == "~") |>
+  select(lhs, rhs, std.all, pvalue) |>
+  mutate(
+    hipotesis = paste0("H", row_number()),
+    path = paste(rhs, "->", lhs),
+    kesimpulan = ifelse(pvalue < 0.05 & std.all > 0, "Didukung", "Tidak Didukung")
+  )
+paths |> select(hipotesis, path, std.all, pvalue, kesimpulan) |>
+  kable(digits = 3)
+```
+
+## Path Diagram Full SEM
+
+```{r}
+#| echo: true
+#| output-location: slide
+semPaths(sem_fit,
+         whatLabels = "std",
+         layout = "tree2",
+         edge.label.cex = 0.7,
+         style = "lisrel",
+         residuals = FALSE,
+         rotation = 2,
+         nCharNodes = 3,
+         sizeMan = 5,
+         sizeLat = 8)
+```
+
+## $R^2$ Variabel Endogen
+
+```{r}
+#| echo: true
+lavInspect(sem_fit, "r2")
+```
+
+. . .
+
+-   $R^2$ menunjukkan seberapa besar varians variabel endogen yang dijelaskan oleh prediktor-prediktornya
+-   Semakin tinggi $R^2$, semakin baik model menjelaskan variabel tersebut
+
+## Pelaporan CB-SEM (APA)
+
+> Model struktural menunjukkan fit yang baik ($\chi^2$ = ..., df = ..., p = ...; CFI = ...; TLI = ...; RMSEA = ...; SRMR = ...). Dari 7 hipotesis yang diuji, ... hipotesis didukung oleh data. Kepercayaan secara signifikan dipengaruhi oleh service quality ($\beta$ = ..., p < ...) dan perceived value ($\beta$ = ..., p < ...).
+
+# Bagian 3: PLS-SEM dengan seminr
+
+## Mengapa PLS-SEM?
+
+::: incremental
+-   Tidak memerlukan asumsi distribusi normal
+-   Bisa menangani sampel kecil
+-   Mendukung indikator **formatif** dan **reflektif**
+-   Cocok untuk model yang **kompleks** dengan banyak variabel
+-   Fokus pada **prediksi** (bukan konfirmasi teori)
+:::
+
+## Dataset: Inovasi
+
+Data simulasi tentang faktor inovasi organisasi (n = 200).
+
+```{r}
+#| echo: true
+inov <- read_csv("data/sem_innovation.csv")
+glimpse(inov)
+```
+
+## Konstruk dan Indikator
+
+| Konstruk | Indikator | Tipe |
+|----------|-----------|------|
+| **Innovation Culture** (IC) | IC1, IC2, IC3, IC4 | Reflektif |
+| **Market Orientation** (MO) | MO1, MO2, MO3 | Reflektif |
+| **Entrepreneurial Orientation** (EO) | EO1, EO2, EO3 | Reflektif |
+| **Competitive Advantage** (CA) | PV1, PV2, PV3 | Reflektif |
+| **Firm Performance** (FP) | FP1, FP2, FP3, FP4 | Reflektif |
+
+## Reflektif vs Formatif
+
+::::: columns
+::: {.column width="50%"}
+**Reflektif** (efek)
+
+-   Indikator adalah **efek** dari konstruk
+-   Menghapus satu indikator tidak mengubah konstruk
+-   Indikator saling berkorelasi tinggi
+-   Contoh: item kuesioner kepuasan
+:::
+
+::: {.column width="50%"}
+**Formatif** (sebab)
+
+-   Indikator **membentuk** konstruk
+-   Menghapus satu indikator mengubah makna konstruk
+-   Indikator tidak harus berkorelasi
+-   Contoh: SES (pendidikan + pendapatan + pekerjaan)
+:::
+:::::
+
+## Langkah PLS-SEM dengan seminr
+
+::: incremental
+1.  Spesifikasi **measurement model** (`constructs()`)
+2.  Spesifikasi **structural model** (`relationships()`)
+3.  Estimasi model (`estimate_pls()`)
+4.  Bootstrap (`bootstrap_model()`)
+5.  Evaluasi measurement model (outer model)
+6.  Evaluasi structural model (inner model)
+:::
+
+## Spesifikasi Measurement Model
+
+```{r}
+#| echo: true
+mm <- constructs(
+  composite("IC", multi_items("IC", 1:4), weights = mode_B),
+  composite("MO", multi_items("MO", 1:3), weights = mode_B),
+  composite("EO", multi_items("EO", 1:3), weights = mode_B),
+  composite("CA", multi_items("CA", 1:4), weights = mode_A),
+  composite("FP", multi_items("FP", 1:4), weights = mode_A)
+)
+```
+
+. . .
+
+-   `composite()`: mendefinisikan konstruk
+-   `multi_items("prefix", 1:3)`: mengambil kolom prefix1, prefix2, prefix3
+-   `mode_A`: reflektif (mode_B untuk formatif)
+
+## Spesifikasi Structural Model
+
+```{r}
+#| echo: true
+sm <- relationships(
+  paths(from = c("IC", "MO", "EO"), to = "CA"),
+  paths(from = c("CA", "IC"), to = "FP")
+)
+```
+
+. . .
+
+Hipotesis:
+
+-   H1: Innovation Culture $\rightarrow$ Knowledge Management
+-   H2: Market Orientation $\rightarrow$ Knowledge Management
+-   H3: Innovation Culture $\rightarrow$ Kapasitas Inovasi
+-   H4: Competitive Advantage $\rightarrow$ Kapasitas Inovasi
+-   H5: Competitive Advantage $\rightarrow$ Kinerja Inovasi
+
+## Estimasi Model PLS
+
+```{r}
+#| echo: true
+pls_model <- estimate_pls(
+  data = inov,
+  measurement_model = mm,
+  structural_model = sm
+)
+```
+
+## Bootstrap
+
+```{r}
+#| echo: true
+boot <- bootstrap_model(
+  seminr_model = pls_model,
+  nboot = 1000,
+  seed = 42
+)
+```
+
+. . .
+
+::: {.callout-tip}
+Bootstrap menghasilkan standard error dan p-value untuk koefisien path. Gunakan minimal **nboot = 1000** (ideal: 5000).
+:::
+
+## Ringkasan Model
+
+```{r}
+#| echo: true
+summary(pls_model)
+```
+
+## Evaluasi Measurement Model (Outer Model)
+
+### Reliability
+
+```{r}
+#| echo: true
+#| output-location: slide
+pls_summary <- summary(pls_model)
+pls_summary$reliability
+```
+
+## Kriteria Outer Model
+
+| Kriteria | Ambang Batas | Apa yang Diuji |
+|----------|-------------|----------------|
+| Outer Loading | $\geq$ 0.70 | Reliabilitas indikator |
+| Cronbach's Alpha | $\geq$ 0.70 | Internal consistency |
+| Composite Reliability (rhoC) | $\geq$ 0.70 | Internal consistency |
+| AVE | $\geq$ 0.50 | Convergent validity |
+| HTMT | < 0.90 | Discriminant validity |
+
+## Outer Loadings
+
+```{r}
+#| echo: true
+pls_summary$loadings
+```
+
+## Discriminant Validity: HTMT
+
+```{r}
+#| echo: true
+pls_summary$validity$htmt
+```
+
+. . .
+
+::: incremental
+-   **HTMT** (Heterotrait-Monotrait Ratio) < 0.90: konstruk cukup berbeda
+-   HTMT < 0.85: lebih konservatif dan direkomendasikan
+-   Alternatif dari Fornell-Larcker criterion
+:::
+
+## Evaluasi Structural Model (Inner Model)
+
+### Path Coefficients
+
+```{r}
+#| echo: true
+pls_summary$paths
+```
+
+## Bootstrap: Signifikansi
+
+```{r}
+#| echo: true
+boot_summary <- summary(boot)
+boot_summary$bootstrapped_paths
+```
+
+## Interpretasi Hipotesis PLS-SEM
+
+```{r}
+#| echo: true
+#| output-location: slide
+boot_paths <- boot_summary$bootstrapped_paths
+as.data.frame(boot_paths) |>
+  rownames_to_column("Path") |>
+  kable(digits = 3)
+```
+
+## $R^2$ dan $f^2$
+
+```{r}
+#| echo: true
+# R-squared
+pls_summary$paths
+```
+
+. . .
+
+| $R^2$ | Interpretasi |
+|-------|-------------|
+| $\geq$ 0.75 | Substansial |
+| $\geq$ 0.50 | Moderat |
+| $\geq$ 0.25 | Lemah |
+
+## Latihan PLS-SEM {.smaller}
+
+> Jalankan kembali model PLS-SEM tanpa path IC -> FP (hapus path langsung IC ke FP). Bandingkan hasilnya.
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+sm2 <- relationships(
+  paths(from = c("IC", "MO", "EO"), to = "CA"),
+  paths(from = "CA", to = "FP")
+)
+
+pls_model2 <- estimate_pls(
+  data = inov,
+  measurement_model = mm,
+  structural_model = sm2
+)
+summary(pls_model2)$paths
+```
+
+## Perbandingan CB-SEM vs PLS-SEM: Ringkasan Praktis
+
+| Aspek | CB-SEM (lavaan) | PLS-SEM (seminr) |
+|-------|-----------------|------------------|
+| Sintaks model | Text formula (`=~`, `~`) | `constructs()`, `relationships()` |
+| Estimasi | `cfa()` / `sem()` | `estimate_pls()` |
+| Signifikansi | Langsung dari output | Perlu `bootstrap_model()` |
+| Fit indices | CFI, TLI, RMSEA, SRMR | Tidak ada (gunakan $R^2$, HTMT) |
+| Visualisasi | `semPaths()` | `plot()` |
+
+# Ringkasan Sesi 3
+
+## Apa yang Sudah Kita Pelajari
+
+::: incremental
+-   **Konsep SEM**: variabel laten, measurement vs structural model
+-   **CB-SEM** dengan `lavaan`:
+    -   CFA: validitas dan reliabilitas konstruk
+    -   Full SEM: pengujian hipotesis antar konstruk
+    -   Fit indices: CFI, TLI, RMSEA, SRMR
+-   **PLS-SEM** dengan `seminr`:
+    -   Measurement model: outer loadings, CR, AVE, HTMT
+    -   Structural model: path coefficients, bootstrap, $R^2$
+:::
+
+## Paket yang Digunakan
+
+| Paket | Fungsi Utama |
+|-------|--------------|
+| `lavaan` | `cfa()`, `sem()`, `fitMeasures()`, `parameterEstimates()` |
+| `semPlot` | `semPaths()` |
+| `seminr` | `constructs()`, `relationships()`, `estimate_pls()`, `bootstrap_model()` |
+
+## Referensi
+
+-   Hair, J.F., et al. (2019). *Multivariate Data Analysis* (8th ed.)
+-   Hair, J.F., et al. (2017). *A Primer on Partial Least Squares SEM* (2nd ed.)
+-   Kline, R.B. (2015). *Principles and Practice of SEM* (4th ed.)
+-   Rosseel, Y. (2012). lavaan: An R Package for SEM. *Journal of Statistical Software*.
+
+## Tips Akhir
+
+::: incremental
+-   Selalu mulai dengan **CFA** sebelum full SEM (CB-SEM)
+-   Periksa **asumsi** sebelum menjalankan model
+-   Laporkan **semua** fit indices yang relevan
+-   Gunakan **bootstrap** untuk PLS-SEM (minimal 1000 resamples)
+-   Jangan hanya mengandalkan p-value; perhatikan **effect size** ($\beta$, $f^2$, $R^2$)
+-   **Teori** harus mendahului analisis --- jangan fishing for significance!
+:::
+
+# Akhir Workshop!
+
+Terima kasih atas partisipasinya! Semoga ilmu yang didapat bermanfaat.
+
+Materi tersedia di website workshop.

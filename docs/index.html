@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</title>
+<title>logo ISEI ISEI Workshop – ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -127,12 +127,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Di halaman ini</h2>
    
   <ul>
-  <li><a href="#selamat-datang" id="toc-selamat-datang" class="nav-link active" data-scroll-target="#selamat-datang">Selamat Datang!</a>
-  <ul class="collapse">
-  <li><a href="#dalam-workshop-ini-anda-akan-belajar" id="toc-dalam-workshop-ini-anda-akan-belajar" class="nav-link" data-scroll-target="#dalam-workshop-ini-anda-akan-belajar">Dalam workshop ini Anda akan belajar:</a></li>
-  </ul></li>
-  <li><a href="#narasumber" id="toc-narasumber" class="nav-link" data-scroll-target="#narasumber">Narasumber</a></li>
-  <li><a href="#informasi-workshop" id="toc-informasi-workshop" class="nav-link" data-scroll-target="#informasi-workshop">Informasi Workshop</a></li>
+  <li><a href="#selamat-datang" id="toc-selamat-datang" class="nav-link active" data-scroll-target="#selamat-datang">Selamat Datang!</a></li>
   <li><a href="#jadwal-workshop" id="toc-jadwal-workshop" class="nav-link" data-scroll-target="#jadwal-workshop">Jadwal Workshop</a></li>
   <li><a href="#kegiatan-pra-workshop" id="toc-kegiatan-pra-workshop" class="nav-link" data-scroll-target="#kegiatan-pra-workshop">Kegiatan Pra-Workshop</a>
   <ul class="collapse">
@@ -149,8 +144,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ISEI Workshop: Analisis Regresi &amp; SEM dengan RStudio</h1>
-<p class="subtitle lead">Sabtu, 18 April 2026 — Sekretariat PP ISEI, Jakarta Selatan</p>
+<h1 class="title"><img src="https://isei.or.id/asset-frontend/images/logo-ISEI.png" class="img-fluid" alt="logo ISEI"> ISEI Workshop</h1>
 </div>
 
 
@@ -167,56 +161,176 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<style type="text/css">
+  .isei-hero {
+    --hero-radius: 16px;
+    --hero-shadow: 0 20px 50px -15px rgba(20, 60, 140, 0.45);
+    --hero-text: #ffffff;
+    position: relative;
+    width: 100%;
+    min-height: clamp(320px, 42vw, 460px);
+    border-radius: var(--hero-radius);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 20% 10%, #6ba6ff 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, #2a6fd8 0%, transparent 50%),
+      linear-gradient(135deg, #4a8eea 0%, #2c6cd5 50%, #1f5cc4 100%);
+    color: var(--hero-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+      Arial, sans-serif;
+    box-shadow: var(--hero-shadow);
+    isolation: isolate;
+  }
+
+  .isei-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 8px 4px at 10% 15%, rgba(255, 255, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 6px 3px at 25% 70%, rgba(255, 255, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse 10px 5px at 45% 25%, rgba(255, 255, 255, 0.12), transparent 60%),
+      radial-gradient(ellipse 7px 4px at 70% 60%, rgba(255, 255, 255, 0.16), transparent 60%),
+      radial-gradient(ellipse 9px 5px at 88% 30%, rgba(255, 255, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse 12px 6px at 60% 88%, rgba(255, 255, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 5px 3px at 35% 50%, rgba(255, 255, 255, 0.12), transparent 60%),
+      radial-gradient(ellipse 8px 4px at 92% 75%, rgba(255, 255, 255, 0.15), transparent 60%),
+      radial-gradient(ellipse 6px 3px at 15% 85%, rgba(255, 255, 255, 0.13), transparent 60%),
+      radial-gradient(ellipse 10px 5px at 50% 10%, rgba(255, 255, 255, 0.14), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .isei-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -2%;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background-image:
+      radial-gradient(circle 18px at 8% 70%, rgba(255, 255, 255, 0.22), transparent 65%),
+      radial-gradient(circle 14px at 18% 85%, rgba(255, 255, 255, 0.18), transparent 65%),
+      radial-gradient(circle 22px at 32% 60%, rgba(255, 255, 255, 0.20), transparent 65%),
+      radial-gradient(circle 16px at 50% 80%, rgba(255, 255, 255, 0.18), transparent 65%),
+      radial-gradient(circle 20px at 65% 65%, rgba(255, 255, 255, 0.20), transparent 65%),
+      radial-gradient(circle 12px at 78% 85%, rgba(255, 255, 255, 0.16), transparent 65%),
+      radial-gradient(circle 18px at 90% 70%, rgba(255, 255, 255, 0.20), transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .isei-hero__content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: clamp(28px, 6%, 56px) clamp(24px, 7%, 72px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(14px, 2vw, 22px);
+    max-width: 720px;
+  }
+
+  .isei-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.95;
+  }
+
+  .isei-hero__eyebrow::after {
+    content: "";
+    flex: 0 0 clamp(60px, 12vw, 140px);
+    height: 1px;
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .isei-hero__title {
+    font-size: clamp(2rem, 4.2vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0;
+    max-width: 11ch;
+  }
+
+  .isei-hero__subtitle {
+    font-size: clamp(0.98rem, 1.45vw, 1.15rem);
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 40rem;
+    opacity: 0.92;
+    margin: 0;
+  }
+
+  .isei-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .isei-hero__meta-item {
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 640px) {
+    .isei-hero {
+      min-height: 360px;
+    }
+
+    .isei-hero__content {
+      padding: 28px 24px;
+    }
+
+    .isei-hero__subtitle {
+      max-width: 100%;
+    }
+
+    .isei-hero__title {
+      max-width: 100%;
+    }
+
+    .isei-hero__eyebrow::after {
+      flex-basis: 72px;
+    }
+  }
+</style>
+
+<div class="isei-hero" role="img" aria-label="Banner ISEI Workshop: Analisis Regresi dan Structural Equation Modelling dengan RStudio">
+  <div class="isei-hero__content">
+    <p class="isei-hero__eyebrow">ISEI Workshop</p>
+    <h1 class="isei-hero__title">Analisis Regresi &amp; SEM</h1>
+    <p class="isei-hero__subtitle">
+      Pelatihan intensif dengan RStudio untuk peneliti, dosen, dan mahasiswa pascasarjana yang ingin memperkuat analisis data dan publikasi ilmiah.
+    </p>
+    <ul class="isei-hero__meta" aria-label="Informasi workshop">
+      <li class="isei-hero__meta-item">Sabtu, 18 April 2026</li>
+      <li class="isei-hero__meta-item">Sekretariat PP ISEI</li>
+      <li class="isei-hero__meta-item">Jakarta Selatan</li>
+      <li class="isei-hero__meta-item">RStudio</li>
+    </ul>
+  </div>
+</div>
+<p><br></p>
 <section id="selamat-datang" class="level2">
 <h2 class="anchored" data-anchor-id="selamat-datang">Selamat Datang!</h2>
 <p><strong>Upgrade skill risetmu dan siapkan publikasi ilmiah yang lebih kuat!</strong></p>
 <p>Situs ini merupakan repositori materi pelatihan (slide, kode, dan dataset) untuk <strong>ISEI Workshop: Analisis Regresi dan Structural Equation Modelling (SEM) dengan RStudio</strong> — pelatihan praktis yang dirancang untuk peneliti, dosen, mahasiswa pascasarjana, dan praktisi yang ingin meningkatkan kualitas analisis data untuk publikasi ilmiah.</p>
-<section id="dalam-workshop-ini-anda-akan-belajar" class="level3">
-<h3 class="anchored" data-anchor-id="dalam-workshop-ini-anda-akan-belajar">Dalam workshop ini Anda akan belajar:</h3>
-<ul>
-<li>Konsep dan praktik analisis regresi</li>
-<li>Structural Equation Modelling (SEM) menggunakan RStudio</li>
-<li>Tips analisis data untuk meningkatkan peluang publikasi ilmiah</li>
-</ul>
-</section>
-</section>
-<section id="narasumber" class="level2">
-<h2 class="anchored" data-anchor-id="narasumber">Narasumber</h2>
-<p>Bersama narasumber berpengalaman dari akademisi.</p>
-</section>
-<section id="informasi-workshop" class="level2">
-<h2 class="anchored" data-anchor-id="informasi-workshop">Informasi Workshop</h2>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td><strong>Tanggal</strong></td>
-<td>Sabtu, 18 April 2026</td>
-</tr>
-<tr class="even">
-<td><strong>Waktu</strong></td>
-<td>08.30 – 15.30 WIB</td>
-</tr>
-<tr class="odd">
-<td><strong>Tempat</strong></td>
-<td>Sekretariat PP ISEI, Jakarta Selatan (<a href="https://bit.ly/KantorSekretariatISEI">Peta Lokasi</a>)</td>
-</tr>
-<tr class="even">
-<td><strong>Kapasitas</strong></td>
-<td>20 orang per sesi</td>
-</tr>
-<tr class="odd">
-<td><strong>Investasi</strong></td>
-<td>Rp1.000.000/orang</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Fasilitas yang termasuk:</strong></p>
-<ul>
-<li>✔ E-Certificate Pelatihan</li>
-<li>✔ Snack Pagi</li>
-<li>✔ Makan Siang</li>
-<li>✔ Workshop Kit</li>
-</ul>
 </section>
 <section id="jadwal-workshop" class="level2">
 <h2 class="anchored" data-anchor-id="jadwal-workshop">Jadwal Workshop</h2>
@@ -240,45 +354,33 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td>1</td>
-<td>08.30 – 09.30</td>
-<td><a href="01-intro.html"><strong>Pengantar R dan RStudio</strong></a></td>
-<td>Pengenalan RStudio, tipe data dasar dan struktur data di R, serta mengimpor file data.</td>
+<td>08.30 – 10.15</td>
+<td><a href="01-intro.html"><strong>Pengantar R, Pengolahan Data, dan Visualisasi</strong></a></td>
+<td>Pengenalan RStudio, tipe data, import data, manipulasi data dengan tidyverse, visualisasi dengan ggplot2, dan statistik deskriptif.</td>
 </tr>
 <tr class="odd">
-<td>2</td>
-<td>09.30 – 10.15</td>
-<td><a href="02-tidyverse.html"><strong>Pengolahan Data dengan Tidyverse</strong></a></td>
-<td>Manipulasi data dengan tidyverse: filter, select, mutate, dan pengelompokan data.</td>
-</tr>
-<tr class="even">
 <td>~</td>
 <td>10.15 – 10.30</td>
 <td>☕ <em>Coffee Break</em></td>
 <td></td>
 </tr>
-<tr class="odd">
-<td>3</td>
-<td>10.30 – 12.00</td>
-<td><a href="03-visualization.html"><strong>Visualisasi Data dan Statistik Deskriptif</strong></a></td>
-<td>Membuat visualisasi dengan ggplot2 dan menghitung statistik deskriptif.</td>
-</tr>
 <tr class="even">
+<td>2</td>
+<td>10.30 – 12.00</td>
+<td><a href="02-regresi.html"><strong>Analisis Regresi</strong></a></td>
+<td>Regresi linear sederhana, berganda, dan dengan variabel kategorikal menggunakan data WVS. Diagnostik model dan interpretasi hasil.</td>
+</tr>
+<tr class="odd">
 <td>~</td>
 <td>12.00 – 13.00</td>
 <td>🍽️ <em>Makan Siang</em></td>
 <td></td>
 </tr>
-<tr class="odd">
-<td>4</td>
-<td>13.00 – 14.30</td>
-<td><a href="04-stats.html"><strong>Uji Statistik Inferensial</strong></a></td>
-<td>Korelasi, t-test, ANOVA, dan interpretasi hasil statistik di R.</td>
-</tr>
 <tr class="even">
-<td>5</td>
-<td>14.30 – 15.30</td>
-<td><a href="05-more-stats.html"><strong>Analisis Regresi dan Penyajian Hasil</strong></a></td>
-<td>Regresi linear, regresi logistik, dan paket-paket R untuk menyajikan tabel hasil analisis.</td>
+<td>3</td>
+<td>13.00 – 15.30</td>
+<td><a href="03-sem.html"><strong>Structural Equation Modelling (SEM)</strong></a></td>
+<td>CB-SEM dengan <code>lavaan</code> (CFA, full SEM, path diagram) dan PLS-SEM dengan <code>seminr</code> (konstruk formatif &amp; reflektif, bootstrap).</td>
 </tr>
 <tr class="odd">
 <td>~</td>
@@ -353,7 +455,7 @@ Catatan
 </div>
 <ol type="1">
 <li><p>Buka RStudio</p></li>
-<li><p>Salin kode berikut: <code>install.packages(c("car", "rmarkdown", "huxtable", "gt", "gtsummary", "apaTables", "lavaan", "semPlot", "tidyverse"))</code></p></li>
+<li><p>Salin kode berikut: <code>install.packages(c("car", "broom", "lavaan", "semPlot", "seminr", "tidyverse", "rmarkdown"))</code></p></li>
 <li><p>Tempel di tab <strong>Console</strong> (lihat gambar di bawah)</p></li>
 <li><p>Tekan Enter. RStudio akan memproses instalasi paket-paket yang dibutuhkan.</p></li>
 </ol>
