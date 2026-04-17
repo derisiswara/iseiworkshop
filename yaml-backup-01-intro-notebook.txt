@@ -1,0 +1,8 @@
+---
+title: "Sesi 1: Pengantar R, Pengolahan Data, dan Visualisasi"
+subtitle: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+format: html
+execute:
+  warning: false
+  message: false
+---

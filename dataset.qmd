@@ -151,6 +151,7 @@ CUSCO → CUSL
 
 - [wvs1.xlsx](data/regresi/wvs1.xlsx) — WVS Wave 7: Singapura, Kanada, Selandia Baru (n = 7.087)
 - [wvs2.xlsx](data/regresi/wvs2.xlsx) — WVS Wave 7: Singapura, Thailand, Indonesia (n = 6.712)
+- [wagedata.xlsx](data/regresi/wagedata.xlsx) — Data upah (n = 1.000) — untuk latihan.
 
 ### CB-SEM
 

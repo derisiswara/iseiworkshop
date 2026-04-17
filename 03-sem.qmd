@@ -1,10 +1,8 @@
----
+﻿---
 title: "Structural Equation Modelling (SEM)"
 author: "ISEI Workshop"
 format: revealjs
 ---
-
-# Selamat Datang!
 
 ```{r}
 #| echo: false
@@ -22,128 +20,88 @@ set.seed(2026)
 
 **Bagian A: CB-SEM dengan `lavaan`**
 
--   Pengantar SEM & terminologi
 -   Two-Step Approach: CFA → Full SEM
--   Dataset E-Loyalty
--   Evaluasi model: fit indices, reliabilitas, validitas
--   Mediasi & pelaporan APA
-
-. . .
+-   Fit indices, reliabilitas, validitas, mediasi
 
 **Bagian B: PLS-SEM dengan `seminr`**
 
--   Kapan menggunakan PLS-SEM
--   Dataset ECSI (mobi)
--   Outer & inner model evaluation
--   Bootstrap, mediasi, PLS-Predict
+-   Berbagai tipe konstruk (composite, reflective, HOC, formatif)
+-   Outer & inner model evaluation, bootstrap, mediasi
 
 ## Apa itu SEM?
 
-::: incremental
--   **Structural Equation Modeling** = teknik statistik multivariat yang menggabungkan analisis faktor dan regresi
--   Memungkinkan pengujian hubungan **simultan** antara beberapa variabel
--   Dapat menguji variabel **laten** (tidak langsung teramati) melalui indikator-indikator terukur
--   Terdiri dari dua komponen: **measurement model** dan **structural model**
-:::
+**SEM** = analisis faktor + regresi. Menguji hubungan simultan antara variabel **laten** melalui indikator terukur.
 
-## Variabel Laten & Manifes
+-   **Measurement model**: hubungan laten ↔ indikator
+-   **Structural model**: hubungan antar laten
+
+## Terminologi SEM {.smaller}
 
 | Istilah | Penjelasan |
 |---------|------------|
-| **Variabel Laten** | Konstruk yang tidak dapat diukur langsung (simbol oval) |
-| **Variabel Manifes/Indikator** | Item kuesioner atau pengukuran langsung (simbol kotak) |
-| **Variabel Eksogen** | Variabel independen — tidak diprediksi oleh variabel lain |
-| **Variabel Endogen** | Variabel dependen — diprediksi oleh variabel lain |
+| Variabel Laten | Konstruk tidak langsung terukur (oval) |
+| Variabel Manifes | Item kuesioner (kotak) |
+| Variabel Eksogen | Independen — tidak diprediksi variabel lain |
+| Variabel Endogen | Dependen — diprediksi variabel lain |
 
-## Measurement Model vs Structural Model
-
--   **Measurement Model**: hubungan antara variabel laten dan indikator-indikatornya
-    -   "Seberapa baik indikator mengukur konstruk?"
--   **Structural Model**: hubungan antar variabel laten
-    -   "Bagaimana konstruk saling mempengaruhi?"
-
-. . .
-
-::: {.callout-note}
-SEM menguji **keduanya** secara bersamaan, sehingga memberikan gambaran yang lebih komprehensif dibanding regresi biasa.
-:::
-
-## Kapan Menggunakan CB-SEM vs PLS-SEM? {.smaller}
+## CB-SEM vs PLS-SEM {.smaller}
 
 | Kriteria | CB-SEM | PLS-SEM |
 |----------|--------|---------|
 | Basis | Kovarians | Varians |
 | Tujuan | Konfirmasi teori | Prediksi & eksplorasi |
 | Ukuran sampel | Besar (>200) | Kecil–menengah (>50) |
-| Distribusi | Memerlukan normalitas | Fleksibel |
 | Tipe indikator | Reflektif | Reflektif & formatif |
-| Fit indices | CFI, TLI, RMSEA, SRMR | Tidak ada (gunakan R², HTMT) |
-| Kompleksitas | Sederhana–menengah | Bisa sangat kompleks |
+| Fit indices | CFI, TLI, RMSEA, SRMR | R², HTMT |
 | Paket R | `lavaan` | `seminr` |
 
 ## Two-Step Approach
 
-**Anderson & Gerbing (1988)** merekomendasikan:
+Anderson & Gerbing (1988):
 
-1.  **Langkah 1 — CFA**: Evaluasi measurement model terlebih dahulu
-    -   Apakah indikator mengukur konstruk dengan baik?
-    -   Validitas konvergen & diskriminan
-2.  **Langkah 2 — Full SEM**: Tambahkan jalur struktural
-    -   Uji hipotesis antar konstruk
-
-. . .
+1.  **CFA**: Evaluasi measurement model (validitas & reliabilitas)
+2.  **Full SEM**: Tambahkan jalur struktural (uji hipotesis)
 
 ::: {.callout-important}
-Jangan langsung menjalankan full SEM tanpa memastikan measurement model sudah baik! Jika pengukuran buruk, kesimpulan struktural tidak dapat dipercaya.
+Jangan langsung full SEM tanpa memastikan measurement model baik!
 :::
 
 # Bagian A: CB-SEM dengan lavaan
 
-## Dataset: E-Loyalty {.smaller}
+## Import Data
 
-Data tentang pengaruh Perceived Mental Benefits dan Hedonic Value terhadap E-Loyalty.
+Data E-Loyalty (Khoa & Nguyen, 2020): PMB → HV → ELOY.
 
 ```{r}
 #| echo: true
-dat <- read_excel("data/sem/data.xlsx")
-dat <- dat |> select(-No)
+dat <- read_excel("data/sem/data.xlsx") |> select(-No)
 glimpse(dat)
 ```
 
-## Konstruk dan Indikator
+## Konstruk dan Hipotesis {.smaller}
 
 | Konstruk | Indikator | Deskripsi |
 |----------|-----------|-----------|
-| **PMB** (Perceived Mental Benefits) | PMB1, PMB2, PMB3, PMB4 | Manfaat mental yang dirasakan |
-| **HV** (Hedonic Value) | HV1, HV2, HV3, HV4 | Nilai hedonik |
-| **ELOY** (Electronic Loyalty) | ELOY1, ELOY2, ELOY3 | Loyalitas elektronik |
-
-. . .
-
-Semua konstruk bersifat **reflektif** — indikator merupakan efek dari konstruk.
-
-## Hipotesis Penelitian
+| **PMB** | PMB1–4 | Perceived Mental Benefits |
+| **HV** | HV1–4 | Hedonic Value |
+| **ELOY** | ELOY1–3 | Electronic Loyalty |
 
 | No | Hipotesis | Path |
 |----|-----------|------|
-| H1 | PMB berpengaruh positif terhadap ELOY | ELOY ~ PMB |
-| H2 | PMB berpengaruh positif terhadap HV | HV ~ PMB |
-| H3 | HV berpengaruh positif terhadap ELOY | ELOY ~ HV |
-
-. . .
-
-Model ini juga memungkinkan pengujian **efek mediasi** HV dalam hubungan PMB → ELOY.
+| H1 | PMB → ELOY | `ELOY ~ PMB` |
+| H2 | PMB → HV | `HV ~ PMB` |
+| H3 | HV → ELOY | `ELOY ~ HV` |
 
 ## Sintaks lavaan
 
 | Operator | Makna | Contoh |
 |----------|-------|--------|
-| `=~` | "diukur oleh" (measurement) | `PMB =~ PMB1 + PMB2` |
-| `~` | "diregresikan terhadap" (structural) | `ELOY ~ PMB + HV` |
+| `=~` | "diukur oleh" | `PMB =~ PMB1 + PMB2` |
+| `~` | "diregresikan terhadap" | `ELOY ~ PMB + HV` |
 | `~~` | kovarians/varians | `HV ~~ ELOY` |
-| `:=` | defined parameter (mediasi) | `indirect := a*b` |
+| `:=` | defined parameter | `indirect := a*b` |
 
-## Langkah 1: Spesifikasi Model CFA
+## CFA: Spesifikasi & Estimasi
 
 ```{r}
 #| echo: true
@@ -152,22 +110,10 @@ cfa_model <- '
   HV   =~ HV1 + HV2 + HV3 + HV4
   ELOY =~ ELOY1 + ELOY2 + ELOY3
 '
-```
-
-## Estimasi CFA
-
-```{r}
-#| echo: true
 cfa_fit <- cfa(cfa_model, data = dat)
 ```
 
-. . .
-
--   Estimator default: **ML** (Maximum Likelihood)
--   Secara otomatis menetapkan loading pertama = 1 untuk identifikasi model
--   `cfa()` hanya mengestimasi measurement model (tanpa jalur struktural)
-
-## Fit Indices CFA
+## Fit Indices CFA {.smaller}
 
 ```{r}
 #| echo: true
@@ -175,23 +121,28 @@ fitMeasures(cfa_fit, c("chisq", "df", "pvalue",
                         "cfi", "tli", "rmsea", "srmr"))
 ```
 
-## Kriteria Fit Indices
-
-Berdasarkan **Hu & Bentler (1999)**:
-
-| Indeks | Kriteria Baik | Keterangan |
-|--------|---------------|------------|
-| $\chi^2$ p-value | > 0.05 | Sensitif terhadap sampel besar |
-| CFI | $\geq$ 0.90 | Comparative Fit Index |
-| TLI | $\geq$ 0.90 | Tucker-Lewis Index |
-| RMSEA | $\leq$ 0.08 | Root Mean Square Error of Approximation |
-| SRMR | $\leq$ 0.08 | Standardized Root Mean Square Residual |
+| Indeks | Kriteria Baik |
+|--------|---------------|
+| CFI | ≥ 0.90 |
+| TLI | ≥ 0.90 |
+| RMSEA | ≤ 0.08 |
+| SRMR | ≤ 0.08 |
 
 ::: {.callout-tip}
 Laporkan minimal CFI, RMSEA, dan SRMR. Jangan hanya mengandalkan satu indeks.
 :::
 
-## Standardized Factor Loadings {.smaller}
+## Modification Indices {.smaller}
+
+```{r}
+#| echo: true
+mi <- modindices(cfa_fit, sort = TRUE, minimum.value = 10)
+mi |> head(10) |> kable(digits = 3)
+```
+
+Kolom `mi` = penurunan chi-square jika parameter ditambahkan. Hanya tambahkan yang punya **justifikasi teoretis**.
+
+## Standardized Loadings {.smaller}
 
 ```{r}
 #| echo: true
@@ -203,93 +154,83 @@ parameterEstimates(cfa_fit, standardized = TRUE) |>
   kable(digits = 3)
 ```
 
-. . .
+Loading ≥ 0.50 memadai, idealnya ≥ 0.70.
 
--   Standardized loading ($\lambda$) $\geq$ 0.50 (ideal $\geq$ 0.70)
--   Loading < 0.50 → indikator perlu dipertimbangkan untuk dihapus
-
-## Composite Reliability (CR) & AVE {.smaller}
+## CR & AVE {.smaller}
 
 ```{r}
 #| echo: true
 std_loadings <- parameterEstimates(cfa_fit, standardized = TRUE) |>
-  filter(op == "=~") |>
-  select(lhs, std.all)
+  filter(op == "=~") |> select(lhs, std.all)
 
 reliabilitas <- std_loadings |>
   group_by(Konstruk = lhs) |>
   summarize(
     n_items = n(),
-    sum_lambda = sum(std.all),
-    sum_lambda2 = sum(std.all^2),
     AVE = sum(std.all^2) / n(),
-    CR = sum_lambda^2 / (sum_lambda^2 + (n() - sum(std.all^2))),
+    CR = sum(std.all)^2 / (sum(std.all)^2 + (n() - sum(std.all^2))),
     .groups = "drop"
   )
-reliabilitas |> select(Konstruk, n_items, AVE, CR) |> kable(digits = 3)
+reliabilitas |> kable(digits = 3)
 ```
 
-. . .
+AVE ≥ 0.50 (convergent validity), CR ≥ 0.70 (reliabilitas).
 
-| Kriteria | Ambang Batas |
-|----------|-------------|
-| AVE | $\geq$ 0.50 (convergent validity) |
-| CR | $\geq$ 0.70 (reliabilitas konstruk) |
-
-## Discriminant Validity: Fornell-Larcker {.smaller}
-
-**Fornell & Larcker (1981)**: $\sqrt{AVE}$ setiap konstruk harus lebih besar dari korelasi antar konstruk.
+## Discriminant Validity: Fornell-Larcker
 
 ```{r}
 #| echo: true
-# Matriks korelasi antar konstruk laten
 cor_lv <- lavInspect(cfa_fit, "cor.lv")
-
-# Hitung sqrt(AVE)
-ave_vals <- reliabilitas$AVE
-names(ave_vals) <- reliabilitas$Konstruk
-sqrt_ave <- sqrt(ave_vals)
-
-# Tampilkan perbandingan
-cat("Korelasi antar konstruk:\n")
 round(cor_lv, 3)
 ```
 
-. . .
-
 ```{r}
 #| echo: true
-cat("Sqrt(AVE) per konstruk:\n")
+sqrt_ave <- sqrt(setNames(reliabilitas$AVE, reliabilitas$Konstruk))
 round(sqrt_ave, 3)
 ```
 
-::: {.callout-tip}
-Jika $\sqrt{AVE}$ lebih besar dari semua korelasi pada baris/kolomnya, discriminant validity terpenuhi.
-:::
+√AVE harus > korelasi antar konstruk pada baris/kolomnya.
 
-## Langkah 2: Full Structural Model {.smaller}
+## Model Tanpa Mediasi
 
-Setelah CFA memadai, tambahkan jalur struktural dengan **label** untuk analisis mediasi:
+```{r}
+#| echo: true
+sem_direct <- '
+  PMB  =~ PMB1 + PMB2 + PMB3 + PMB4
+  HV   =~ HV1 + HV2 + HV3 + HV4
+  ELOY =~ ELOY1 + ELOY2 + ELOY3
+  ELOY ~ PMB + HV
+'
+sem_direct_fit <- sem(sem_direct, data = dat)
+```
+
+```{r}
+#| echo: true
+parameterEstimates(sem_direct_fit, standardized = TRUE) |>
+  filter(op == "~") |>
+  select(DV = lhs, IV = rhs, B = est, Beta = std.all, p = pvalue) |>
+  kable(digits = 3)
+```
+
+## Full SEM dengan Mediasi {.smaller}
 
 ```{r}
 #| echo: true
 sem_model <- '
-  # Measurement model
   PMB  =~ PMB1 + PMB2 + PMB3 + PMB4
   HV   =~ HV1 + HV2 + HV3 + HV4
   ELOY =~ ELOY1 + ELOY2 + ELOY3
-
-  # Structural model (dengan label untuk mediasi)
   HV   ~ a*PMB
   ELOY ~ c*PMB + b*HV
-
-  # Defined parameters
   indirect := a*b
   total    := c + a*b
 '
 ```
 
-## Estimasi Full SEM dengan Bootstrap
+Label `a`, `b`, `c` untuk menghitung indirect & total effect.
+
+## Estimasi Bootstrap
 
 ```{r}
 #| echo: true
@@ -297,313 +238,169 @@ sem_model <- '
 sem_fit <- sem(sem_model, data = dat, se = "bootstrap", bootstrap = 1000)
 ```
 
-. . .
+Bootstrap: distribusi sampling mediasi umumnya *skewed* → CI empiris lebih valid.
 
-::: {.callout-note}
-Bootstrap SE digunakan agar confidence interval untuk efek mediasi (indirect effect) tidak bergantung pada asumsi normalitas distribusi sampling.
-:::
-
-## Fit Indices Full SEM
-
-```{r}
-#| echo: true
-fitMeasures(sem_fit, c("chisq", "df", "pvalue",
-                        "cfi", "tli", "rmsea", "srmr"))
-```
-
-## Path Coefficients (Uji Hipotesis) {.smaller}
+## Path Coefficients {.smaller}
 
 ```{r}
 #| echo: true
 parameterEstimates(sem_fit, standardized = TRUE) |>
   filter(op == "~") |>
-  select(DV = lhs, IV = rhs, B = est, SE = se, Z = z,
+  select(DV = lhs, IV = rhs, B = est, SE = se,
          p = pvalue, Beta = std.all) |>
   mutate(Sig = ifelse(p < 0.05, "Ya", "Tidak")) |>
   kable(digits = 3)
 ```
 
-## $R^2$ Variabel Endogen
+## R² & Mediasi
 
 ```{r}
 #| echo: true
 lavInspect(sem_fit, "r2")
 ```
 
-. . .
-
--   $R^2$ menunjukkan proporsi varians variabel endogen yang dijelaskan oleh prediktor
--   Semakin tinggi $R^2$, semakin baik model menjelaskan variabel tersebut
-
-## Analisis Mediasi {.smaller}
-
-HV sebagai mediator dalam hubungan PMB → ELOY:
-
 ```{r}
 #| echo: true
 parameterEstimates(sem_fit) |>
   filter(op == ":=") |>
-  select(Label = label, Estimate = est, SE = se, Z = z,
-         p = pvalue, CI.Lower = ci.lower, CI.Upper = ci.upper) |>
+  select(Label = label, Estimate = est, p = pvalue,
+         CI.Lower = ci.lower, CI.Upper = ci.upper) |>
   kable(digits = 3)
 ```
 
-. . .
-
-::: {.callout-note}
-**Interpretasi**: Efek tidak langsung (indirect) signifikan jika bootstrap CI tidak melewati nol. Ini menunjukkan bahwa HV memediasi hubungan PMB → ELOY.
-:::
+CI tidak melewati nol → mediasi signifikan. Efek langsung tetap signifikan → **mediasi parsial**.
 
 ## Path Diagram
 
 ```{r}
 #| echo: true
-semPaths(sem_fit,
-         whatLabels = "std",
-         layout = "tree2",
-         edge.label.cex = 0.8,
-         style = "lisrel",
-         residuals = FALSE,
-         rotation = 2,
-         nCharNodes = 4,
-         sizeMan = 6,
-         sizeLat = 9)
+semPaths(sem_fit, whatLabels = "std", layout = "tree2",
+         edge.label.cex = 0.8, style = "lisrel", residuals = FALSE,
+         rotation = 2, nCharNodes = 4, sizeMan = 6, sizeLat = 9)
 ```
-
-## Common Method Bias (CMB) {.smaller}
-
-::: {.callout-warning}
-**Perhatian**: Data dalam penelitian ini dikumpulkan melalui **self-report questionnaire** dengan sumber yang sama (single-source), sehingga berpotensi terkena **Common Method Bias** (CMB).
-:::
-
-Langkah mitigasi yang dapat dilakukan:
-
--   **Harman's single-factor test**: Jalankan EFA dengan satu faktor; jika varians yang dijelaskan < 50%, CMB tidak menjadi masalah serius
--   **Common Latent Factor** (CLF): Tambahkan satu faktor laten umum ke model CFA
--   **Procedural remedies**: Gunakan sumber data berbeda, jaminan anonimitas, counterbalancing item order
-
-. . .
-
-> CMB bukan berarti hasil tidak valid, tetapi harus dilaporkan sebagai **limitasi** dan diuji.
-
-## Pelaporan CB-SEM (Template APA) {.smaller}
-
-> Model pengukuran (CFA) menunjukkan fit yang memadai ($\chi^2$(df) = ..., p = ...; CFI = ...; TLI = ...; RMSEA = ...; SRMR = ...). Semua standardized factor loadings berada di atas 0.50, dengan AVE > 0.50 dan CR > 0.70 untuk seluruh konstruk, menunjukkan convergent validity dan reliabilitas yang baik. Discriminant validity terpenuhi berdasarkan kriteria Fornell-Larcker.
->
-> Model struktural menunjukkan bahwa PMB berpengaruh positif signifikan terhadap HV ($\beta$ = ..., p < ...) dan terhadap ELOY ($\beta$ = ..., p < ...). HV juga berpengaruh positif signifikan terhadap ELOY ($\beta$ = ..., p < ...). Analisis mediasi dengan bootstrap (1000 resamples) menunjukkan efek tidak langsung PMB → HV → ELOY yang signifikan (indirect = ..., 95% CI [..., ...]), mengindikasikan mediasi parsial.
-
-## Referensi CB-SEM
-
--   Anderson, J.C. & Gerbing, D.W. (1988). Structural equation modeling in practice. *Psychological Bulletin*, 103(3), 411–423.
--   Hu, L. & Bentler, P.M. (1999). Cutoff criteria for fit indexes. *Structural Equation Modeling*, 6(1), 1–55.
--   Fornell, C. & Larcker, D.F. (1981). Evaluating SEM with unobserved variables. *Journal of Marketing Research*, 18(1), 39–50.
--   Khoa, B.T. & Nguyen, T.D. (2020). Electronic loyalty in social commerce. *Sustainability*, 12(7), 2804.
--   Lee, W.I. & Wu, C.C. (2017). Customer loyalty in e-commerce. *Journal of Internet Commerce*, 16(3), 305–326.
--   Nguyen, T.D. & Khoa, B.T. (2019). Hedonic value and e-loyalty. *Journal of Distribution Science*, 17(2), 33–42.
 
 # Bagian B: PLS-SEM dengan seminr
 
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
+#| echo: true
 library(seminr)
 ```
 
 ## Mengapa PLS-SEM?
 
-::: incremental
--   Tidak memerlukan asumsi distribusi normal
--   Bisa menangani **sampel kecil**
+-   Tidak memerlukan asumsi normalitas
+-   Sampel kecil (>50)
 -   Mendukung indikator **formatif** dan **reflektif**
--   Cocok untuk model yang **kompleks** dengan banyak variabel
--   Fokus pada **prediksi**, bukan hanya konfirmasi teori
--   Sangat populer di bidang manajemen, pemasaran, dan sistem informasi
-:::
+-   Cocok untuk model kompleks
+-   Fokus pada **prediksi**
 
 ## Reflektif vs Formatif
 
-::::: columns
-::: {.column width="50%"}
-**Reflektif** (Mode A)
+-   **Reflektif** (Mode A): Indikator = *efek* dari konstruk. Hapus satu → makna tetap.
+-   **Formatif** (Mode B): Indikator *membentuk* konstruk. Hapus satu → makna berubah.
 
--   Indikator adalah **efek** dari konstruk
--   Menghapus satu indikator tidak mengubah makna konstruk
--   Indikator saling berkorelasi tinggi
--   Contoh: item kepuasan pelanggan
-:::
+## Tipe Konstruk di `seminr` {.smaller}
 
-::: {.column width="50%"}
-**Formatif** (Mode B)
+| Fungsi | Model | Penjelasan |
+|--------|-------|------------|
+| `composite()` | Composite Mode A | Default PLS-SEM, correlation weights |
+| `composite(..., mode_B)` | Composite Mode B | Formatif, regression weights |
+| `reflective()` | Common factor | PLSc (consistent PLS) |
+| `higher_composite()` | HOC | Dibentuk dari dimensi konstruk lain |
+| `single_item()` | Single item | Satu indikator |
 
--   Indikator **membentuk** konstruk
--   Menghapus satu indikator mengubah makna konstruk
--   Indikator tidak harus berkorelasi
--   Contoh: SES (pendidikan + pendapatan + pekerjaan)
-:::
-:::::
-
-. . .
-
-::: {.callout-note}
-Model ECSI yang kita gunakan hari ini menggunakan **semua konstruk reflektif** (Mode A).
-:::
-
-## Dataset: ECSI Mobile Operator {.smaller}
-
-European Customer Satisfaction Index untuk operator telekomunikasi.
+## Dataset & Model {.smaller}
 
 ```{r}
 #| echo: true
 mobi <- read_excel("data/plssem/sem_mobi.xlsx")
-glimpse(mobi)
 ```
 
-## Konstruk dan Indikator ECSI {.smaller}
+| Konstruk | Indikator | Tipe |
+|----------|-----------|------|
+| Image | IMAG1–3 | composite Mode A |
+| Value | PERV1–2 | composite Mode A |
+| Satisfaction | HOC | higher_composite (Image + Value) |
+| Quality | PERQ1–3 | composite **Mode B** (formatif) |
+| Complaints | CUSCO | single_item |
+| Loyalty | CUSL1–3 | reflective (PLSc) |
 
-| Konstruk | Indikator | Deskripsi |
-|----------|-----------|-----------|
-| **IMAG** (Image) | IMAG1–5 | Trustworthiness, stability, social contribution, concern, innovation |
-| **CUEX** (Customer Expectation) | CUEX1–3 | Overall quality expectation, need fulfillment, error frequency |
-| **PERQ** (Perceived Quality) | PERQ1–7 | Overall quality, technical, service, product, variety, reliability, transparency |
-| **PERV** (Perceived Value) | PERV1–2 | Price vs quality, quality vs price |
-| **CUSA** (Customer Satisfaction) | CUSA1–3 | Overall satisfaction, fulfillment, ideal comparison |
-| **CUSCO** (Customer Complaints) | CUSCO | Single item: complaint handling |
-| **CUSL** (Customer Loyalty) | CUSL1–3 | Repurchase, price tolerance, word of mouth |
-
-## Catatan tentang Indikator {.smaller}
-
-::: {.callout-warning}
-**CUSCO** hanya memiliki **1 indikator** (single item). Ini berarti:
-
--   Tidak dapat menghitung reliabilitas internal (Alpha, CR)
--   AVE otomatis = 1.0 (hanya satu loading)
--   Interpretasi harus hati-hati — error variance tidak dapat diestimasi secara terpisah
-:::
-
-::: {.callout-note}
-**PERV** hanya memiliki **2 indikator**. Konstruk dengan 2 indikator masih dapat diidentifikasi dalam PLS-SEM, tetapi memiliki keterbatasan dalam estimasi reliabilitas. Gunakan rhoA sebagai ukuran reliabilitas yang lebih robust.
-:::
-
-## Hipotesis ECSI (H1–H12) {.smaller}
+## Hipotesis PLS
 
 | No | Hipotesis | Path |
 |----|-----------|------|
-| H1 | IMAG → CUEX | CUEX ~ IMAG |
-| H2 | IMAG → CUSA | CUSA ~ IMAG |
-| H3 | IMAG → CUSL | CUSL ~ IMAG |
-| H4 | CUEX → PERQ | PERQ ~ CUEX |
-| H5 | CUEX → PERV | PERV ~ CUEX |
-| H6 | CUEX → CUSA | CUSA ~ CUEX |
-| H7 | PERQ → PERV | PERV ~ PERQ |
-| H8 | PERQ → CUSA | CUSA ~ PERQ |
-| H9 | PERV → CUSA | CUSA ~ PERV |
-| H10 | CUSA → CUSCO | CUSCO ~ CUSA |
-| H11 | CUSA → CUSL | CUSL ~ CUSA |
-| H12 | CUSCO → CUSL | CUSL ~ CUSCO |
+| H1 | Quality → Satisfaction | |
+| H2 | Satisfaction → Complaints | |
+| H3 | Satisfaction → Loyalty | |
 
-## Spesifikasi Measurement Model
+Mediasi: Quality → Satisfaction → Loyalty
+
+## Spesifikasi Model {.smaller}
 
 ```{r}
 #| echo: true
 mm <- constructs(
-  composite("IMAG",  multi_items("IMAG", 1:5)),
-  composite("CUEX",  multi_items("CUEX", 1:3)),
-  composite("PERQ",  multi_items("PERQ", 1:7)),
-  composite("PERV",  multi_items("PERV", 1:2)),
-  composite("CUSA",  multi_items("CUSA", 1:3)),
-  composite("CUSCO", single_item("CUSCO")),
-  composite("CUSL",  multi_items("CUSL", 1:3))
+  composite("Image",        multi_items("IMAG", 1:3)),
+  composite("Value",        multi_items("PERV", 1:2)),
+  higher_composite("Satisfaction",
+                   dimensions = c("Image", "Value"),
+                   method = two_stage),
+  composite("Quality",      multi_items("PERQ", 1:3), weights = mode_B),
+  composite("Complaints",   single_item("CUSCO")),
+  reflective("Loyalty",     multi_items("CUSL", 1:3))
 )
-```
 
-## Spesifikasi Structural Model
-
-```{r}
-#| echo: true
 sm <- relationships(
-  paths(from = "IMAG",  to = c("CUEX", "CUSA", "CUSL")),
-  paths(from = "CUEX",  to = c("PERQ", "PERV", "CUSA")),
-  paths(from = "PERQ",  to = c("PERV", "CUSA")),
-  paths(from = "PERV",  to = "CUSA"),
-  paths(from = "CUSA",  to = c("CUSCO", "CUSL")),
-  paths(from = "CUSCO", to = "CUSL")
+  paths(from = "Quality",      to = "Satisfaction"),
+  paths(from = "Satisfaction", to = c("Complaints", "Loyalty"))
 )
 ```
 
-## Estimasi Model PLS
+## Estimasi PLS
 
 ```{r}
 #| echo: true
 pls_model <- estimate_pls(
-  data = mobi,
+  data = as.data.frame(mobi),
   measurement_model = mm,
   structural_model = sm
 )
+
+# Workaround bug seminr: HOC dimensions
+hoc_dims <- c("Image", "Value")
+stage1_scores <- pls_model$first_stage_model$construct_scores
+pls_model$rawdata <- cbind(pls_model$rawdata,
+                           stage1_scores[, hoc_dims, drop = FALSE])
+
 pls_summary <- summary(pls_model)
 ```
 
-## Evaluasi Outer Model: Reliabilitas {.smaller}
+## Reliabilitas {.smaller}
 
 ```{r}
 #| echo: true
 pls_summary$reliability
 ```
 
-. . .
+rhoC ≥ 0.70, AVE ≥ 0.50. Alpha/rhoA **tidak relevan** untuk konstruk formatif (Mode B).
 
-| Kriteria | Ambang Batas |
-|----------|-------------|
-| Cronbach's Alpha | $\geq$ 0.70 |
-| rhoC (Composite Reliability) | $\geq$ 0.70 |
-| AVE | $\geq$ 0.50 |
-| rhoA | $\geq$ 0.70 |
-
-## Outer Loadings {.smaller}
+## Outer Loadings
 
 ```{r}
 #| echo: true
 pls_summary$loadings
 ```
 
-. . .
+Loading ≥ 0.70 ideal. Loading 0.40–0.70: pertimbangkan dampak pada AVE.
 
--   Outer loading $\geq$ 0.70: ideal
--   Loading antara 0.40–0.70: pertimbangkan dampak penghapusan terhadap AVE/CR
-
-## Discriminant Validity: HTMT {.smaller}
+## HTMT (Discriminant Validity) {.smaller}
 
 ```{r}
 #| echo: true
 pls_summary$validity$htmt
 ```
 
-. . .
-
--   **HTMT** (Heterotrait-Monotrait Ratio) < 0.90: memadai
--   HTMT < 0.85: lebih konservatif (**Henseler et al., 2015**)
-
-## Discriminant Validity: Fornell-Larcker {.smaller}
-
-```{r}
-#| echo: true
-pls_summary$validity$fl_criteria
-```
-
-. . .
-
-Diagonal = $\sqrt{AVE}$, off-diagonal = korelasi antar konstruk. Discriminant validity terpenuhi jika nilai diagonal > semua nilai off-diagonal pada baris/kolomnya.
-
-## Discriminant Validity: Cross-Loadings {.smaller}
-
-```{r}
-#| echo: true
-pls_summary$validity$cross_loadings
-```
-
-. . .
-
-Setiap indikator harus memiliki loading tertinggi pada konstruk miliknya sendiri dibanding konstruk lain.
+HTMT < 0.90 memadai (konservatif: < 0.85). Image–Satisfaction dan Value–Satisfaction tinggi karena mereka **dimensi HOC**.
 
 ## Bootstrap {.smaller}
 
@@ -611,12 +408,12 @@ Setiap indikator harus memiliki loading tertinggi pada konstruk miliknya sendiri
 #| echo: true
 #| cache: true
 set.seed(2026)
-boot <- bootstrap_model(pls_model, nboot = 5000)
+boot <- bootstrap_model(pls_model, nboot = 100, cores = 1)
 boot_sum <- summary(boot)
 ```
 
 ::: {.callout-tip}
-Gunakan minimal **nboot = 5000** untuk hasil yang stabil (Hair et al., 2019). Selalu set seed untuk reprodusibilitas.
+Minimal **nboot = 5000** untuk hasil stabil (Hair et al., 2019). 100 hanya untuk demo.
 :::
 
 ## Path Coefficients (Bootstrap) {.smaller}
@@ -626,102 +423,103 @@ Gunakan minimal **nboot = 5000** untuk hasil yang stabil (Hair et al., 2019). Se
 boot_sum$bootstrapped_paths
 ```
 
-## Evaluasi Inner Model: $R^2$
+T > 1.96 dan CI tidak melewati nol → signifikan.
+
+## R² dan f² {.smaller}
 
 ```{r}
 #| echo: true
 pls_summary$paths
 ```
 
-. . .
-
-| $R^2$ | Interpretasi |
+| R² | Interpretasi |
 |-------|-------------|
-| $\geq$ 0.75 | Substansial |
-| $\geq$ 0.50 | Moderat |
-| $\geq$ 0.25 | Lemah |
-
-## Effect Size: $f^2$ {.smaller}
+| ≥ 0.75 | Substansial |
+| ≥ 0.50 | Moderat |
+| ≥ 0.25 | Lemah |
 
 ```{r}
 #| echo: true
 pls_summary$fSquare
 ```
 
-. . .
+f²: 0.02 kecil, 0.15 sedang, 0.35 besar.
 
-| $f^2$ | Interpretasi |
-|-------|-------------|
-| $\geq$ 0.35 | Besar |
-| $\geq$ 0.15 | Sedang |
-| $\geq$ 0.02 | Kecil |
-
-## Analisis Mediasi PLS-SEM {.smaller}
-
-Menguji mediasi IMAG → CUSA → CUSL:
+## Mediasi PLS-SEM
 
 ```{r}
 #| echo: true
-med <- specific_effect_significance(boot,
-  from = "IMAG", through = "CUSA", to = "CUSL")
-med
+med1 <- specific_effect_significance(boot,
+  from = "Quality", through = "Satisfaction", to = "Loyalty")
+med1
 ```
 
-. . .
+```{r}
+#| echo: true
+med2 <- specific_effect_significance(boot,
+  from = "Quality", through = "Satisfaction", to = "Complaints")
+med2
+```
 
-Jika bootstrap CI tidak melewati nol, efek mediasi signifikan.
-
-## PLS-Predict {.smaller}
+## PLSpredict {.smaller}
 
 ```{r}
 #| echo: true
-#| cache: true
-set.seed(2026)
-pred <- tryCatch(
-  predict_pls(
-    model = pls_model,
-    technique = predict_DA,
-    noFolds = 10,
-    reps = 10
-  ),
-  error = function(e) {
-    message("PLS-Predict error (sering terjadi pada model dengan single-item construct): ", e$message)
-    NULL
-  }
+# PLSpredict belum mendukung higher_composite()
+# Demo dengan model sederhana tanpa HOC:
+mm_simple <- constructs(
+  composite("Quality",      multi_items("PERQ", 1:3), weights = mode_B),
+  composite("Satisfaction", multi_items("IMAG", 1:3)),
+  composite("Complaints",   single_item("CUSCO")),
+  reflective("Loyalty",     multi_items("CUSL", 1:3))
 )
-if (!is.null(pred)) summary(pred)
+sm_simple <- relationships(
+  paths(from = "Quality",      to = "Satisfaction"),
+  paths(from = "Satisfaction", to = c("Complaints", "Loyalty"))
+)
+pls_simple <- estimate_pls(data = as.data.frame(mobi),
+                           measurement_model = mm_simple,
+                           structural_model = sm_simple)
+set.seed(2026)
+pred <- predict_pls(pls_simple, technique = predict_DA, noFolds = 10)
+summary(pred)
 ```
 
-. . .
-
-::: {.callout-note}
-**Interpretasi**: Jika RMSE PLS < RMSE LM untuk **mayoritas indikator**, model memiliki predictive power yang baik (Shmueli et al., 2019).
-:::
+PLS RMSE < LM RMSE → predictive power baik.
 
 ## Path Diagram PLS
 
 ```{r}
 #| echo: true
-plot(pls_model)
+plot(boot)
+save_plot("plsem.png")
 ```
 
-## Pelaporan PLS-SEM (Template APA) {.smaller}
+# Rekap Sesi 3
 
-> Model PLS-SEM diestimasi menggunakan paket seminr di R. Evaluasi outer model menunjukkan bahwa seluruh konstruk memiliki reliabilitas yang memadai (rhoC > 0.70, AVE > 0.50). Discriminant validity terpenuhi berdasarkan kriteria HTMT (< 0.90) dan Fornell-Larcker.
->
-> Hasil bootstrap (5000 resamples) menunjukkan bahwa ... dari 12 hipotesis didukung oleh data. IMAG berpengaruh signifikan terhadap CUEX ($\beta$ = ..., p < ...). CUSA berpengaruh signifikan terhadap CUSL ($\beta$ = ..., p < ...). Nilai $R^2$ untuk CUSL sebesar ..., mengindikasikan bahwa model menjelaskan ...% varians customer loyalty. Analisis mediasi menunjukkan efek tidak langsung IMAG → CUSA → CUSL yang signifikan (indirect = ..., 95% CI [..., ...]).
+## Perbandingan Praktis {.smaller}
 
-## Referensi PLS-SEM
+| Aspek | CB-SEM (`lavaan`) | PLS-SEM (`seminr`) |
+|-------|-------------------|---------------------|
+| Sintaks | `=~`, `~` | `constructs()`, `relationships()` |
+| Estimasi | `cfa()` / `sem()` | `estimate_pls()` |
+| Signifikansi | Langsung dari output | `bootstrap_model()` |
+| Fit indices | CFI, TLI, RMSEA, SRMR | R², f², HTMT |
+| Mediasi | Label + `:=` | `specific_effect_significance()` |
 
--   Hair, J.F., Risher, J.J., Sarstedt, M. & Ringle, C.M. (2019). When to use and how to report PLS-SEM. *European Business Review*, 31(1), 2–24.
--   Henseler, J., Ringle, C.M. & Sarstedt, M. (2015). A new criterion for assessing discriminant validity. *Journal of the Academy of Marketing Science*, 43(1), 115–135.
--   Shmueli, G., Sarstedt, M., Hair, J.F., et al. (2019). Predictive model assessment in PLS-SEM. *European Journal of Marketing*, 53(11), 2322–2347.
+## Yang Sudah Dipelajari
+
+::: incremental
+-   **Konsep SEM**: laten vs manifes, measurement vs structural
+-   **CB-SEM**: CFA → Full SEM, fit indices, CR, AVE, Fornell-Larcker, mediasi
+-   **PLS-SEM**: composite (Mode A/B), reflective (PLSc), HOC, single_item, bootstrap, R², f², HTMT
+:::
 
 # Latihan
 
-## Latihan 1: CB-SEM {.smaller}
+## Latihan 1: CB-SEM
 
-> Hapus satu path dari model struktural CB-SEM (misalnya hapus path `ELOY ~ HV`) dan estimasi ulang. Bandingkan fit indices dan path coefficients dengan model asli.
+> Hapus path `ELOY ~ HV` dan estimasi ulang.
 
 ```{r}
 #| echo: true
@@ -738,44 +536,36 @@ sem_fit2 <- sem(sem_model2, data = dat)
 fitMeasures(sem_fit2, c("cfi", "tli", "rmsea", "srmr"))
 ```
 
-## Latihan 2: PLS-SEM {.smaller}
+## Latihan 2: PLS-SEM
 
-> Uji jalur mediasi lain dalam model ECSI, misalnya CUEX → PERQ → CUSA. Gunakan `specific_effect_significance()`.
+> Hapus CUSL2 dari Loyalty, estimasi ulang. Apakah reliabilitas membaik?
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Jawaban"
-med2 <- specific_effect_significance(boot,
-  from = "CUEX", through = "PERQ", to = "CUSA")
-med2
+mm2 <- constructs(
+  composite("Image",        multi_items("IMAG", 1:3)),
+  composite("Value",        multi_items("PERV", 1:2)),
+  higher_composite("Satisfaction",
+                   dimensions = c("Image", "Value"),
+                   method = two_stage),
+  composite("Quality",      multi_items("PERQ", 1:3), weights = mode_B),
+  composite("Complaints",   single_item("CUSCO")),
+  reflective("Loyalty",     c("CUSL1", "CUSL3"))
+)
+pls_model2 <- estimate_pls(
+  data = as.data.frame(mobi),
+  measurement_model = mm2,
+  structural_model = sm
+)
+stage1 <- pls_model2$first_stage_model$construct_scores
+for (d in c("Image", "Value")) {
+  pls_model2$rawdata[[d]] <- stage1[, d]
+}
+summary(pls_model2)$reliability
 ```
 
-# Ringkasan
+# Akhir Sesi 3!
 
-## Apa yang Sudah Kita Pelajari
-
--   **Konsep SEM**: variabel laten, measurement vs structural model
--   **CB-SEM** dengan `lavaan`:
-    -   Two-step approach (CFA → Full SEM)
-    -   Fit indices, CR, AVE, Fornell-Larcker
-    -   Analisis mediasi dengan bootstrap
--   **PLS-SEM** dengan `seminr`:
-    -   Outer model: loadings, reliabilitas, HTMT, Fornell-Larcker, cross-loadings
-    -   Inner model: path coefficients, bootstrap, $R^2$, $f^2$
-    -   Mediasi dan PLS-Predict
-
-## Perbandingan Praktis
-
-| Aspek | CB-SEM (`lavaan`) | PLS-SEM (`seminr`) |
-|-------|-------------------|---------------------|
-| Sintaks model | Text formula (`=~`, `~`) | `constructs()`, `relationships()` |
-| Estimasi | `cfa()` / `sem()` | `estimate_pls()` |
-| Signifikansi | Langsung dari output | `bootstrap_model()` |
-| Fit indices | CFI, TLI, RMSEA, SRMR | $R^2$, $f^2$, HTMT |
-| Visualisasi | `semPaths()` | `plot()` |
-| Mediasi | Label + `:=` | `specific_effect_significance()` |
-
-# Terima Kasih!
-
-Materi tersedia di website workshop.
+Terima kasih atas partisipasinya!

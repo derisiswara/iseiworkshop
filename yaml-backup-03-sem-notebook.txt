@@ -1,0 +1,8 @@
+---
+title: "Sesi 3: Structural Equation Modelling (SEM)"
+subtitle: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+format: html
+execute:
+  warning: false
+  message: false
+---

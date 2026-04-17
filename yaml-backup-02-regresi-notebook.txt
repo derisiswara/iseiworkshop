@@ -1,0 +1,8 @@
+---
+title: "Sesi 2: Analisis Regresi"
+subtitle: "ISEI Workshop: Analisis Regresi & SEM dengan RStudio"
+format: html
+execute:
+  warning: false
+  message: false
+---

@@ -1,10 +1,8 @@
----
+﻿---
 title: "Analisis Regresi"
 author: "ISEI Workshop"
 format: revealjs
 ---
-
-# Selamat Datang di Sesi 2!
 
 ```{r}
 #| echo: false
@@ -25,257 +23,115 @@ set.seed(2026)
 **Bagian 1: Regresi Linear Sederhana**
 
 -   Konsep regresi dan korelasi
--   Membangun model regresi sederhana
--   Interpretasi koefisien
+-   Model regresi sederhana, interpretasi koefisien
 
 **Bagian 2: Regresi Linear Berganda**
 
--   Menambahkan prediktor
--   Perbandingan model dengan ANOVA
--   Asumsi dan diagnostik
+-   Menambahkan prediktor, ANOVA, diagnostik
 
 **Bagian 3: Variabel Kategorikal dan Pelaporan**
 
--   Dummy variable
--   Interaksi
--   Pelaporan hasil
+-   Dummy variable, interaksi, pelaporan
 
-## Dataset Hari Ini
+## Apa itu Regresi?
 
-Kita akan menggunakan data **World Values Survey (WVS)** Wave 7 yang sudah diterjemahkan ke Bahasa Indonesia.
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \varepsilon$$
+
+| Komponen | Simbol | Makna |
+|----------|--------|-------|
+| Intercept | $\beta_0$ | Nilai Y ketika semua X = 0 |
+| Slope | $\beta_k$ | Perubahan Y per kenaikan 1 unit $X_k$ |
+| Error | $\varepsilon$ | Selisih prediksi dan aktual |
+
+**Tujuan OLS**: Menemukan garis terbaik yang meminimalkan jumlah kuadrat error.
+
+## Korelasi vs Regresi
+
+-   **Korelasi**: kekuatan dan arah hubungan (simetris: $r_{xy} = r_{yx}$)
+-   **Regresi**: memprediksi Y berdasarkan X (tidak simetris)
+-   Korelasi **bukan** kausalitas!
+
+. . .
+
+Di R: `lm(Y ~ X1 + X2)` — simbol `~` = "diprediksi oleh", `+` = menambah prediktor.
+
+## Asumsi Regresi Linear
+
+1.  **Linearitas**: hubungan X dan Y linear
+2.  **Independensi**: residual saling independen
+3.  **Homoskedastisitas**: varians residual konstan
+4.  **Normalitas**: residual berdistribusi normal
+5.  **Multikolinearitas**: prediktor tidak terlalu berkorelasi
+
+## Landasan Teori {.smaller}
+
+-   **SWB** (Diener et al., 1999): evaluasi kognitif dan afektif terhadap kehidupan
+-   **Kebebasan** (Inglehart, 2000; Sen, 1999): prediktor penting kesejahteraan subjektif
+-   **Skala ordinal sebagai kontinu** (Norman, 2010): skala Likert ≥ 5 poin dapat diperlakukan sebagai data kontinu
+
+## Import & Pembersihan Data
 
 ```{r}
 #| echo: true
 wvs <- read_excel("data/regresi/wvs1.xlsx")
-glimpse(wvs)
-```
-
-## Variabel Utama
-
-| Variabel | Deskripsi | Tipe |
-|----------|-----------|------|
-| `kepuasan_hidup` | Kepuasan hidup (1-10) | Numerik |
-| `kepuasan_finansial` | Kepuasan finansial (1-10) | Numerik |
-| `religiusitas` | Tingkat religiusitas (1-10) | Numerik |
-| `kebebasan_memilih` | Kebebasan memilih (1-10) | Numerik |
-| `usia` | Usia responden | Numerik |
-| `jenis_kelamin` | Laki-laki / Perempuan | Kategorikal |
-| `negara` | Negara responden | Kategorikal |
-
-## Menyiapkan Data
-
-```{r}
-#| echo: true
-# Pilih variabel yang diperlukan dan hapus missing values
 dat <- wvs |>
-  select(kepuasan_hidup, kepuasan_finansial, religiusitas,
-         kebebasan_memilih, usia, jenis_kelamin, negara) |>
+  select(kepuasan_hidup, kebebasan_memilih, kepuasan_finansial, usia,
+         religiusitas, jenis_kelamin, negara) |>
   drop_na()
-
 nrow(dat)
 ```
 
-::: {.callout-note}
-Variabel skala 1–10 diperlakukan sebagai kontinu berdasarkan Norman (2010) yang menunjukkan bahwa Likert data dengan ≥ 5 kategori bersifat robust untuk analisis parametrik.
-:::
-
 # Bagian 1: Regresi Linear Sederhana
 
-## Apa itu Regresi?
-
-::: incremental
--   **Regresi** adalah metode statistik untuk memodelkan hubungan antara variabel
--   Variabel **dependen** (Y): variabel yang ingin kita prediksi/jelaskan
--   Variabel **independen** (X): variabel yang digunakan sebagai prediktor
--   Model: $Y = \beta_0 + \beta_1 X + \varepsilon$
-:::
-
-## Landasan Teori: Subjective Well-Being
-
-::: incremental
--   **Teori Subjective Well-Being** (Diener et al., 1999): kepuasan hidup merupakan komponen kognitif dari SWB, yang mencerminkan evaluasi individu terhadap kehidupannya secara keseluruhan.
--   **Kebebasan dan kesejahteraan**: Inglehart (2000) dan Sen (1999) menunjukkan bahwa kebebasan individual berperan penting dalam meningkatkan kesejahteraan subjektif.
--   **Justifikasi variabel**: Pemilihan variabel prediktor (kepuasan finansial, kebebasan memilih, religiusitas) didasarkan pada literatur WVS yang secara konsisten menemukan hubungan signifikan antara faktor-faktor tersebut dengan kepuasan hidup.
-:::
-
-## Komponen Model Regresi
-
-| Komponen | Simbol | Makna |
-|----------|--------|-------|
-| Intercept | $\beta_0$ | Nilai Y ketika X = 0 |
-| Slope | $\beta_1$ | Perubahan Y untuk setiap kenaikan 1 unit X |
-| Error | $\varepsilon$ | Selisih antara nilai prediksi dan nilai aktual |
-
-. . .
-
-**Tujuan**: Menemukan garis "terbaik" yang meminimalkan jumlah kuadrat error (Ordinary Least Squares / OLS)
-
-## Korelasi vs Regresi
-
-::: incremental
--   **Korelasi**: mengukur kekuatan dan arah hubungan linear antara dua variabel
--   **Regresi**: memprediksi nilai satu variabel berdasarkan variabel lain
--   Korelasi **bukan** kausalitas!
--   Korelasi simetris ($r_{xy} = r_{yx}$), regresi **tidak** simetris
-:::
-
-## Korelasi: Contoh
+## Korelasi
 
 ```{r}
 #| echo: true
 cor(dat$kepuasan_finansial, dat$kepuasan_hidup)
-```
-
-. . .
-
-```{r}
-#| echo: true
 cor.test(dat$kepuasan_finansial, dat$kepuasan_hidup)
 ```
 
-## Visualisasi Hubungan
-
-```{r}
-#| echo: true
-#| output-location: slide
-ggplot(dat, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm", color = "steelblue") +
-  labs(
-    title = "Hubungan Kepuasan Finansial dan Kepuasan Hidup",
-    x = "Kepuasan Finansial",
-    y = "Kepuasan Hidup"
-  ) +
-  theme_minimal()
-```
-
-## Membuat Model Regresi Sederhana
-
-Fungsi `lm()` = **l**inear **m**odel
+## Model Sederhana (M1)
 
 ```{r}
 #| echo: true
 m1 <- lm(kepuasan_hidup ~ kepuasan_finansial, data = dat)
-```
-
-. . .
-
-Formula: `Y ~ X` dibaca "Y diregresikan terhadap X"
-
--   `~` artinya "diprediksi oleh"
--   Sisi kiri: variabel dependen
--   Sisi kanan: variabel independen
-
-## Hasil Model Sederhana
-
-```{r}
-#| echo: true
-summary(m1)
-```
-
-## Membaca Output `summary()`
-
-::: incremental
-1.  **Call**: formula model yang digunakan
-2.  **Residuals**: ringkasan distribusi residual
-3.  **Coefficients**:
-    -   `Estimate`: nilai koefisien ($\beta$)
-    -   `Std. Error`: standard error koefisien
-    -   `t value`: statistik uji ($\beta / SE$)
-    -   `Pr(>|t|)`: p-value
-4.  **R-squared**: proporsi varians yang dijelaskan model
-5.  **F-statistic**: uji signifikansi keseluruhan model
-:::
-
-## Interpretasi Koefisien
-
-```{r}
-#| echo: true
 tidy(m1, conf.int = TRUE)
 ```
 
 . . .
 
--   **Intercept** ($\beta_0$): Ketika `kepuasan_finansial` = 0, rata-rata `kepuasan_hidup` adalah ...
--   **Slope** ($\beta_1$): Setiap kenaikan 1 poin `kepuasan_finansial`, `kepuasan_hidup` meningkat sebesar ... poin
+-   Intercept = 3.51: prediksi jika kepuasan finansial = 0
+-   Slope = 0.545: setiap +1 poin finansial → +0.545 poin kepuasan hidup
 
-## R-squared ($R^2$)
+## R-squared
 
 ```{r}
 #| echo: true
-glance(m1)
+glance(m1) |> select(r.squared, adj.r.squared, AIC)
 ```
 
-. . .
+$R^2$ = proporsi varians Y yang dijelaskan model (0–1). $R^2_{adj}$ disesuaikan jumlah prediktor.
 
-::: incremental
--   $R^2$ = proporsi varians variabel dependen yang dijelaskan oleh model
--   Rentang: 0 (tidak menjelaskan) sampai 1 (sempurna)
--   $R^2$ adjusted: disesuaikan dengan jumlah prediktor
-:::
-
-## Visualisasi Residual
+## Visualisasi M1
 
 ```{r}
 #| echo: true
 #| output-location: slide
-par(mfrow = c(2, 2))
-plot(m1)
-```
-
-## Latihan 1 {.smaller}
-
-> Buatlah model regresi sederhana: `kepuasan_hidup ~ kebebasan_memilih`
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| code-summary: "Jawaban"
-m_latihan <- lm(kepuasan_hidup ~ kebebasan_memilih, data = dat)
-summary(m_latihan)
-tidy(m_latihan, conf.int = TRUE)
+ggplot(dat, aes(x = kepuasan_finansial, y = kepuasan_hidup)) +
+  geom_jitter(alpha = 0.1, width = 0.3, height = 0.3) +
+  geom_smooth(method = "lm", color = "steelblue") +
+  labs(title = "M1: Regresi Sederhana",
+       x = "Kepuasan Finansial", y = "Kepuasan Hidup")
 ```
 
 # Bagian 2: Regresi Linear Berganda
 
-## Mengapa Regresi Berganda?
-
-::: incremental
--   Model sederhana hanya menggunakan **satu** prediktor
--   Realita: banyak faktor mempengaruhi suatu outcome
--   Regresi berganda memungkinkan kita:
-    -   Mengontrol variabel lain (confounders)
-    -   Melihat kontribusi unik setiap prediktor
-    -   Meningkatkan prediksi
-:::
-
-## Formula Regresi Berganda
-
-$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \varepsilon$$
-
-Di R:
-
-```r
-lm(Y ~ X1 + X2 + X3, data = ...)
-```
-
-. . .
-
-`+` menambahkan prediktor ke model (bukan operasi matematika)
-
-## Model dengan 2 Prediktor
+## Model 2 Prediktor (M2)
 
 ```{r}
 #| echo: true
-m2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih,
-         data = dat)
-summary(m2)
-```
-
-## Interpretasi Koefisien Berganda
-
-```{r}
-#| echo: true
+m2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih, data = dat)
 tidy(m2, conf.int = TRUE)
 ```
 
@@ -283,198 +139,35 @@ tidy(m2, conf.int = TRUE)
 
 ::: {.callout-important}
 Setiap koefisien diinterpretasikan **"dengan mengontrol variabel lain"** (ceteris paribus).
-
-Contoh: "Setiap kenaikan 1 poin kepuasan finansial, kepuasan hidup meningkat sebesar ... poin, **setelah mengontrol kebebasan memilih**."
 :::
 
-## Model dengan Lebih Banyak Prediktor
+## Model Penuh (M3)
 
 ```{r}
 #| echo: true
 m3 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia, data = dat)
-summary(m3)
+tidy(m3, conf.int = TRUE)
 ```
 
-## Perbandingan Model: ANOVA
+# Bagian 3: Variabel Kategorikal dan Interaksi
 
-Apakah model yang lebih kompleks secara signifikan lebih baik?
+## Dummy Variables (M4)
 
-```{r}
-#| echo: true
-anova(m1, m2, m3)
-```
-
-. . .
-
-::: incremental
--   **RSS**: Residual Sum of Squares (semakin kecil semakin baik)
--   **F statistic**: menguji apakah penambahan variabel signifikan
--   **p-value < 0.05**: model yang lebih kompleks signifikan lebih baik
-:::
-
-## Perbandingan $R^2$
-
-```{r}
-#| echo: true
-tibble(
-  Model = c("m1 (finansial)",
-            "m2 (+ kebebasan)",
-            "m3 (+ religiusitas + usia)"),
-  R2 = c(glance(m1)$r.squared,
-         glance(m2)$r.squared,
-         glance(m3)$r.squared),
-  R2_adj = c(glance(m1)$adj.r.squared,
-             glance(m2)$adj.r.squared,
-             glance(m3)$adj.r.squared),
-  AIC = c(AIC(m1), AIC(m2), AIC(m3)),
-  f2 = R2_adj / (1 - R2_adj)
-) |> kable(digits = 3)
-```
-
-::: {.callout-note}
-**Cohen's $f^2$**: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).
-:::
-
-## Asumsi Regresi Linear
-
-::: incremental
-1.  **Linearitas**: hubungan antara X dan Y linear
-2.  **Independensi**: residual saling independen
-3.  **Homoskedastisitas**: varians residual konstan
-4.  **Normalitas**: residual berdistribusi normal
-5.  **Multikolinearitas**: prediktor tidak terlalu berkorelasi satu sama lain
-:::
-
-## Diagnostik: Residual vs Fitted
-
-```{r}
-#| echo: true
-#| output-location: slide
-ggplot(augment(m3), aes(x = .fitted, y = .resid)) +
-  geom_point(alpha = 0.3) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  geom_smooth(se = FALSE, color = "steelblue") +
-  labs(title = "Residual vs Fitted",
-       x = "Fitted Values", y = "Residuals") +
-  theme_minimal()
-```
-
-## Diagnostik: Q-Q Plot
-
-```{r}
-#| echo: true
-#| output-location: slide
-ggplot(augment(m3), aes(sample = .resid)) +
-  stat_qq() +
-  stat_qq_line(color = "red") +
-  labs(title = "Normal Q-Q Plot") +
-  theme_minimal()
-```
-
-## Multikolinearitas: VIF
-
-**Variance Inflation Factor** mengukur seberapa besar varians koefisien meningkat akibat korelasi antar prediktor.
-
-```{r}
-#| echo: true
-vif(m3)
-```
-
-. . .
-
-::: incremental
--   **VIF < 5**: tidak ada masalah
--   **VIF 5-10**: perlu perhatian
--   **VIF > 10**: multikolinearitas serius
-:::
-
-## Diagnostik: Breusch-Pagan Test
-
-**Breusch-Pagan test** menguji asumsi homoskedastisitas (varians residual konstan).
-
-```{r}
-#| echo: true
-bptest(m3)
-```
-
-. . .
-
-Jika p-value < 0.05, terdapat indikasi **heteroskedastisitas** — varians residual tidak konstan.
-
-## Robust Standard Errors
-
-Jika p-value BP test < 0.05, gunakan **robust standard errors** untuk inferensi yang lebih valid.
-
-```{r}
-#| echo: true
-coeftest(m3, vcov = vcovHC(m3, type = "HC3"))
-```
-
-. . .
-
-::: {.callout-tip}
-Robust standard errors (HC3) memberikan estimasi standard error yang valid meskipun terdapat heteroskedastisitas, sehingga p-value dan confidence interval lebih dapat dipercaya.
-:::
-
-## Latihan 2 {.smaller}
-
-> Buatlah model regresi berganda dengan `kepuasan_hidup` sebagai DV dan semua variabel numerik sebagai prediktor. Periksa VIF-nya.
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| code-summary: "Jawaban"
-m_latihan2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
-                   religiusitas + usia, data = dat)
-tidy(m_latihan2, conf.int = TRUE)
-vif(m_latihan2)
-```
-
-# Bagian 3: Variabel Kategorikal dan Pelaporan
-
-## Variabel Kategorikal sebagai Prediktor
-
-::: incremental
--   R secara otomatis membuat **dummy variables** dari faktor
--   Kategori referensi: level pertama (alfabet) dari faktor
--   Koefisien dummy: perbedaan rata-rata dibanding referensi
-:::
-
-. . .
+R otomatis membuat dummy dari factor. Kategori referensi: level pertama.
 
 ```{r}
 #| echo: true
 dat <- dat |>
-  mutate(
-    jenis_kelamin = factor(jenis_kelamin),
-    negara = factor(negara)
-  )
-levels(dat$jenis_kelamin)
-levels(dat$negara)
-```
+  mutate(jenis_kelamin = factor(jenis_kelamin),
+         negara = factor(negara))
 
-## Model dengan Variabel Kategorikal
-
-```{r}
-#| echo: true
 m4 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
            religiusitas + usia + jenis_kelamin, data = dat)
-summary(m4)
-```
-
-## Interpretasi Dummy Variable
-
-```{r}
-#| echo: true
 tidy(m4, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-. . .
-
-Koefisien `jenis_kelaminPerempuan` menunjukkan perbedaan rata-rata kepuasan hidup antara Perempuan dan Laki-laki (referensi), **setelah mengontrol variabel lain**.
-
-## Model dengan Negara
+## Model dengan Negara (M5) {.smaller}
 
 ```{r}
 #| echo: true
@@ -483,23 +176,20 @@ m5 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
 tidy(m5, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-## Mengubah Kategori Referensi
-
-Gunakan `relevel()` untuk mengubah kategori referensi:
+## Mengubah Kategori Referensi {.smaller}
 
 ```{r}
 #| echo: true
-dat <- dat |>
-  mutate(negara = relevel(negara, ref = "Singapura"))
+dat <- dat |> mutate(negara = relevel(negara, ref = "Singapura"))
 
 m5b <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
             religiusitas + usia + jenis_kelamin + negara, data = dat)
 tidy(m5b, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-## Interaksi antar Variabel
+## Model Interaksi (M6) {.smaller}
 
-Interaksi: efek satu variabel **tergantung** pada level variabel lain.
+Interaksi: efek satu variabel **tergantung** level variabel lain.
 
 ```{r}
 #| echo: true
@@ -517,75 +207,186 @@ ggplot(dat, aes(x = kepuasan_finansial, y = kepuasan_hidup,
                 color = jenis_kelamin)) +
   geom_point(alpha = 0.2) +
   geom_smooth(method = "lm") +
-  labs(
-    title = "Interaksi: Kepuasan Finansial x Jenis Kelamin",
-    x = "Kepuasan Finansial",
-    y = "Kepuasan Hidup",
-    color = "Jenis Kelamin"
-  ) +
+  labs(title = "Interaksi: Kepuasan Finansial x Jenis Kelamin",
+       x = "Kepuasan Finansial", y = "Kepuasan Hidup",
+       color = "Jenis Kelamin") +
   theme_minimal()
 ```
 
-## Perbandingan Semua Model
+# Bagian 4: Diagnostik dan Perbandingan Model
+
+## ANOVA: Perbandingan Model
 
 ```{r}
 #| echo: true
+anova(m1, m2, m3)
+```
+
+Model nested: jika p < 0.05, model lebih kompleks signifikan lebih baik.
+
+## Tabel Perbandingan (Cohen's f²) {.smaller}
+
+```{r}
+#| echo: true
+r2_adj <- c(glance(m1)$adj.r.squared, glance(m2)$adj.r.squared,
+            glance(m3)$adj.r.squared, glance(m4)$adj.r.squared,
+            glance(m5)$adj.r.squared, glance(m6)$adj.r.squared)
+
+cohens_f2 <- c(NA, diff(r2_adj) / (1 - r2_adj[-1]))
+
 tibble(
   Model = paste0("m", 1:6),
-  Formula = c("finansial", "+ kebebasan",
-              "+ religiusitas + usia", "+ jenis_kelamin",
-              "+ negara", "finansial * jk + lainnya"),
-  R2_adj = c(glance(m1)$adj.r.squared, glance(m2)$adj.r.squared,
-             glance(m3)$adj.r.squared, glance(m4)$adj.r.squared,
-             glance(m5)$adj.r.squared, glance(m6)$adj.r.squared),
+  Formula = c("finansial", "+ kebebasan", "+ religiusitas + usia",
+              "+ jenis_kelamin", "+ negara", "finansial * jk + lainnya"),
+  R2_adj = r2_adj,
   AIC = c(AIC(m1), AIC(m2), AIC(m3), AIC(m4), AIC(m5), AIC(m6)),
-  f2 = R2_adj / (1 - R2_adj)
+  Cohens_f2 = cohens_f2
 ) |> kable(digits = 3)
 ```
 
-::: {.callout-note}
-**Cohen's $f^2$**: Ukuran effect size untuk regresi. Interpretasi: 0.02 = kecil, 0.15 = sedang, 0.35 = besar (Cohen, 1988).
-:::
+Cohen's f²: 0.02 = kecil, 0.15 = sedang, 0.35 = besar.
 
-## Pelaporan Hasil Regresi (APA Style)
-
-Cara melaporkan hasil regresi dalam format APA:
-
-. . .
-
-> Regresi linear berganda dilakukan untuk menguji pengaruh kepuasan finansial, kebebasan memilih, religiusitas, dan usia terhadap kepuasan hidup. Model secara keseluruhan signifikan, $F(4, N) = \ldots, p < .001$, dan menjelaskan $\ldots$% varians kepuasan hidup ($R^2_{adj} = \ldots$). Kepuasan finansial ($B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p < .001$) dan kebebasan memilih ($B = \ldots, 95\% \text{ CI } [\ldots, \ldots], p < .001$) merupakan prediktor signifikan.
-
-::: {.callout-tip}
-Sertakan **confidence interval 95%** untuk setiap koefisien. Gunakan output `tidy(model, conf.int = TRUE)` untuk mendapatkan nilai `conf.low` dan `conf.high`.
-:::
-
-## Tips Pelaporan
-
-::: incremental
--   Laporkan $R^2$ adjusted (bukan $R^2$ biasa)
--   Gunakan **unstandardized** coefficients ($B$) ATAU **standardized** ($\beta$) --- pilih satu dan konsisten
--   Sertakan **95% CI** untuk setiap koefisien
--   Laporkan F-test keseluruhan model
--   Sebutkan jumlah observasi
--   Jika ada variabel yang tidak signifikan, tetap laporkan
-:::
-
-## Standardized Coefficients
+## Diagnostic Plots
 
 ```{r}
 #| echo: true
-# Standardized: scaling semua variabel numerik
-dat_scaled <- dat |>
-  mutate(across(where(is.numeric), scale))
+#| output-location: slide
+par(mfrow = c(2, 2))
+plot(m3)
+```
 
+## Membaca Diagnostic Plots {.smaller}
+
+1.  **Residuals vs Fitted**: linearitas & homoskedastisitas (menyebar acak = baik)
+2.  **Normal Q-Q**: normalitas residual (ikut garis diagonal = baik)
+3.  **Scale-Location**: homoskedastisitas (garis datar = baik)
+4.  **Residuals vs Leverage**: observasi berpengaruh (di luar Cook's distance = hati-hati)
+
+## VIF & Uji Formal
+
+```{r}
+#| echo: true
+vif(m3)
+```
+
+VIF < 5: OK. VIF 5–10: perlu perhatian. VIF > 10: masalah serius.
+
+## Uji Normalitas & Autokorelasi
+
+```{r}
+#| echo: true
+ks.test(m3$residuals, "pnorm", mean = 0, sd = sd(m3$residuals))
+dwtest(m3)
+```
+
+::: {.callout-note}
+Durbin-Watson dirancang untuk time series. Pada cross-section, autokorelasi bisa muncul jika data diurutkan atau ada clustering.
+:::
+
+## Uji Heteroskedastisitas
+
+```{r}
+#| echo: true
+bptest(m3)
+```
+
+Jika p < 0.05 → heteroskedastisitas terdeteksi.
+
+## Robust Standard Errors
+
+```{r}
+#| echo: true
+coeftest(m3, vcov = vcovHC(m3, type = "HC3"))
+```
+
+Robust SE mengubah inferensi, **tidak** mengubah koefisien.
+
+## Aturan Praktis Robust SE {.smaller}
+
+| Situasi | Rekomendasi |
+|---------|-------------|
+| Cross-section, n > 250 | HC1 atau HC3 |
+| Cross-section, n < 100 | **HC3** |
+| Panel data (clustered) | **Cluster-robust SE** |
+| Time series + autocorrelation | **HAC / Newey-West** |
+| Ragu? | **HC3** — aman untuk mayoritas kasus |
+
+## Standardized Coefficients {.smaller}
+
+```{r}
+#| echo: true
+dat_scaled <- dat |> mutate(across(where(is.numeric), scale))
 m3_std <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                religiusitas + usia, data = dat_scaled)
 tidy(m3_std, conf.int = TRUE) |> kable(digits = 3)
 ```
 
-## Latihan 3 {.smaller}
+$\beta$ terstandarisasi: prediktor dengan |$\beta$| terbesar = pengaruh relatif terkuat.
 
-> Gabungkan data wvs1.xlsx dan wvs2.xlsx. Buatlah model regresi terbaik untuk memprediksi `kepuasan_hidup`. Bandingkan modelnya dan interpretasikan.
+# Pelaporan Hasil
+
+## Tips Pelaporan
+
+-   Laporkan $R^2$ adjusted
+-   Gunakan **B** (unstandardized) ATAU **β** (standardized) — konsisten
+-   Sertakan **95% CI**
+-   Laporkan F-test keseluruhan model
+-   Sebutkan jumlah observasi
+-   Variabel tidak signifikan tetap dilaporkan
+
+# Rekap Sesi 2
+
+## Ringkasan {.smaller}
+
+| Topik | Detail |
+|-------|--------|
+| Regresi sederhana | `lm(Y ~ X)` |
+| Regresi berganda | `lm(Y ~ X1 + X2 + ...)` |
+| Interpretasi | B, $R^2$, p-value, CI |
+| Diagnostik | residual plots, VIF, BP test, robust SE |
+| Kategorikal | `factor()`, `relevel()`, dummy |
+| Interaksi | `X1 * X2` |
+| Perbandingan | ANOVA, AIC, Cohen's f² |
+
+| Paket | Fungsi Utama |
+|-------|-------------|
+| `broom` | `tidy()`, `glance()` |
+| `car` | `vif()` |
+| `lmtest` | `bptest()`, `dwtest()`, `coeftest()` |
+| `sandwich` | `vcovHC()` |
+
+# Latihan
+
+## Latihan 1
+
+> Model regresi sederhana: `kepuasan_hidup ~ kebebasan_memilih`
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+m_latihan <- lm(kepuasan_hidup ~ kebebasan_memilih, data = dat)
+tidy(m_latihan, conf.int = TRUE)
+glance(m_latihan) |> select(r.squared, adj.r.squared)
+```
+
+## Latihan 2
+
+> Model regresi berganda penuh + periksa VIF
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Jawaban"
+m_latihan2 <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
+                   religiusitas + usia, data = dat)
+tidy(m_latihan2, conf.int = TRUE)
+vif(m_latihan2)
+```
+
+## Latihan 3
+
+> Gabungkan `wvs1.xlsx` dan `wvs2.xlsx`, buat model terbaik
 
 ```{r}
 #| echo: true
@@ -599,49 +400,10 @@ wvs_all <- bind_rows(wvs, wvs2) |>
 
 m_final <- lm(kepuasan_hidup ~ kepuasan_finansial + kebebasan_memilih +
                 religiusitas + usia + jenis_kelamin + negara, data = wvs_all)
-summary(m_final)
 tidy(m_final, conf.int = TRUE)
+glance(m_final) |> select(r.squared, adj.r.squared, AIC)
 ```
-
-# Ringkasan Sesi 2
-
-## Apa yang Sudah Kita Pelajari
-
-::: incremental
--   **Regresi sederhana**: satu prediktor, `lm(Y ~ X)`
--   **Regresi berganda**: banyak prediktor, `lm(Y ~ X1 + X2 + ...)`
--   **Interpretasi**: koefisien, $R^2$, p-value, confidence interval
--   **Diagnostik**: residual plots, VIF, Breusch-Pagan test, robust SE
--   **Variabel kategorikal**: dummy variable, `factor()`
--   **Interaksi**: `X1 * X2`
--   **Perbandingan model**: ANOVA, AIC, Cohen's $f^2$
-:::
-
-## Paket yang Digunakan
-
-| Paket | Fungsi Utama |
-|-------|--------------|
-| `tidyverse` | `read_csv()`, `select()`, `mutate()`, `filter()` |
-| `readxl` | `read_excel()` |
-| `broom` | `tidy()`, `glance()`, `augment()` |
-| `car` | `vif()` |
-| `lmtest` | `bptest()`, `coeftest()` |
-| `sandwich` | `vcovHC()` |
-
-## Referensi
-
--   Diener, E., Suh, E. M., Lucas, R. E., & Smith, H. L. (1999). Subjective well-being: Three decades of progress. *Psychological Bulletin*, 125(2), 276-302.
--   Norman, G. (2010). Likert scales, levels of measurement and the "laws" of statistics. *Advances in Health Sciences Education*, 15(5), 625-632.
--   Inglehart, R. (2000). Globalization and postmodern values. *The Washington Quarterly*, 23(1), 215-228.
-
-## Sesi Berikutnya
-
-**Sesi 3: Structural Equation Modeling (SEM)**
-
--   CB-SEM dengan `lavaan`
--   PLS-SEM dengan `seminr`
--   CFA, model fit, path analysis
 
 # Akhir Sesi 2!
 
-Terima kasih! Sampai jumpa di sesi berikutnya.
+Terima kasih! Sesi berikutnya: **Structural Equation Modelling (SEM)**.
