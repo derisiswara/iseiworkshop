@@ -1,7 +1,9 @@
 ﻿---
 title: "Analisis Regresi"
 author: "ISEI Workshop"
-format: revealjs
+format: 
+  revealjs:
+    scrollable: true
 ---
 
 ```{r}

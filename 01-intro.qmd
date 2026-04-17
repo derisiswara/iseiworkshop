@@ -1,7 +1,9 @@
 ﻿---
 title: "Pengantar R, Pengolahan Data, dan Visualisasi"
 author: "ISEI Workshop"
-format: revealjs
+format: 
+  revealjs:
+    scrollable: true
 ---
 
 # Selamat Datang!
