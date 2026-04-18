@@ -191,7 +191,7 @@ Situs ini merupakan repositori materi pelatihan (slide, kode, dan dataset) untuk
 | \~ | 10.15 – 10.30 | ☕ *Coffee Break* | | |
 | 2 | 10.30 – 12.00 | [**Analisis Regresi**](02-regresi.html) | Regresi linear sederhana, berganda, dan dengan variabel kategorikal menggunakan data WVS. Diagnostik model dan interpretasi hasil. | [📄 R Script](02-regresi-script.R) |
 | \~ | 12.00 – 13.00 | 🍽️ *Makan Siang* | | |
-| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](SEM dengan RStudio 2026.pdf) | [📄 R Script](03-sem-script.R)  |
+| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](SEM dengan RStudio 2026.pdf) | | [📄 R Script 1](script SEM.R) · [📊 Data](data/sem/datasem.xlsx) · [📄 R Script 2](syntax SEM original.R) · [📊 Data](data/sem/datasem0.xlsx)  |
 | \~ | Setelah workshop | | [Latihan pasca-workshop](exercises.html) | |
 :::
 
