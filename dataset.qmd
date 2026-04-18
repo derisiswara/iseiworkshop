@@ -93,3 +93,7 @@ Penjelasan terdapat pada sheet ke-2 di file tersebut.
 ### SEM
 
 - [data.xlsx](data/sem/datasem.xlsx)
+
+### Bahan Belajar Tambahan
+
+- [Download di sini!](https://drive.google.com/drive/folders/1L-p57qbzN89-Dn9FXy5d-bTo3yz_tcnK?usp=sharing)
