@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: docs
+#  output-dir: docs
   render:
     - index.qmd
     - dataset.qmd
@@ -51,5 +51,5 @@ format:
 resources:
   - data/**
 
-execute:
-  freeze: auto
+#execute:
+#  freeze: auto

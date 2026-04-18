@@ -133,24 +133,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#kamus-data" id="toc-kamus-data" class="nav-link" data-scroll-target="#kamus-data">Kamus Data</a></li>
   <li><a href="#referensi" id="toc-referensi" class="nav-link" data-scroll-target="#referensi">Referensi</a></li>
   </ul></li>
-  <li><a href="#cb-sem-electronic-loyalty-e-loyalty" id="toc-cb-sem-electronic-loyalty-e-loyalty" class="nav-link" data-scroll-target="#cb-sem-electronic-loyalty-e-loyalty">2. CB-SEM: Electronic Loyalty (E-Loyalty)</a>
+  <li><a href="#structural-equation-modelling-sem" id="toc-structural-equation-modelling-sem" class="nav-link" data-scroll-target="#structural-equation-modelling-sem">2. Structural Equation Modelling (SEM)</a>
   <ul class="collapse">
-  <li><a href="#konstruk-dan-indikator" id="toc-konstruk-dan-indikator" class="nav-link" data-scroll-target="#konstruk-dan-indikator">Konstruk dan Indikator</a></li>
-  <li><a href="#variabel-tambahan" id="toc-variabel-tambahan" class="nav-link" data-scroll-target="#variabel-tambahan">Variabel Tambahan</a></li>
-  <li><a href="#model-struktural" id="toc-model-struktural" class="nav-link" data-scroll-target="#model-struktural">Model Struktural</a></li>
   <li><a href="#referensi-1" id="toc-referensi-1" class="nav-link" data-scroll-target="#referensi-1">Referensi</a></li>
-  </ul></li>
-  <li><a href="#pls-sem-ecsi-mobile-industry" id="toc-pls-sem-ecsi-mobile-industry" class="nav-link" data-scroll-target="#pls-sem-ecsi-mobile-industry">3. PLS-SEM: ECSI Mobile Industry</a>
-  <ul class="collapse">
-  <li><a href="#konstruk-dan-indikator-1" id="toc-konstruk-dan-indikator-1" class="nav-link" data-scroll-target="#konstruk-dan-indikator-1">Konstruk dan Indikator</a></li>
-  <li><a href="#model-struktural-ecsi" id="toc-model-struktural-ecsi" class="nav-link" data-scroll-target="#model-struktural-ecsi">Model Struktural ECSI</a></li>
-  <li><a href="#referensi-2" id="toc-referensi-2" class="nav-link" data-scroll-target="#referensi-2">Referensi</a></li>
   </ul></li>
   <li><a href="#download-data" id="toc-download-data" class="nav-link" data-scroll-target="#download-data">Download Data</a>
   <ul class="collapse">
   <li><a href="#regresi" id="toc-regresi" class="nav-link" data-scroll-target="#regresi">Regresi</a></li>
-  <li><a href="#cb-sem" id="toc-cb-sem" class="nav-link" data-scroll-target="#cb-sem">CB-SEM</a></li>
-  <li><a href="#pls-sem" id="toc-pls-sem" class="nav-link" data-scroll-target="#pls-sem">PLS-SEM</a></li>
+  <li><a href="#sem" id="toc-sem" class="nav-link" data-scroll-target="#sem">SEM</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -364,183 +354,15 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 </section>
 </section>
-<section id="cb-sem-electronic-loyalty-e-loyalty" class="level2">
-<h2 class="anchored" data-anchor-id="cb-sem-electronic-loyalty-e-loyalty">2. CB-SEM: Electronic Loyalty (E-Loyalty)</h2>
-<p>Dataset untuk analisis CB-SEM menggunakan data riil tentang <strong>Electronic Loyalty</strong> dalam konteks e-commerce.</p>
-<p><strong>File:</strong> <code>data/sem/data.xlsx</code> (n = 485, 15 kolom)</p>
-<section id="konstruk-dan-indikator" class="level3">
-<h3 class="anchored" data-anchor-id="konstruk-dan-indikator">Konstruk dan Indikator</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Konstruk</th>
-<th>Kode</th>
-<th>Indikator</th>
-<th>Deskripsi</th>
-<th>Referensi</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Perceived Mental Benefits</td>
-<td>PMB</td>
-<td>PMB1–PMB4</td>
-<td>Manfaat mental yang dirasakan konsumen</td>
-<td>Nguyen &amp; Khoa (2019)</td>
-</tr>
-<tr class="even">
-<td>Hedonic Value</td>
-<td>HV</td>
-<td>HV1–HV4</td>
-<td>Nilai hedonis dari pengalaman belanja online</td>
-<td>Lee &amp; Wu (2017)</td>
-</tr>
-<tr class="odd">
-<td>Electronic Loyalty</td>
-<td>ELOY</td>
-<td>ELOY1–ELOY3</td>
-<td>Loyalitas elektronik konsumen</td>
-<td>Khoa &amp; Nguyen (2020); Srivastava &amp; Rai (2018)</td>
-</tr>
-</tbody>
-</table>
-<p>Semua konstruk <strong>reflektif</strong>. Skala Likert.</p>
-</section>
-<section id="variabel-tambahan" class="level3">
-<h3 class="anchored" data-anchor-id="variabel-tambahan">Variabel Tambahan</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Variabel</th>
-<th>Deskripsi</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>No</code></td>
-<td>Nomor responden</td>
-</tr>
-<tr class="even">
-<td><code>gender</code></td>
-<td>Jenis kelamin</td>
-</tr>
-<tr class="odd">
-<td><code>occupation</code></td>
-<td>Pekerjaan</td>
-</tr>
-<tr class="even">
-<td><code>times</code></td>
-<td>Frekuensi penggunaan</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="model-struktural" class="level3">
-<h3 class="anchored" data-anchor-id="model-struktural">Model Struktural</h3>
-<pre><code>PMB → ELOY    (direct effect)
-PMB → HV
-HV  → ELOY
-PMB → HV → ELOY  (indirect/mediasi)</code></pre>
-</section>
+<section id="structural-equation-modelling-sem" class="level2">
+<h2 class="anchored" data-anchor-id="structural-equation-modelling-sem">2. Structural Equation Modelling (SEM)</h2>
+<p>Dataset untuk analisis SEM: <br> <strong>File:</strong> <code>data/sem/datasem.xlsx</code> <br> Penjelasan terdapat pada sheet ke-2 di file tersebut.</p>
 <section id="referensi-1" class="level3">
 <h3 class="anchored" data-anchor-id="referensi-1">Referensi</h3>
 <ul>
 <li>Khoa, B. T., &amp; Nguyen, H. M. (2020). Electronic Loyalty In Social Commerce. <em>Gadjah Mada International Journal of Business</em>, 22(3), 275-299.</li>
 <li>Lee, C.-H., &amp; Wu, J. J. (2017). Consumer online flow experience. <em>Industrial Management &amp; Data Systems</em>, 117(10), 2452-2467.</li>
 <li>Nguyen, M. H., &amp; Khoa, B. T. (2019). Perceived Mental Benefit in Electronic Commerce. <em>Sustainability</em>, 11(23), 6587-6608.</li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="pls-sem-ecsi-mobile-industry" class="level2">
-<h2 class="anchored" data-anchor-id="pls-sem-ecsi-mobile-industry">3. PLS-SEM: ECSI Mobile Industry</h2>
-<p>Dataset untuk analisis PLS-SEM menggunakan data <strong>European Customer Satisfaction Index (ECSI)</strong> untuk industri telepon seluler.</p>
-<p><strong>File:</strong> <code>data/plssem/sem_mobi.xlsx</code> (n = 250, 24 kolom)</p>
-<section id="konstruk-dan-indikator-1" class="level3">
-<h3 class="anchored" data-anchor-id="konstruk-dan-indikator-1">Konstruk dan Indikator</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Konstruk</th>
-<th>Kode</th>
-<th>Indikator</th>
-<th>Deskripsi</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Corporate Image</td>
-<td>IMAG</td>
-<td>IMAG1–IMAG5</td>
-<td>Trustworthiness, stabilitas, kontribusi sosial, kepedulian, inovasi</td>
-</tr>
-<tr class="even">
-<td>Customer Expectations</td>
-<td>CUEX</td>
-<td>CUEX1–CUEX3</td>
-<td>Ekspektasi kualitas, pemenuhan kebutuhan, frekuensi error</td>
-</tr>
-<tr class="odd">
-<td>Perceived Quality</td>
-<td>PERQ</td>
-<td>PERQ1–PERQ7</td>
-<td>Kualitas keseluruhan, teknis, layanan, produk, keragaman, reliabilitas, transparansi</td>
-</tr>
-<tr class="even">
-<td>Perceived Value</td>
-<td>PERV</td>
-<td>PERV1–PERV2</td>
-<td>Harga vs kualitas, kualitas vs harga</td>
-</tr>
-<tr class="odd">
-<td>Customer Satisfaction</td>
-<td>CUSA</td>
-<td>CUSA1–CUSA3</td>
-<td>Kepuasan keseluruhan, fulfillment, perbandingan ideal</td>
-</tr>
-<tr class="even">
-<td>Customer Complaints</td>
-<td>CUSCO</td>
-<td>CUSCO</td>
-<td>Single indicator — penanganan keluhan</td>
-</tr>
-<tr class="odd">
-<td>Customer Loyalty</td>
-<td>CUSL</td>
-<td>CUSL1–CUSL3</td>
-<td>Repurchase, price tolerance, word of mouth</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Skala:</strong> Likert 1–10. Semua konstruk <strong>reflektif</strong> (Mode A). CUSCO adalah <em>single-item construct</em>.</p>
-</section>
-<section id="model-struktural-ecsi" class="level3">
-<h3 class="anchored" data-anchor-id="model-struktural-ecsi">Model Struktural ECSI</h3>
-<pre><code>IMAG → CUEX, CUSA, CUSL
-CUEX → PERQ, PERV, CUSA
-PERQ → PERV, CUSA
-PERV → CUSA
-CUSA → CUSCO, CUSL
-CUSCO → CUSL</code></pre>
-</section>
-<section id="referensi-2" class="level3">
-<h3 class="anchored" data-anchor-id="referensi-2">Referensi</h3>
-<ul>
-<li>Hair, J.F., Risher, J.J., Sarstedt, M. &amp; Ringle, C.M. (2019). When to use and how to report PLS-SEM. <em>European Business Review</em>, 31(1), 2-24.</li>
-<li>Henseler, J., Ringle, C.M. &amp; Sarstedt, M. (2015). A new criterion for assessing discriminant validity. <em>JAMS</em>, 43(1), 115-135.</li>
 </ul>
 <hr>
 </section>
@@ -555,17 +377,10 @@ CUSCO → CUSL</code></pre>
 <li><a href="data/regresi/wagedata.xlsx">wagedata.xlsx</a> — Data upah (n = 1.000) — untuk latihan.</li>
 </ul>
 </section>
-<section id="cb-sem" class="level3">
-<h3 class="anchored" data-anchor-id="cb-sem">CB-SEM</h3>
+<section id="sem" class="level3">
+<h3 class="anchored" data-anchor-id="sem">SEM</h3>
 <ul>
-<li><a href="data/sem/data.xlsx">data.xlsx</a> — E-Loyalty: Perceived Mental Benefits, Hedonic Value, Electronic Loyalty (n = 485)</li>
-<li><a href="data/sem/Measurement Scale.pdf">Measurement Scale.pdf</a> — Skala pengukuran dan item kuesioner</li>
-</ul>
-</section>
-<section id="pls-sem" class="level3">
-<h3 class="anchored" data-anchor-id="pls-sem">PLS-SEM</h3>
-<ul>
-<li><a href="data/plssem/sem_mobi.xlsx">sem_mobi.xlsx</a> — ECSI Mobile Industry: 7 konstruk, 24 indikator (n = 250)</li>
+<li><a href="data/sem/datasem.xlsx">data.xlsx</a></li>
 </ul>
 
 

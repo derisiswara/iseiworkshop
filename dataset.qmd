@@ -65,83 +65,20 @@ Haerpfer, C., Inglehart, R., Moreno, A., Welzel, C., Kizilova, K., Diez-Medrano,
 
 ---
 
-## 2. CB-SEM: Electronic Loyalty (E-Loyalty)
+## 2. Structural Equation Modelling (SEM)
 
-Dataset untuk analisis CB-SEM menggunakan data riil tentang **Electronic Loyalty** dalam konteks e-commerce.
+Dataset untuk analisis SEM:
+<br>
+**File:** `data/sem/datasem.xlsx`
+<br>
+Penjelasan terdapat pada sheet ke-2 di file tersebut.
 
-**File:** `data/sem/data.xlsx` (n = 485, 15 kolom)
-
-### Konstruk dan Indikator
-
-| Konstruk | Kode | Indikator | Deskripsi | Referensi |
-|---|---|---|---|---|
-| Perceived Mental Benefits | PMB | PMB1–PMB4 | Manfaat mental yang dirasakan konsumen | Nguyen & Khoa (2019) |
-| Hedonic Value | HV | HV1–HV4 | Nilai hedonis dari pengalaman belanja online | Lee & Wu (2017) |
-| Electronic Loyalty | ELOY | ELOY1–ELOY3 | Loyalitas elektronik konsumen | Khoa & Nguyen (2020); Srivastava & Rai (2018) |
-
-Semua konstruk **reflektif**. Skala Likert.
-
-### Variabel Tambahan
-
-| Variabel | Deskripsi |
-|---|---|
-| `No` | Nomor responden |
-| `gender` | Jenis kelamin |
-| `occupation` | Pekerjaan |
-| `times` | Frekuensi penggunaan |
-
-### Model Struktural
-
-```
-PMB → ELOY    (direct effect)
-PMB → HV
-HV  → ELOY
-PMB → HV → ELOY  (indirect/mediasi)
-```
 
 ### Referensi
 
 - Khoa, B. T., & Nguyen, H. M. (2020). Electronic Loyalty In Social Commerce. *Gadjah Mada International Journal of Business*, 22(3), 275-299.
 - Lee, C.-H., & Wu, J. J. (2017). Consumer online flow experience. *Industrial Management & Data Systems*, 117(10), 2452-2467.
 - Nguyen, M. H., & Khoa, B. T. (2019). Perceived Mental Benefit in Electronic Commerce. *Sustainability*, 11(23), 6587-6608.
-
----
-
-## 3. PLS-SEM: ECSI Mobile Industry
-
-Dataset untuk analisis PLS-SEM menggunakan data **European Customer Satisfaction Index (ECSI)** untuk industri telepon seluler.
-
-**File:** `data/plssem/sem_mobi.xlsx` (n = 250, 24 kolom)
-
-### Konstruk dan Indikator
-
-| Konstruk | Kode | Indikator | Deskripsi |
-|---|---|---|---|
-| Corporate Image | IMAG | IMAG1–IMAG5 | Trustworthiness, stabilitas, kontribusi sosial, kepedulian, inovasi |
-| Customer Expectations | CUEX | CUEX1–CUEX3 | Ekspektasi kualitas, pemenuhan kebutuhan, frekuensi error |
-| Perceived Quality | PERQ | PERQ1–PERQ7 | Kualitas keseluruhan, teknis, layanan, produk, keragaman, reliabilitas, transparansi |
-| Perceived Value | PERV | PERV1–PERV2 | Harga vs kualitas, kualitas vs harga |
-| Customer Satisfaction | CUSA | CUSA1–CUSA3 | Kepuasan keseluruhan, fulfillment, perbandingan ideal |
-| Customer Complaints | CUSCO | CUSCO | Single indicator — penanganan keluhan |
-| Customer Loyalty | CUSL | CUSL1–CUSL3 | Repurchase, price tolerance, word of mouth |
-
-**Skala:** Likert 1–10. Semua konstruk **reflektif** (Mode A). CUSCO adalah *single-item construct*.
-
-### Model Struktural ECSI
-
-```
-IMAG → CUEX, CUSA, CUSL
-CUEX → PERQ, PERV, CUSA
-PERQ → PERV, CUSA
-PERV → CUSA
-CUSA → CUSCO, CUSL
-CUSCO → CUSL
-```
-
-### Referensi
-
-- Hair, J.F., Risher, J.J., Sarstedt, M. & Ringle, C.M. (2019). When to use and how to report PLS-SEM. *European Business Review*, 31(1), 2-24.
-- Henseler, J., Ringle, C.M. & Sarstedt, M. (2015). A new criterion for assessing discriminant validity. *JAMS*, 43(1), 115-135.
 
 ---
 
@@ -153,11 +90,6 @@ CUSCO → CUSL
 - [wvs2.xlsx](data/regresi/wvs2.xlsx) — WVS Wave 7: Singapura, Thailand, Indonesia (n = 6.712)
 - [wagedata.xlsx](data/regresi/wagedata.xlsx) — Data upah (n = 1.000) — untuk latihan.
 
-### CB-SEM
+### SEM
 
-- [data.xlsx](data/sem/data.xlsx) — E-Loyalty: Perceived Mental Benefits, Hedonic Value, Electronic Loyalty (n = 485)
-- [Measurement Scale.pdf](data/sem/Measurement%20Scale.pdf) — Skala pengukuran dan item kuesioner
-
-### PLS-SEM
-
-- [sem_mobi.xlsx](data/plssem/sem_mobi.xlsx) — ECSI Mobile Industry: 7 konstruk, 24 indikator (n = 250)
+- [data.xlsx](data/sem/datasem.xlsx)

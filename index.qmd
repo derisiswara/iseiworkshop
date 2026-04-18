@@ -181,17 +181,17 @@ Situs ini merupakan repositori materi pelatihan (slide, kode, dan dataset) untuk
 
 ## Jadwal Workshop
 
-*Klik pada tautan di kolom "Materi" untuk mengakses slide. Materi akan tersedia secara bertahap.*
+*Klik pada tautan di kolom "Materi" untuk mengakses slide. Materi akan tersedia secara **bertahap**.*
 
 ::: table-schedule
 | Sesi | Waktu | Materi | Deskripsi | Unduh |
 |------------------|------------------|------------------|--------------------|------------------|
 | \~ | Sebelum workshop | Persiapan | Selesaikan [kegiatan pra-workshop](#kegiatan-pra-workshop) | |
-| 1 | 08.30 – 10.15 | [**Pengantar R, Pengolahan Data, dan Visualisasi**](01-intro.html) | Pengenalan RStudio, tipe data, import data, manipulasi data dengan tidyverse, visualisasi dengan ggplot2, dan statistik deskriptif. | [📄 R Script](01-intro-script.R) · [📓 Notebook](01-intro-notebook.qmd) |
+| 1 | 08.30 – 10.15 | [**Pengantar R, Pengolahan Data, dan Visualisasi**](01-intro.html) | Pengenalan RStudio, tipe data, import data, manipulasi data dengan tidyverse, visualisasi dengan ggplot2, dan statistik deskriptif. | [📄 R Script](01-intro-script.R) |
 | \~ | 10.15 – 10.30 | ☕ *Coffee Break* | | |
-| 2 | 10.30 – 12.00 | [**Analisis Regresi**](02-regresi.html) | Regresi linear sederhana, berganda, dan dengan variabel kategorikal menggunakan data WVS. Diagnostik model dan interpretasi hasil. | [📄 R Script](02-regresi-script.R) · [📓 Notebook](02-regresi-notebook.qmd) |
+| 2 | 10.30 – 12.00 | [**Analisis Regresi**](02-regresi.html) | Regresi linear sederhana, berganda, dan dengan variabel kategorikal menggunakan data WVS. Diagnostik model dan interpretasi hasil. | [📄 R Script](02-regresi-script.R) |
 | \~ | 12.00 – 13.00 | 🍽️ *Makan Siang* | | |
-| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](03-sem.html) | CB-SEM dengan `lavaan` (CFA, full SEM, mediasi) dan PLS-SEM dengan `seminr` (model ECSI, bootstrap, PLS-Predict). | [📄 R Script](03-sem-script.R) · [📓 Notebook](03-sem-notebook.qmd) |
+| 3 | 13.00 – 15.30 | [**Structural Equation Modelling (SEM)**](SEM dengan RStudio 2026.pdf) | [📄 R Script](03-sem-script.R)  |
 | \~ | Setelah workshop | | [Latihan pasca-workshop](exercises.html) | |
 :::
 
