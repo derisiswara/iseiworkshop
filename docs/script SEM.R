@@ -1,10 +1,10 @@
-install.packages("lavaan")
-install.packages("semPlot")
+#install.packages("lavaan")
+#install.packages("semPlot")
 library(lavaan)  
 library(semPlot)
 
 #import data, name: datasem
-datasem = read_excel("D:/datasem.xlsx")
+datasem = read_excel("data/datasem.xlsx")
 
 model = "
   SQ  =~ SQ1 + SQ2 + SQ3 + SQ4
