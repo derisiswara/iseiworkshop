@@ -1,5 +1,5 @@
 ---
-title: "![logo ISEI](https://isei.or.id/asset-frontend/images/logo-ISEI.png) ISEI Workshop "
+title: "![](https://isei.or.id/asset-frontend/images/logo-ISEI.png) ISEI Workshop "
 # subtitle: "Sabtu, 18 April 2026 — Sekretariat PP ISEI, Jakarta Selatan"
 format: html
 ---
