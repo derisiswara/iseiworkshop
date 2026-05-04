@@ -3,7 +3,7 @@ project:
   output-dir: docs
   render:
     - index.qmd
-    - dataset.qmd
+#    - dataset.qmd
     - coc.qmd
     - resources.qmd
     - exercises.qmd
@@ -21,8 +21,8 @@ website:
     left:
       - href: index.qmd
         text: Beranda
-      - href: dataset.qmd
-        text: Dataset
+#      - href: dataset.qmd
+#        text: Dataset
       - href: coc.qmd
         text: Tata Tertib
       - href: resources.qmd
